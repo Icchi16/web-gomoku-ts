@@ -1,0 +1,11 @@
+.SideBar {
+  z-index: 1000;
+}
+
+.SideBar * {
+  text-align: center;
+}
+
+.BtnList {
+  margin: 0;
+}
