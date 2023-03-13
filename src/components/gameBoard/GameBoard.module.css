@@ -1,5 +1,7 @@
 .Square {
-  outline: 1px solid black;
+  border: 1px solid black;
   height: 100px;
   width: 100px;
+  margin-top: -1px;
+  margin-right: -1px;
 }
