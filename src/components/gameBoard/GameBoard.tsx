@@ -1,22 +1,33 @@
 import { RefObject, useEffect, useLayoutEffect, useRef, useState } from "react";
 import styles from "./GameBoard.module.css";
-import { Col, Row } from "@nextui-org/react";
+import { Col, Row, Container } from "@nextui-org/react";
+import Square from "../square/Square";
 
 const GameBoard = () => {
-  const SQUARE_SIZE: number = 0;
-  const SQUARE_ROW: number = 16;
-  const SQUARE_LINE: number = 4;
+  const SQUARE_ROW: number = 30;
+  const SQUARE_LINE: number = 15;
 
   let boardWidth: number = 0;
 
   const boardRef: RefObject<any> = useRef();
 
+  // State
+  const [boxWidth, setBoxWidth] = useState<number>(0);
+
+  // Event handling
   const getBoardWidth = () => {
     if (boardRef.current) {
       boardWidth = boardRef.current.offsetWidth;
+      setBoxWidth((boardWidth - SQUARE_ROW - 1) / SQUARE_ROW);
     }
   };
 
+  const handleClick = (e: Event) => {
+    const box = e.target as HTMLInputElement;
+    console.log(box.id, boxWidth, boardRef.current.offsetWidth);
+  };
+
+  // UseEffect
   useLayoutEffect(() => {
     getBoardWidth();
     window.addEventListener("resize", getBoardWidth);
@@ -25,24 +36,26 @@ const GameBoard = () => {
     };
   }, []);
 
-  const handleClick = (e: Event) => {
-    const box = e.target as HTMLInputElement;
-    console.log(box.id, boardWidth, boardRef.current.offsetWidth);
-  };
-
   return (
-    <div ref={boardRef}>
-      <Row wrap="wrap">
-        {[...Array(SQUARE_ROW * SQUARE_LINE)].map((x, i: number) => (
-          <div
-            className={styles.Square}
-            key={i}
-            id={i + 1}
-            onClick={handleClick}
-          ></div>
-        ))}
+    <Container gap={0}>
+      <Row gap={0} justify="center">
+        <Col span={11}>
+          <div ref={boardRef}>
+            <Row wrap="wrap">
+              {[...Array(SQUARE_ROW * SQUARE_LINE)].map((x, i: number) => (
+                <Square
+                  id={i + 1}
+                  value={""}
+                  width={boxWidth}
+                  key={i}
+                  handleClick={handleClick}
+                />
+              ))}
+            </Row>
+          </div>
+        </Col>
       </Row>
-    </div>
+    </Container>
   );
 };
 
