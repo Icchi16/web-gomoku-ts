@@ -8,6 +8,8 @@ import "../styles/global.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   // 2. Use at the root of your app
+
+
   return (
     <NextUIProvider>
       <Row gap={0} css={{ position: "relative", height: "calc(100vh)" }}>

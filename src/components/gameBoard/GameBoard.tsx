@@ -22,11 +22,6 @@ const GameBoard = () => {
     }
   };
 
-  const handleClick = (e: Event) => {
-    const box = e.target as HTMLInputElement;
-    console.log(box.id, boxWidth, boardRef.current.offsetWidth);
-  };
-
   // UseEffect
   useLayoutEffect(() => {
     getBoardWidth();
@@ -43,13 +38,7 @@ const GameBoard = () => {
           <div ref={boardRef}>
             <Row wrap="wrap">
               {[...Array(SQUARE_ROW * SQUARE_LINE)].map((x, i: number) => (
-                <Square
-                  id={i + 1}
-                  value={""}
-                  width={boxWidth}
-                  key={i}
-                  handleClick={handleClick}
-                />
+                <Square id={i + 1} width={boxWidth} key={i} />
               ))}
             </Row>
           </div>
