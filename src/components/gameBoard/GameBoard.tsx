@@ -25,8 +25,11 @@ const GameBoard = () => {
     }
   };
 
-  const changePlayer = () => {
-    setPlayer1(!player1);
+  const changePlayer = (e: Event) => {
+    const playerBox = e.target as HTMLElement;
+    if (playerBox.innerHTML === "") {
+      setPlayer1(!player1);
+    }
   };
 
   // UseEffect
