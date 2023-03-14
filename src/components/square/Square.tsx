@@ -1,22 +1,29 @@
 import { useState, useEffect } from "react";
 import styles from "./Square.module.css";
 
-const Square = ({ width, id }) => {
+interface Props {
+  width: number;
+  id: number;
+  player1: boolean;
+  value: any;
+}
+
+const Square = ({ width, id, player1, value }: Props) => {
   // State
 
-  let player1: boolean = true;
-  const [value, setValue] = useState<any>(null);
+  const [player1Box, setPlayer1Box] = useState<boolean>(player1);
+  const [valueBox, setValueBox] = useState<any>(null);
 
   // handle event
   const handleClick = (e: Event) => {
-    if (player1) {
-      player1 = player1!;
-      console.log(player1);
-      setValue("x");
-    } else {
-      setValue("O");
-      player1 = player1!;
-    }
+    if (e.target.innerText === "") {
+      console.log("no text");
+      if (player1) {
+        setValueBox("X");
+      } else {
+        setValueBox("O");
+      }
+    } else console.log("some text");
   };
 
   return (
@@ -26,7 +33,7 @@ const Square = ({ width, id }) => {
       style={{ width: `${width}px`, height: `${width}px` }}
       onClick={handleClick}
     >
-      {value}
+      {valueBox}
     </div>
   );
 };

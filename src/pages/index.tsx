@@ -6,7 +6,6 @@ import GameBoard from "../components/gameBoard/GameBoard";
 const Home: NextPage = () => {
   return (
     <div>
-      <ScoreBoard />
       <GameBoard />
     </div>
   );
