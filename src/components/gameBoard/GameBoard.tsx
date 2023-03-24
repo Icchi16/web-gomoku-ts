@@ -4,6 +4,9 @@ import { Col, Row, Container } from "@nextui-org/react";
 import Square from "../square/Square";
 import ScoreBoard from "../scoreBoard/ScoreBoard";
 
+import { Provider } from "react-redux";
+import { store } from "../../store/store";
+
 const GameBoard = () => {
   const SQUARE_ROW: number = 30;
   const SQUARE_LINE: number = 15;
@@ -15,7 +18,6 @@ const GameBoard = () => {
 
   // State
   const [boxWidth, setBoxWidth] = useState<number>(0);
-  const [player1, setPlayer1] = useState<boolean>(true);
 
   // Event handling
   const getBoardWidth = () => {
@@ -25,14 +27,7 @@ const GameBoard = () => {
     }
   };
 
-  const changePlayer = (e: Event) => {
-    const playerBox = e.target as HTMLElement;
-    if (playerBox.innerHTML === "") {
-      setPlayer1(!player1);
-    }
-  };
-
-  // UseEffect
+ 
   useLayoutEffect(() => {
     getBoardWidth();
     window.addEventListener("resize", getBoardWidth);
@@ -45,12 +40,12 @@ const GameBoard = () => {
     <Container gap={0}>
       <Row gap={0}>
         <Col span={12}>
-          <ScoreBoard player={player1} />
+          <ScoreBoard />
         </Col>
       </Row>
       <Row gap={0} justify="center">
         <Col span={11}>
-          <div ref={boardRef} onClick={changePlayer}>
+          <div ref={boardRef}>
             <Row wrap="wrap">
               {[...Array(SQUARE_ROW * SQUARE_LINE)].map((x, i: number) => (
                 <Square
@@ -58,7 +53,6 @@ const GameBoard = () => {
                   width={boxWidth}
                   key={i}
                   value={value}
-                  player1={player1}
                 />
               ))}
             </Row>

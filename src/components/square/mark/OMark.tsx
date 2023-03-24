@@ -6,7 +6,8 @@ const OMark = ({ width }) => {
           borderRadius: 100,
           borderWidth: 2,
           borderColor: "black",
-          width: `${width}`,
+          width: innerWidth,
+          height: innerHeight,
         }}
       >
         {width}
