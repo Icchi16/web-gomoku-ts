@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import styles from "./Square.module.css";
+import OMark from "./mark/OMark";
+import XMark from "./mark/XMark";
 
 interface Props {
   width: number;
@@ -11,7 +13,6 @@ interface Props {
 const Square = ({ width, id, player1, value }: Props) => {
   // State
 
-  const [player1Box, setPlayer1Box] = useState<boolean>(player1);
   const [valueBox, setValueBox] = useState<any>(null);
 
   // handle event
@@ -19,9 +20,9 @@ const Square = ({ width, id, player1, value }: Props) => {
     if (e.target.innerText === "") {
       console.log("no text");
       if (player1) {
-        setValueBox("X");
+        setValueBox(<XMark width={width} />);
       } else {
-        setValueBox("O");
+        setValueBox(<OMark width={width} />);
       }
     } else console.log("some text");
   };
