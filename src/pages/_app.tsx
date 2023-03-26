@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
               "&::after": {
                 content: "''",
                 display: "block",
-                position: "absolute",
+                position: "fixed",
                 width: SIDEBAR_SIZE,
                 backgroundColor: "$blue100",
                 top: "0",

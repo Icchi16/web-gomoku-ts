@@ -1,5 +1,7 @@
-.Square {
-  border: 1px solid black;
-  margin-top: -1px;
-  margin-right: -1px;
+.Square:nth-child(even) {
+  background-color: aqua;
+}
+
+.Square:nth-child(odd) {
+  background-color: blueviolet;
 }

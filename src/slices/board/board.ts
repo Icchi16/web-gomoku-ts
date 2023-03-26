@@ -12,7 +12,7 @@ const initialState: boardState = {
   boardWidth: 0,
   boxWidth: 0,
   BOX_PER_ROW: 30,
-  BOX_ROW: 15,
+  BOX_ROW: 16,
 };
 
 export const boardSlice = createSlice({
@@ -21,8 +21,7 @@ export const boardSlice = createSlice({
   reducers: {
     resizeBoard: (state, action: PayloadAction<number>) => {
       state.boardWidth = action.payload;
-      state.boxWidth =
-        (state.boardWidth - state.BOX_PER_ROW - 1) / state.BOX_PER_ROW;
+      state.boxWidth = state.boardWidth / state.BOX_PER_ROW;
     },
   },
 });

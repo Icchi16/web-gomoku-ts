@@ -5,7 +5,7 @@ import { changePlayer, playerValue } from "../../slices/player/playerSlices";
 import styles from "./Square.module.css";
 import OMark from "./mark/OMark";
 import XMark from "./mark/XMark";
-import { boxWidthValue } from "../../slices/board/board";
+import { BOX_PER_ROW, boxWidthValue } from "../../slices/board/board";
 
 interface Props {
   width: number;
@@ -18,12 +18,14 @@ const Square = ({ width, id, value }: Props) => {
   const [valueBox, setValueBox] = useState<any>(null);
   const player = useSelector(playerValue);
   const boxWidth = useSelector(boxWidthValue);
+  const boxPerRow = useSelector(BOX_PER_ROW);
 
   // Dispatch
   const dispatch = useDispatch();
 
   // handle event
   const handleClick = (e: Event) => {
+    console.log(boxWidth);
     if (e.currentTarget.childNodes.length === 0) {
       if (player) {
         dispatch(changePlayer());
@@ -38,8 +40,14 @@ const Square = ({ width, id, value }: Props) => {
   return (
     <div
       id={id}
-      className={styles.Square}
-      style={{ width: `${boxWidth}px`, height: `${boxWidth}px` }}
+      style={{
+        width: `${boxWidth}px`,
+        height: `${boxWidth}px`,
+        backgroundColor:
+          (id % 2) - (Math.floor(id / boxPerRow) % 2)
+            ? "DarkGray"
+            : "GhostWhite",
+      }}
       onClick={handleClick}
       value={value}
     >

@@ -47,11 +47,11 @@ const GameBoard = () => {
       </Row>
       <Row gap={0} justify="center">
         <Col span={11}>
-          <div ref={boardRef}>
+          <div ref={boardRef} className={styles.GameBoard}>
             <Row wrap="wrap">
               {[...Array(BOX_PER_ROW_VALUE * BOX_ROW_VALUE)].map(
                 (x, i: number) => (
-                  <Square id={i + 1} key={i} value={i} />
+                  <Square id={i} key={i} value={i} />
                 )
               )}
             </Row>
