@@ -1,18 +1,19 @@
-const OMark = ({ width }) => {
+import { useSelector } from "react-redux";
+import { boxWidthValue } from "../../../slices/board/board";
+import styles from "./OMark.module.css"
+
+const OMark = () => {
+  const boxWidth = useSelector(boxWidthValue);
+
   return (
-    <>
-      <div
-        style={{
-          borderRadius: 100,
-          borderWidth: 2,
-          borderColor: "black",
-          width: innerWidth,
-          height: innerHeight,
-        }}
-      >
-        {width}
-      </div>
-    </>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={boxWidth}
+      height={boxWidth}
+      viewBox="0 0 100 100"
+    >
+      <circle cx={50} cy={50} r={boxWidth} fill="transparent" className={styles.OMark}/>
+    </svg>
   );
 };
 

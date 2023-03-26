@@ -1,37 +1,36 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { changePlayer } from "../../slices/player/playerSlices";
-import type { RootState } from "../../store/store";
+import { changePlayer, playerValue } from "../../slices/player/playerSlices";
 
 import styles from "./Square.module.css";
 import OMark from "./mark/OMark";
 import XMark from "./mark/XMark";
+import { boxWidthValue } from "../../slices/board/board";
 
 interface Props {
   width: number;
   id: number;
-  player1: boolean;
   value: any;
 }
 
 const Square = ({ width, id, value }: Props) => {
   // State
   const [valueBox, setValueBox] = useState<any>(null);
-  const player = useSelector((state: RootState) => state.player.player1);
+  const player = useSelector(playerValue);
+  const boxWidth = useSelector(boxWidthValue);
 
   // Dispatch
   const dispatch = useDispatch();
 
   // handle event
   const handleClick = (e: Event) => {
-    if (e.target.innerText === "") {
-      console.log("no text");
+    if (e.currentTarget.childNodes.length === 0) {
       if (player) {
         dispatch(changePlayer());
-        setValueBox(<XMark width={width} />);
+        setValueBox(<XMark />);
       } else {
         dispatch(changePlayer());
-        setValueBox(<OMark width={width} />);
+        setValueBox(<OMark />);
       }
     } else console.log("some text");
   };
@@ -40,8 +39,9 @@ const Square = ({ width, id, value }: Props) => {
     <div
       id={id}
       className={styles.Square}
-      style={{ width: `${width}px`, height: `${width}px` }}
+      style={{ width: `${boxWidth}px`, height: `${boxWidth}px` }}
       onClick={handleClick}
+      value={value}
     >
       {valueBox}
     </div>

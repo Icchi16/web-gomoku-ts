@@ -3,38 +3,40 @@ import styles from "./GameBoard.module.css";
 import { Col, Row, Container } from "@nextui-org/react";
 import Square from "../square/Square";
 import ScoreBoard from "../scoreBoard/ScoreBoard";
-
-import { Provider } from "react-redux";
-import { store } from "../../store/store";
+import {
+  BOX_PER_ROW,
+  BOX_ROW,
+  boardWidthValue,
+  boxWidthValue,
+  resizeBoard,
+} from "../../slices/board/board";
+import { useSelector, useDispatch } from "react-redux";
 
 const GameBoard = () => {
-  const SQUARE_ROW: number = 30;
-  const SQUARE_LINE: number = 15;
-
-  let boardWidth: number = 0;
-  let value: any = "x";
-
+  let value: any = null;
   const boardRef: RefObject<any> = useRef();
 
   // State
-  const [boxWidth, setBoxWidth] = useState<number>(0);
+  const boxWidth = useSelector(boxWidthValue);
+  const boardWidth = useSelector(boardWidthValue);
+  const BOX_PER_ROW_VALUE = useSelector(BOX_PER_ROW);
+  const BOX_ROW_VALUE = useSelector(BOX_ROW);
 
   // Event handling
-  const getBoardWidth = () => {
-    if (boardRef.current) {
-      boardWidth = boardRef.current.offsetWidth;
-      setBoxWidth((boardWidth - SQUARE_ROW - 1) / SQUARE_ROW);
-    }
+  const dispatch = useDispatch();
+
+  const getBoxWidth = () => {
+    dispatch(resizeBoard(boardRef.current.offsetWidth));
+    console.log(boxWidth, boardWidth);
   };
 
- 
   useLayoutEffect(() => {
-    getBoardWidth();
-    window.addEventListener("resize", getBoardWidth);
+    getBoxWidth();
+    window.addEventListener("resize", getBoxWidth);
     return () => {
-      window.removeEventListener("resize", getBoardWidth);
+      window.removeEventListener("resize", getBoxWidth);
     };
-  }, [boxWidth]);
+  }, []);
 
   return (
     <Container gap={0}>
@@ -47,14 +49,11 @@ const GameBoard = () => {
         <Col span={11}>
           <div ref={boardRef}>
             <Row wrap="wrap">
-              {[...Array(SQUARE_ROW * SQUARE_LINE)].map((x, i: number) => (
-                <Square
-                  id={i + 1}
-                  width={boxWidth}
-                  key={i}
-                  value={value}
-                />
-              ))}
+              {[...Array(BOX_PER_ROW_VALUE * BOX_ROW_VALUE)].map(
+                (x, i: number) => (
+                  <Square id={i + 1} key={i} value={i} />
+                )
+              )}
             </Row>
           </div>
         </Col>
