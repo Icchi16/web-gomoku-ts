@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { changePlayer, playerValue } from "../../slices/player/playerSlices";
 
@@ -8,12 +8,11 @@ import XMark from "./mark/XMark";
 import { BOX_PER_ROW, boxWidthValue } from "../../slices/board/board";
 
 interface Props {
-  width: number;
   id: number;
   value: any;
 }
 
-const Square = ({ width, id, value }: Props) => {
+const Square = ({ id, value }: Props) => {
   // State
   const [valueBox, setValueBox] = useState<any>(null);
   const player = useSelector(playerValue);
@@ -25,8 +24,9 @@ const Square = ({ width, id, value }: Props) => {
 
   // handle event
   const handleClick = (e: Event) => {
-    console.log(boxWidth);
-    if (e.currentTarget.childNodes.length === 0) {
+    const targetBox = e.currentTarget as HTMLElement;
+
+    if (targetBox.childNodes.length === 0) {
       if (player) {
         dispatch(changePlayer());
         setValueBox(<XMark />);
