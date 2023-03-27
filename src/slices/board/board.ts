@@ -12,7 +12,7 @@ const initialState: boardState = {
   boardWidth: 0,
   boxWidth: 0,
   BOX_PER_ROW: 30,
-  BOX_ROW: 16,
+  BOX_ROW: 15,
 };
 
 export const boardSlice = createSlice({

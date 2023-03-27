@@ -1,3 +1,17 @@
 .ScoreBoardContainer {
-  background-color: beige;
+  /* background-color: beige; */
+}
+
+.BoardText,
+.Player1,
+.Player2 {
+  display: flex;
+  justify-content: center;
+}
+
+.Active {
+  text-decoration: underline;
+}
+
+.NonActive {
 }

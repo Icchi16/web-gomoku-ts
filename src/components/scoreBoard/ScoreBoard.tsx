@@ -11,16 +11,32 @@ const ScoreBoard = () => {
     <Container className={styles.ScoreBoardContainer}>
       <Row justify="center">
         <Col span={12}>
-          <Text h1>It is {player ? "player 1" : "player 2"} turn</Text>
+          <Text h1 className={styles.BoardText}>
+            It is {player ? "player 1" : "player 2"} turn
+          </Text>
         </Col>
       </Row>
 
       <Row justify="center">
         <Col span={6}>
-          <Text h2>Player 1 : 0</Text>
+          <Text
+            h2
+            className={`${styles.Player1} ${
+              player ? styles.Active : styles.NonActive
+            }`}
+          >
+            Player 1 : 0
+          </Text>
         </Col>
         <Col span={6}>
-          <Text h2>Player 2 : 0</Text>
+          <Text
+            h2
+            className={`${styles.Player2}  ${
+              player ? styles.NonActive : styles.Active
+            }`}
+          >
+            Player 2 : 0
+          </Text>
         </Col>
       </Row>
     </Container>
