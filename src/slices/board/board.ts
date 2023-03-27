@@ -21,7 +21,7 @@ export const boardSlice = createSlice({
   reducers: {
     resizeBoard: (state, action: PayloadAction<number>) => {
       state.boardWidth = action.payload;
-      state.boxWidth = state.boardWidth / state.BOX_PER_ROW;
+      state.boxWidth = Math.floor((state.boardWidth - 1) / state.BOX_PER_ROW);
     },
   },
 });

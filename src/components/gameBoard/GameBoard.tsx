@@ -36,7 +36,7 @@ const GameBoard = () => {
     return () => {
       window.removeEventListener("resize", getBoxWidth);
     };
-  }, []);
+  }, [boardWidth]);
 
   return (
     <Container gap={0}>
@@ -48,7 +48,7 @@ const GameBoard = () => {
       <Row gap={0} justify="center">
         <Col span={11}>
           <div ref={boardRef} className={styles.GameBoard}>
-            <Row wrap="wrap">
+            <Row wrap="wrap" justify="center">
               {[...Array(BOX_PER_ROW_VALUE * BOX_ROW_VALUE)].map(
                 (x, i: number) => (
                   <Square id={i} key={i} value={i} />
