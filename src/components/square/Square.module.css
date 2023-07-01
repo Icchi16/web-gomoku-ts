@@ -1,7 +1,0 @@
-.Square:nth-child(even) {
-  background-color: aqua;
-}
-
-.Square:nth-child(odd) {
-  background-color: blueviolet;
-}
