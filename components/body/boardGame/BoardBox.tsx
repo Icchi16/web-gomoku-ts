@@ -11,14 +11,23 @@ interface BoardBoxProps {
   id: number;
 }
 
-const BoardBox: React.FC<BoardBoxProps> = ({ width, isVariant1, id, col, row }) => {
-  
+const BoardBox: React.FC<BoardBoxProps> = ({
+  width,
+  isVariant1,
+  id,
+  col,
+  row,
+}) => {
   return (
     <div
-      className={clsx(isVariant1 && "bg-blue-gray-300", !isVariant1 && "bg-gray-300")}
+      className={clsx(
+        "text-red-400",
+        isVariant1 && "bg-blue-gray-300",
+        !isVariant1 && "bg-gray-300"
+      )}
       style={{ width: width, height: width }}
     >
-      {id}
+      {row}/{col}
     </div>
   );
 };

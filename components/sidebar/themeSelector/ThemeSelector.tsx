@@ -1,7 +1,7 @@
 "use client";
 
 const ThemeSelector = () => {
-  return <div>This is theme Selector</div>;
+  return <div className="text-gray-900">This is theme Selector</div>;
 };
 
 export default ThemeSelector;

@@ -5,7 +5,7 @@ import boardSettings from "./boardSettings";
 import { useElementSize } from "usehooks-ts";
 
 const BoardGame = () => {
-  const { MAX_BOX, MAX_COL, MAX_ROW } = boardSettings;
+  const { MAX_COL, MAX_ROW } = boardSettings;
   const [screenRef, { width }] = useElementSize();
 
   return (

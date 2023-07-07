@@ -15,8 +15,13 @@ const AuthForm = () => {
       </div>
       {/* <hr className=" border-b-[1px] border-gray-300" /> */}
       <div>
-        <div className="mt-5">
-          <ButtonComp>Create account</ButtonComp>
+        <div className="mt-5 flex w-full justify-between space-x-4">
+          <div className="flex-1">
+            <ButtonComp>Register</ButtonComp>
+          </div>
+          <div className="flex-1">
+            <ButtonComp secondary>Play as guest</ButtonComp>
+          </div>
         </div>
       </div>
     </div>

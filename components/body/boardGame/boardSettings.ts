@@ -15,7 +15,13 @@ function boardConstructor(
   this.MAX_BOX = this.MAX_COL * this.MAX_ROW;
 }
 
-// Board Col needs to be odd
-const boardSettings: BoardSettingProps = new (boardConstructor as any)(22, 42);
+// Change Board Settings here
+const BOARD_COLUMN = 42;
+const BOARD_ROW = 22;
+
+const boardSettings: BoardSettingProps = new (boardConstructor as any)(
+  BOARD_ROW,
+  BOARD_COLUMN
+);
 
 export default boardSettings;
