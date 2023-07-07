@@ -28,7 +28,6 @@ const ButtonComp: React.FC<ButtonCompProps> = ({
         type={type}
         disabled={disabled}
         color={secondary ? "gray" : theme.primaryColor}
-        
       >
         {children}
       </Button>
