@@ -1,7 +1,7 @@
 "use client";
 
 import ButtonComp from "@/components/ButtonComp";
-import InputComp from "@/components/Input";
+import InputComp from "@/components/InputComp";
 import { useState } from "react";
 
 const AuthForm = () => {

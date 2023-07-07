@@ -16,6 +16,6 @@ function boardConstructor(
 }
 
 // Board Col needs to be odd
-const boardSettings: BoardSettingProps = new (boardConstructor as any)(21, 43);
+const boardSettings: BoardSettingProps = new (boardConstructor as any)(22, 42);
 
 export default boardSettings;

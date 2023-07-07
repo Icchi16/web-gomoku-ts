@@ -5,10 +5,8 @@ import { ReactNode } from "react";
 
 const ButtonComp = ({ children }: { children: ReactNode }) => {
   return (
-    <div className="w-full">
-      <Button variant="gradient" className="w-full">
-        {children}
-      </Button>
+    <div>
+      <Button fullWidth>{children}</Button>
     </div>
   );
 };

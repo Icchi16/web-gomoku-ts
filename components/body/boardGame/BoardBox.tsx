@@ -1,27 +1,22 @@
 "use client";
 
 import clsx from "clsx";
-import { useEffect, useState } from "react";
 
 interface BoardBoxProps {
+  col: number;
+  row: number;
   width: number;
   height?: number;
-  odd?: boolean;
+  isVariant1?: boolean;
   id: number;
 }
 
-const BoardBox: React.FC<BoardBoxProps> = ({ width, height, odd, id }) => {
-  // const [boxWidth, setBoxWidth] = useState(width);
-
-  // useEffect(() => {
-  //   setBoxWidth(width);
-  //   console.log(boxWidth);
-  // }, [width]);
-
+const BoardBox: React.FC<BoardBoxProps> = ({ width, isVariant1, id, col, row }) => {
+  
   return (
     <div
-      className={clsx(odd && "bg-blue-gray-300", !odd && "bg-gray-300")}
-      style={{ width: width , height: width }}
+      className={clsx(isVariant1 && "bg-blue-gray-300", !isVariant1 && "bg-gray-300")}
+      style={{ width: width, height: width }}
     >
       {id}
     </div>

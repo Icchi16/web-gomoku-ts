@@ -9,7 +9,7 @@ const UserPage = () => {
       <div className="flex justify-center">
         <Header />
       </div>
-      <div className="flex h-full justify-center items-center">
+      <div className="flex h-full justify-center items-center mx-20">
         <BoardGame />
       </div>
     </>
