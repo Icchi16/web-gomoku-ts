@@ -17,10 +17,14 @@ const AuthForm = () => {
       <div>
         <div className="mt-5 flex w-full justify-between space-x-4">
           <div className="flex-1">
-            <ButtonComp>Register</ButtonComp>
+            <ButtonComp fullWidth variant="gradient">
+              Register
+            </ButtonComp>
           </div>
           <div className="flex-1">
-            <ButtonComp secondary>Play as guest</ButtonComp>
+            <ButtonComp fullWidth secondary>
+              Play as guest
+            </ButtonComp>
           </div>
         </div>
       </div>

@@ -21,7 +21,7 @@ const Sidebar = () => {
         </div>
         <div>
           <div>
-            <hr className=" border-gray-300 " />
+            {/* <hr className=" border-gray-300 " /> */}
             <div className="py-4">
               <ThemeSelector />
             </div>

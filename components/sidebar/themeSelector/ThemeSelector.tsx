@@ -1,7 +1,93 @@
 "use client";
 
+import ButtonComp from "@/components/ButtonComp";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { LegacyRef, ReactElement, useRef, useState } from "react";
+import {
+  Collapse,
+  Card,
+  Typography,
+  CardBody,
+  Button,
+  Radio,
+  List,
+  ListItem,
+  TabsHeader,
+  Tabs,
+  Tab,
+} from "@material-tailwind/react";
+import clsx from "clsx";
+import ThemeBall from "./ThemeBall";
+
 const ThemeSelector = () => {
-  return <div className="text-gray-900">This is theme Selector</div>;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeThemeBall, setActiveThemeBall] = useState(0);
+  const themeBallRef: any = useRef([]);
+  // const handlerActiveBall: any = (ref: HTMLElement) => {
+  //   ref.
+  // };
+
+  return (
+    <div className=" items-end relative">
+      <Collapse open={isModalOpen} className="z-50 space-y-4">
+        <hr className="border-gray-300 w-full" />
+        <Tabs
+          value={activeThemeBall}
+          className="flex flex-col w-full rounded-lg overflow-hidden space-y-2 "
+        >
+          {[...Array(2)].map((valueRow, indexRow) => {
+            return (
+              <TabsHeader
+                key={indexRow}
+                indicatorProps={{
+                  className: "bg-blue-500 rounded-full outline-2 blur-[2px]",
+                }}
+                className="flex flex-row flex-nowrap justify-between w-full bg-opacity-0"
+              >
+                {[...Array(3)].map((valueCol, indexCol) => {
+                  return (
+                    <Tab
+                      key={indexCol + 3 * indexRow}
+                      value={indexCol + 3 * indexRow}
+                      onClick={() =>
+                        setActiveThemeBall(indexCol + 3 * indexRow)
+                      }
+                      className="w-fit p-[5px] focus:bg-opacity-0 focus:outline-4 focus:outline-blue-900 rounded-full"
+                    >
+                      <ThemeBall isModalOpen={isModalOpen} />
+                    </Tab>
+                  );
+                })}
+              </TabsHeader>
+            );
+          })}
+        </Tabs>
+      </Collapse>
+      <div className="flex flex-col items-end relative space-y-4">
+        <hr
+          className={clsx(
+            `relative w-full`,
+            !isModalOpen && "border-gray-300",
+            isModalOpen && "border-none"
+          )}
+        />
+        <ButtonComp
+          variant="text"
+          onClick={() => {
+            setIsModalOpen((current) => !current);
+          }}
+        >
+          <div className="flex justify-end space-x-4 text-sm">
+            <div>Change Theme</div>
+            <div>
+              <FontAwesomeIcon icon={faArrowRight} />
+            </div>
+          </div>
+        </ButtonComp>
+      </div>
+    </div>
+  );
 };
 
 export default ThemeSelector;

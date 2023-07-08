@@ -1,35 +1,23 @@
-"use client"
+"use client";
 
+import React from "react";
+import {
+  Collapse,
+  Button,
+  Card,
+  Typography,
+  CardBody,
+} from "@material-tailwind/react";
 import { useState } from "react";
 
-import { useElementSize } from "usehooks-ts";
-
-export default function Component() {
-  const [isVisible, setVisible] = useState(true);
-  const [squareRef, { width, height }] = useElementSize();
-
-  const toggleVisibility = () => setVisible((x) => !x);
+export default function Example() {
+  const [open, setOpen] = useState(false);
+  const toggleOpen = () => setOpen((cur) => !cur);
 
   return (
-    <>
-      <p>{`The square width is ${width}px and height ${height}px`}</p>
-      <p>Try, resize your window and-or click on the button.</p>
-
-      <button onClick={toggleVisibility}>
-        {isVisible ? "Hide" : "Show"} square
-      </button>
-
-      {isVisible && (
-        <div
-          ref={squareRef}
-          style={{
-            width: "50%",
-            paddingTop: "50%",
-            backgroundColor: "aquamarine",
-            margin: "auto",
-          }}
-        />
-      )}
-    </>
+    <div>
+      <Button onClick={toggleOpen}>Open Collapse</Button>
+      <Collapse open={open}>Hello</Collapse>
+    </div>
   );
 }

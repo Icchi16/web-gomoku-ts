@@ -8,7 +8,10 @@ interface ButtonCompProps {
   secondary?: boolean;
   children?: ReactNode;
   disabled?: boolean;
+  fullWidth?: boolean;
+  onClick?: () => void;
   type?: "button" | "submit" | "reset" | undefined;
+  variant?: "filled" | "gradient" | "outlined" | "text" | undefined;
 }
 
 const ButtonComp: React.FC<ButtonCompProps> = ({
@@ -16,18 +19,20 @@ const ButtonComp: React.FC<ButtonCompProps> = ({
   children,
   type,
   disabled,
+  fullWidth,
+  variant,
+  onClick,
 }) => {
   const theme = useTheme();
-
-  console.log(theme, theme.primaryColor);
-
   return (
     <div>
       <Button
-        fullWidth
+        variant={variant}
+        fullWidth={fullWidth}
         type={type}
         disabled={disabled}
         color={secondary ? "gray" : theme.primaryColor}
+        onClick={onClick}
       >
         {children}
       </Button>
