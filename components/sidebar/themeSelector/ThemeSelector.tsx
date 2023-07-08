@@ -2,21 +2,9 @@
 
 import ButtonComp from "@/components/ButtonComp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { LegacyRef, ReactElement, useRef, useState } from "react";
-import {
-  Collapse,
-  Card,
-  Typography,
-  CardBody,
-  Button,
-  Radio,
-  List,
-  ListItem,
-  TabsHeader,
-  Tabs,
-  Tab,
-} from "@material-tailwind/react";
+import { faArrowRight, faCheck } from "@fortawesome/free-solid-svg-icons";
+import { useRef, useState } from "react";
+import { Collapse, TabsHeader, Tabs, Tab } from "@material-tailwind/react";
 import clsx from "clsx";
 import ThemeBall from "./ThemeBall";
 
@@ -78,12 +66,21 @@ const ThemeSelector = () => {
             setIsModalOpen((current) => !current);
           }}
         >
-          <div className="flex justify-end space-x-4 text-sm">
-            <div>Change Theme</div>
-            <div>
-              <FontAwesomeIcon icon={faArrowRight} />
+          {isModalOpen ? (
+            <div className="flex justify-end space-x-4 text-sm">
+              <div>Done</div>
+              <div>
+                <FontAwesomeIcon icon={faCheck} />
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="flex justify-end space-x-4 text-sm">
+              <div>Change Theme</div>
+              <div>
+                <FontAwesomeIcon icon={faArrowRight} />
+              </div>
+            </div>
+          )}
         </ButtonComp>
       </div>
     </div>
