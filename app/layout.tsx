@@ -2,7 +2,6 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/themes/MaterialUIServerSide";
 import Sidebar from "@/components/sidebar/Sidebar";
-import { useState } from "react";
 import { theme1 } from "@/themes/theme";
 
 const inter = Inter({ subsets: ["latin"] });

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTheme } from "@material-tailwind/react";
 import clsx from "clsx";
 
 interface BoardBoxProps {
@@ -18,17 +19,17 @@ const BoardBox: React.FC<BoardBoxProps> = ({
   col,
   row,
 }) => {
+  const theme = useTheme();
+  const { boxVariant1, boxVariant2 } = theme;
+
   return (
     <div
-      className={clsx(
-        "text-red-400",
-        isVariant1 && "bg-blue-gray-300",
-        !isVariant1 && "bg-gray-300"
-      )}
-      style={{ width: width, height: width }}
-    >
-      {row}/{col}
-    </div>
+      style={{
+        width: width,
+        height: width,
+        backgroundColor: isVariant1 ? boxVariant1 : boxVariant2,
+      }}
+    ></div>
   );
 };
 

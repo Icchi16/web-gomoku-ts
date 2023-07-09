@@ -3,7 +3,7 @@
 import ButtonComp from "@/components/ButtonComp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faCheck } from "@fortawesome/free-solid-svg-icons";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Collapse, TabsHeader, Tabs, Tab } from "@material-tailwind/react";
 import clsx from "clsx";
 import ThemeBall from "./ThemeBall";
@@ -11,10 +11,6 @@ import ThemeBall from "./ThemeBall";
 const ThemeSelector = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeThemeBall, setActiveThemeBall] = useState(0);
-  const themeBallRef: any = useRef([]);
-  // const handlerActiveBall: any = (ref: HTMLElement) => {
-  //   ref.
-  // };
 
   return (
     <div className=" items-end relative">

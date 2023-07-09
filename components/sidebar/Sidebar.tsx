@@ -3,11 +3,16 @@
 import Image from "next/image";
 import AuthForm from "./authForm/AuthForm";
 import ThemeSelector from "./themeSelector/ThemeSelector";
-import { useState } from "react";
+import { useTheme } from "@material-tailwind/react";
 
 const Sidebar = () => {
+  const theme = useTheme();
+  const { bgColor } = theme;
+
+  console.log(theme);
+
   return (
-    <div className="h-full bg-white rounded-r-lg ">
+    <div className="h-full rounded-r-lg" style={{ backgroundColor: bgColor }}>
       <div className="mx-4 flex flex-col h-full justify-between">
         <div className="flex flex-col space-y-5">
           <div className="flex flex-col items-center justify-center space-y-5 mt-5">
