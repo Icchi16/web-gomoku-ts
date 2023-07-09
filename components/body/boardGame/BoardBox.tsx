@@ -20,7 +20,7 @@ const BoardBox: React.FC<BoardBoxProps> = ({
   row,
 }) => {
   const theme = useTheme();
-  const { boxVariant1, boxVariant2 } = theme;
+  const { boxVariant1, boxVariant2 } = theme.colors;
 
   return (
     <div

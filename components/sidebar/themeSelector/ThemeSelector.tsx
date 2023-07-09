@@ -4,13 +4,22 @@ import ButtonComp from "@/components/ButtonComp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
-import { Collapse, TabsHeader, Tabs, Tab } from "@material-tailwind/react";
+import {
+  Collapse,
+  TabsHeader,
+  Tabs,
+  Tab,
+  useTheme,
+} from "@material-tailwind/react";
 import clsx from "clsx";
 import ThemeBall from "./ThemeBall";
+import { themes } from "@/themes/theme";
 
 const ThemeSelector = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeThemeBall, setActiveThemeBall] = useState(0);
+  const theme = useTheme();
+  const { primaryColor } = theme.colors;
 
   return (
     <div className=" items-end relative">
@@ -25,7 +34,8 @@ const ThemeSelector = () => {
               <TabsHeader
                 key={indexRow}
                 indicatorProps={{
-                  className: "bg-blue-500 rounded-full outline-2 blur-[2px]",
+                  style: { backgroundColor: primaryColor },
+                  className: "rounded-full outline-2 blur-[2px]",
                 }}
                 className="flex flex-row flex-nowrap justify-between w-full bg-opacity-0"
               >
@@ -39,7 +49,10 @@ const ThemeSelector = () => {
                       }
                       className="w-fit p-[5px] focus:bg-opacity-0 focus:outline-4 focus:outline-blue-900 rounded-full"
                     >
-                      <ThemeBall isModalOpen={isModalOpen} />
+                      <ThemeBall
+                        isModalOpen={isModalOpen}
+                        theme={themes[indexCol + 3 * indexRow]}
+                      />
                     </Tab>
                   );
                 })}

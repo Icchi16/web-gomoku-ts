@@ -24,7 +24,6 @@ const ButtonComp: React.FC<ButtonCompProps> = ({
   onClick,
 }) => {
   const theme = useTheme();
-  const [theme1, setTheme1] = useState("theme1");
   return (
     <div>
       <Button
@@ -32,8 +31,8 @@ const ButtonComp: React.FC<ButtonCompProps> = ({
         fullWidth={fullWidth}
         type={type}
         disabled={disabled}
-        color={secondary ? "gray" : theme?.primaryTheme}
         onClick={onClick}
+        color={secondary ? "gray" : "amber"}
       >
         {children}
       </Button>
