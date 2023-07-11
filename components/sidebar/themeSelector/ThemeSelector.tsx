@@ -1,9 +1,10 @@
 "use client";
 
+import { useZustandStore } from "@/store/ZutandStore";
 import ButtonComp from "@/components/ButtonComp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faCheck } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import {
   Collapse,
   TabsHeader,
@@ -20,6 +21,13 @@ const ThemeSelector = () => {
   const [activeThemeBall, setActiveThemeBall] = useState(0);
   const theme = useTheme();
   const { primaryColor } = theme.colors;
+  const themeStore = useZustandStore((state) => state.theme);
+  const themeSelect = useZustandStore((state) => state.themeSelect);
+  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    const themeId: string = event.currentTarget.id;
+    themeSelect(themes[parseInt(themeId)]);
+    console.log(themeStore);
+  };
 
   return (
     <div className=" items-end relative">
@@ -50,8 +58,10 @@ const ThemeSelector = () => {
                       className="w-fit p-[5px] focus:bg-opacity-0 focus:outline-4 focus:outline-blue-900 rounded-full"
                     >
                       <ThemeBall
+                        id={`${indexCol + 3 * indexRow}`}
                         isModalOpen={isModalOpen}
                         theme={themes[indexCol + 3 * indexRow]}
+                        onClick={handleClick}
                       />
                     </Tab>
                   );

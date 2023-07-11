@@ -1,6 +1,14 @@
 import { create } from "zustand";
+import { themes } from "@/themes/theme";
 
-const useStore = create((set) => ({
-  theme: {},
-  themeSelect: () => {},
+interface StoreProps {
+  theme: {};
+  themeSelect: (theme: {}) => void;
+}
+
+export const useZustandStore = create<StoreProps>((set) => ({
+  theme: themes[0],
+  themeSelect: (theme: {}) => {
+    set((state) => ({ theme: theme }));
+  },
 }));

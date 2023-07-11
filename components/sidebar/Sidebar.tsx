@@ -13,7 +13,10 @@ const Sidebar = () => {
 
   return (
     // <div className="h-full rounded-r-lg" style={{ backgroundColor: bgColor2 }}>
-    <div className="h-full rounded-r-lg" style={{ backgroundColor: "#ffffff" }}>
+    <div
+      className="h-full rounded-r-lg transition-colors duration-300"
+      style={{ backgroundColor: bgColor2 }}
+    >
       <div className="mx-4 flex flex-col h-full justify-between">
         <div className="flex flex-col space-y-5">
           <div className="flex flex-col items-center justify-center space-y-5 mt-5">

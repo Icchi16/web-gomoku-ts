@@ -1,9 +1,11 @@
+"use client";
+
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { ThemeProvider } from "@/themes/MaterialUIServerSide";
 import Sidebar from "@/components/sidebar/Sidebar";
 import { theme1 } from "@/themes/theme";
-import { useTheme } from "@material-tailwind/react";
+import { useZustandStore } from "@/store/ZutandStore";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,8 +19,9 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const theme = useZustandStore((state) => state.theme);
   return (
-    <ThemeProvider value={theme1}>
+    <ThemeProvider value={theme}>
       <html lang="en">
         <body className={inter.className}>
           <div className="fixed inset-0 w-80 h-full">

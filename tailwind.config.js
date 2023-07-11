@@ -8,7 +8,9 @@ module.exports = withMT({
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      transitionDuration: "300",
+    },
   },
   plugins: [],
 });

@@ -18,4 +18,22 @@ export const theme1 = {
   },
 };
 
-export let themes = [theme1, theme1, theme1, theme1, theme1, theme1];
+export const theme2 = {
+  colors: {
+    primaryColor: "#f09f42",
+    secondaryColor: "#f39782",
+    successColor: "#7daa4c",
+    textColor: "#f8f6ef",
+    boxVariant1: "#faf9f5",
+    boxVariant2: "#D1D5DB",
+    markVariant1: "#699BD7",
+    markVariant2: "#216DD3",
+    dangerColor: "#fb9a14",
+    warningColor: "#f44336",
+    bgColor1: "#216dd3",
+    bgColor2: "#1e57a3",
+    // "#524e55"
+  },
+};
+
+export let themes = [theme1, theme2, theme1, theme1, theme1, theme1];
