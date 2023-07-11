@@ -18,15 +18,15 @@ import { themes } from "@/themes/theme";
 
 const ThemeSelector = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [activeThemeBall, setActiveThemeBall] = useState(0);
   const theme = useTheme();
   const { primaryColor } = theme.colors;
+  const [activeThemeBall, setActiveThemeBall] = useState(theme.themeId);
   const themeStore = useZustandStore((state) => state.theme);
   const themeSelect = useZustandStore((state) => state.themeSelect);
+
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     const themeId: string = event.currentTarget.id;
     themeSelect(themes[parseInt(themeId)]);
-    console.log(themeStore);
   };
 
   return (

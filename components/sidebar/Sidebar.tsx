@@ -7,16 +7,12 @@ import { useTheme } from "@material-tailwind/react";
 
 const Sidebar = () => {
   const theme = useTheme();
-  const { bgColor2 } = theme.colors;
 
-  console.log(theme);
+  const { bgColor2 } = theme.colors;
 
   return (
     // <div className="h-full rounded-r-lg" style={{ backgroundColor: bgColor2 }}>
-    <div
-      className="h-full rounded-r-lg transition-colors duration-300"
-      style={{ backgroundColor: bgColor2 }}
-    >
+    <div className="h-full rounded-r-lg" style={{ backgroundColor: bgColor2 }}>
       <div className="mx-4 flex flex-col h-full justify-between">
         <div className="flex flex-col space-y-5">
           <div className="flex flex-col items-center justify-center space-y-5 mt-5">

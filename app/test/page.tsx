@@ -10,7 +10,7 @@ const UserPage = () => {
 
   return (
     <div
-      className="h-full bg-blue-gray-900 transition-colors duration-300"
+      className="h-full bg-blue-gray-900"
       style={{ backgroundColor: bgColor1 }}
     >
       <div className="fixed inset-0 left-80">

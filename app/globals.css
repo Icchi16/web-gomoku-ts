@@ -2,6 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
+* {
   transition: background-color 1000ms linear;
 }
