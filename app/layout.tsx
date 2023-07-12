@@ -1,10 +1,7 @@
-"use client";
-
 import "./globals.css";
 import { Inter } from "next/font/google";
-import { ThemeProvider } from "@/themes/MaterialUIServerSide";
+import ThemeProviderClient from "@/themes/MaterialUIServerSide";
 import Sidebar from "@/components/sidebar/Sidebar";
-import { useZustandStore } from "@/store/ZutandStore";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,10 +15,8 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const theme = useZustandStore((state) => state.theme);
-
   return (
-    <ThemeProvider value={theme}>
+    <ThemeProviderClient>
       <html lang="en">
         <body className={inter.className}>
           <div className="fixed inset-0 w-80 h-full">
@@ -32,6 +27,6 @@ export default function RootLayout({
           </div>
         </body>
       </html>
-    </ThemeProvider>
+    </ThemeProviderClient>
   );
 }
