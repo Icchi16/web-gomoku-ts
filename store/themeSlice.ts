@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage, devtools } from "zustand/middleware";
 import { themes } from "@/themes/theme";
-import localforage from "localforage";
 
 interface ThemeSlice {
   theme: {};
@@ -11,7 +10,7 @@ interface ThemeSlice {
 const theme = () => {
   const localTheme = JSON.parse(
     localStorage?.getItem("theme-storage") as string
-  ).state.theme;
+  )?.state?.theme;
 
   return !localTheme ? themes[0] : localTheme;
 };
