@@ -25,18 +25,17 @@ const ButtonComp: React.FC<ButtonCompProps> = ({
 }) => {
   const theme = useTheme();
   return (
-    <div>
-      <Button
-        variant={variant}
-        fullWidth={fullWidth}
-        type={type}
-        disabled={disabled}
-        onClick={onClick}
-        color={secondary ? "gray" : "amber"}
-      >
-        {children}
-      </Button>
-    </div>
+    <Button
+      className="px-0"
+      variant={variant}
+      fullWidth={fullWidth}
+      type={type}
+      disabled={disabled}
+      onClick={onClick}
+      color={secondary ? "gray" : "amber"}
+    >
+      {children}
+    </Button>
   );
 };
 

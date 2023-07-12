@@ -20,7 +20,7 @@ const BoardBox: React.FC<BoardBoxProps> = ({
   row,
 }) => {
   const theme = useTheme();
-  const { boxVariant1, boxVariant2 } = theme.colors;
+  const { boxVariant1, boxVariant2, markVariant1, markVariant2 } = theme.colors;
 
   return (
     <div
@@ -28,8 +28,11 @@ const BoardBox: React.FC<BoardBoxProps> = ({
         width: width,
         height: width,
         backgroundColor: isVariant1 ? boxVariant1 : boxVariant2,
+        color: col % 2 === 0 ? markVariant1 : markVariant2,
       }}
-    ></div>
+    >
+      {id}
+    </div>
   );
 };
 
