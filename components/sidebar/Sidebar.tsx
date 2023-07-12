@@ -4,6 +4,7 @@ import Image from "next/image";
 import AuthForm from "./authForm/AuthForm";
 import ThemeSelector from "./themeSelector/ThemeSelector";
 import { useTheme } from "@material-tailwind/react";
+import Logo from "./Logo";
 
 const Sidebar = () => {
   const theme = useTheme();
@@ -15,11 +16,10 @@ const Sidebar = () => {
     <div className="h-full rounded-r-lg" style={{ backgroundColor: bgColor2 }}>
       <div className="mx-4 flex flex-col h-full justify-between">
         <div className="flex flex-col space-y-5">
-          <div className="flex flex-col items-center justify-center space-y-5 mt-5">
-            <Image alt="Logo" src="/logo.jpg" height={120} width={120} />
+          <div>
+            <Logo />
           </div>
-          <hr className=" border-gray-300 " />
-          <div className="">
+          <div>
             <AuthForm />
           </div>
           <hr className=" border-gray-300 " />
