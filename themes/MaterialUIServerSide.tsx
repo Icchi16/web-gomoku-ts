@@ -4,7 +4,7 @@ interface ThemeProviderProps {
   children: React.ReactNode;
 }
 
-import { useZustandStore } from "@/store/ZutandStore";
+import { useZustandStore } from "@/store/themeSlice";
 import { ThemeProvider } from "@material-tailwind/react";
 
 const ThemeProviderClient: React.FC<ThemeProviderProps> = ({ children }) => {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useZustandStore } from "@/store/ZutandStore";
+import { useZustandStore } from "@/store/themeSlice";
 import ButtonComp from "@/components/ButtonComp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faCheck } from "@fortawesome/free-solid-svg-icons";

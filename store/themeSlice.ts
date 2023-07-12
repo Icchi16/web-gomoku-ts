@@ -8,15 +8,19 @@ interface ThemeSlice {
   themeSelect: (theme: {}) => void;
 }
 
-const localTheme = JSON.parse(localStorage.getItem("theme-storage")).state
-  .theme;
+const theme = () => {
+  const localTheme = JSON.parse(
+    localStorage?.getItem("theme-storage") as string
+  ).state.theme;
+
+  return !localTheme ? themes[0] : localTheme;
+};
 
 export const useZustandStore = create<ThemeSlice>()(
   devtools(
     persist(
       (set) => ({
-        // theme: !localTheme ? themes[0] : localTheme,
-        theme: !localTheme ? themes[0] : localTheme,
+        theme: theme(),
         themeSelect: (theme: {}) => set(() => ({ theme: theme })),
       }),
       {
