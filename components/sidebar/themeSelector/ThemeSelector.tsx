@@ -1,6 +1,6 @@
 "use client";
 
-import { useZustandStore } from "@/store/themeSlice";
+import { useThemeSlice } from "@/store/themeSlice";
 import ButtonComp from "@/components/ButtonComp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faCheck } from "@fortawesome/free-solid-svg-icons";
@@ -21,8 +21,8 @@ const ThemeSelector = () => {
   const theme = useTheme();
   const { primaryColor } = theme.colors;
   const [activeThemeBall, setActiveThemeBall] = useState(theme.themeId);
-  const themeStore = useZustandStore((state) => state.theme);
-  const themeSelect = useZustandStore((state) => state.themeSelect);
+  const themeStore = useThemeSlice((state) => state.theme);
+  const themeSelect = useThemeSlice((state) => state.themeSelect);
 
   const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
     const themeId: string = event.currentTarget.id;

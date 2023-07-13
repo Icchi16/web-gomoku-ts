@@ -9,5 +9,7 @@ body,
 }
 
 * {
-  transition: background-color 1000ms linear;
+  transition-property: background-color, color;
+  transition-duration: 600ms;
+  transition-timing-function: ease-in-out;
 }

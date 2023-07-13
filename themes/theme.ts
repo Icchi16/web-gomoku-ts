@@ -1,6 +1,24 @@
 import type { ButtonStyleTypes } from "@material-tailwind/react";
 
-export const themes = [
+export interface ThemeProps {
+  themeId: number;
+  colors: {
+    primaryColor: string;
+    secondaryColor: string;
+    successColor: string;
+    textColor: string;
+    dangerColor: string;
+    warningColor: string;
+    boxVariant1: string;
+    boxVariant2: string;
+    markVariant1: string;
+    markVariant2: string;
+    bgColor1: string;
+    bgColor2: string;
+  };
+}
+
+export const themes: ThemeProps[] = [
   {
     themeId: 0,
     colors: {

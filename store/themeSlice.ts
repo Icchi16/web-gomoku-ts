@@ -1,10 +1,11 @@
 import { create } from "zustand";
 import { persist, createJSONStorage, devtools } from "zustand/middleware";
-import { themes } from "@/themes/theme";
+import { ThemeProps, themes } from "@/themes/theme";
+import { ThemeConfig } from "tailwindcss/types/config";
 
-interface ThemeSlice {
-  theme: {};
-  themeSelect: (theme: {}) => void;
+interface ThemeSliceProps {
+  theme: ThemeProps;
+  themeSelect: (theme: ThemeProps) => void;
 }
 
 const theme = () => {
@@ -15,12 +16,12 @@ const theme = () => {
   return !localTheme ? themes[0] : localTheme;
 };
 
-export const useZustandStore = create<ThemeSlice>()(
+export const useThemeSlice = create<ThemeSliceProps>()(
   devtools(
     persist(
       (set) => ({
         theme: theme(),
-        themeSelect: (theme: {}) => set(() => ({ theme: theme })),
+        themeSelect: (theme: ThemeProps) => set(() => ({ theme: theme })),
       }),
       {
         name: "theme-storage",

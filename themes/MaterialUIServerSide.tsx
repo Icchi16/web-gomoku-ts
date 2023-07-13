@@ -1,6 +1,6 @@
 "use client";
 
-import { useZustandStore } from "@/store/themeSlice";
+import { useThemeSlice } from "@/store/themeSlice";
 import { ThemeProvider } from "@material-tailwind/react";
 
 interface ThemeProviderProps {
@@ -8,7 +8,7 @@ interface ThemeProviderProps {
 }
 
 const ThemeProviderClient: React.FC<ThemeProviderProps> = ({ children }) => {
-  const theme = useZustandStore((state) => state.theme);
+  const theme = useThemeSlice((state) => state.theme);
 
   return <ThemeProvider value={theme}>{children}</ThemeProvider>;
 };
