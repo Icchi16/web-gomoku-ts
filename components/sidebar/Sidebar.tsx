@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import AuthForm from "./authForm/AuthForm";
 import ThemeSelector from "./themeSelector/ThemeSelector";
 import { useTheme } from "@material-tailwind/react";
@@ -8,7 +7,6 @@ import Logo from "./Logo";
 
 const Sidebar = () => {
   const theme = useTheme();
-
   const { bgColor2 } = theme.colors;
 
   return (

@@ -19,7 +19,7 @@ const Mark: React.FC<MarkProps> = ({ isMarkX, width }) => {
               y2={(width / 5) * 4}
               stroke="currentColor"
               strokeLinecap="round"
-              stroke-width="4"
+              strokeWidth={4}
             />
             <line
               x1={(width / 5) * 4}
@@ -28,7 +28,7 @@ const Mark: React.FC<MarkProps> = ({ isMarkX, width }) => {
               y2={(width / 5) * 4}
               stroke="currentColor"
               strokeLinecap="round"
-              stroke-width="4"
+              strokeWidth={4}
             />
           </svg>
         </div>
