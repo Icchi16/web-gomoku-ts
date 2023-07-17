@@ -8,5 +8,8 @@ interface GomokuType {
   col: number;
 }
 
-export const GomokuCal = () => {
+
+
+export const gomokuCal = (id, col, row, isPlayer1) => {
+  
 };
