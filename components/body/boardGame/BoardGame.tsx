@@ -1,18 +1,27 @@
 "use client";
 
+import { useBoardSlice } from "@/store/boardSlice";
 import BoardBox from "./BoardBox";
 import boardSettings from "./boardSettings";
 import { useElementSize } from "usehooks-ts";
+import { useEffect } from "react";
 
 const BoardGame = () => {
   const { MAX_COL, MAX_ROW } = boardSettings;
   const [screenRef, { width }] = useElementSize();
+  const board = useBoardSlice((state) => state.board);
+
+  useEffect(() => {
+    useBoardSlice.setState({ board: board });
+    console.log(board);
+  }, [board]);
 
   return (
     <div
       ref={screenRef}
       className="flex flex-wrap justify-center items-center w-full"
     >
+      <div className="sr-only">{board.length}</div>
       <div className="flex flex-col rounded-lg overflow-hidden">
         {[...Array(MAX_ROW)].map((valueRow, indexRow) => {
           return (

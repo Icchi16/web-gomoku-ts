@@ -2,12 +2,11 @@
 
 import EmptyState from "@/components/EmptyState";
 import { useTheme } from "@material-tailwind/react";
+import { useEffect } from "react";
 
 export default function Home() {
   const theme = useTheme();
   const { bgColor1 } = theme.colors;
-
-  console.log(bgColor1);
 
   return (
     <div

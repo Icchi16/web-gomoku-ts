@@ -8,19 +8,26 @@ interface ThemeSliceProps {
   themeSelect: (theme: ThemeProps) => void;
 }
 
-const theme = () => {
+let theme: ThemeProps;
+
+if (window !== undefined) {
+  console.log("Storage Loaded");
+
   const localTheme = JSON.parse(
     localStorage?.getItem("theme-storage") as string
   )?.state?.theme;
 
-  return !localTheme ? themes[0] : localTheme;
-};
+  theme = !localTheme ? themes[0] : localTheme;
+} else {
+  console.log("You are on Server");
+  theme = themes[0];
+}
 
 export const useThemeSlice = create<ThemeSliceProps>()(
   devtools(
     persist(
       (set) => ({
-        theme: theme(),
+        theme: theme,
         themeSelect: (theme: ThemeProps) => set(() => ({ theme: theme })),
       }),
       {

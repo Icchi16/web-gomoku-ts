@@ -8,9 +8,3 @@ interface GomokuType {
   row: number;
   col: number;
 }
-
-const board = useBoardSlice.getState().board;
-
-export const gomokuCal = () => {
-  console.log(board);
-};
