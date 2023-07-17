@@ -5,6 +5,7 @@ import { useTheme } from "@material-tailwind/react";
 import { useMemo, useState } from "react";
 import Mark from "./Mark";
 
+import { useBoardSlice } from "@/store/boardSlice";
 import { gomokuCal } from "@/services/boardRule";
 interface BoardBoxProps {
   col: number;
@@ -24,19 +25,25 @@ const BoardBox: React.FC<BoardBoxProps> = ({
 }) => {
   const { boxVariant1, boxVariant2, markVariant1, markVariant2 } =
     useTheme().colors;
-  const { isPlayer1, changePlayer } = usePlayerSlice((state) => state);
+  const isPlayer1 = usePlayerSlice((state) => state.isPlayer1);
+  const changePlayer = usePlayerSlice((state) => state.changePlayer);
+
+  const board = useBoardSlice((state) => state.board);
+  const boardUpdate = useBoardSlice((state) => state.boardUpdate);
+
   const [boxState, setBoxState] = useState({ blank: true, disabled: false });
   const [XMark, setXMark] = useState(isPlayer1);
-  const isPlayer1Turn = useMemo(() => (isPlayer1 ? true : false), [isPlayer1]);
 
   const handleClick = (event: any) => {
     const { id, col, row } = event.currentTarget.attributes;
+    boardUpdate(id.value, col.value, row.value, XMark);
 
     event.preventDefault();
     setXMark(isPlayer1);
     setBoxState({ blank: false, disabled: true });
     changePlayer();
-    gomokuCal(id.value, col.value, row.value, isPlayer1Turn);
+
+    gomokuCal();
   };
 
   return (

@@ -20,13 +20,11 @@ const boardArray: any = new Array(MAX_BOX).fill({});
 export const useBoardSlice = create<BoardSliceProps>((set, get) => ({
   board: boardArray,
   boardUpdate: (id, col, row, isPlayer1P) => {
-    const currentBoard = get().board;
-
-    set(() => ({
+    set((state) => ({
       board: update(
         id,
         { value: { row: row, col: col }, player1: isPlayer1P },
-        currentBoard
+        state.board
       ),
     }));
   },

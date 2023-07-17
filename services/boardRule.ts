@@ -1,6 +1,7 @@
 import { BoxValueProps } from "@/types/boardType";
 import { filter } from "ramda";
 import { useBoardSlice } from "../store/boardSlice";
+import { useStore } from "zustand";
 
 interface GomokuType {
   id: number;
@@ -8,8 +9,8 @@ interface GomokuType {
   col: number;
 }
 
+const board = useBoardSlice.getState().board;
 
-
-export const gomokuCal = (id, col, row, isPlayer1) => {
-  
+export const gomokuCal = () => {
+  console.log(board);
 };
