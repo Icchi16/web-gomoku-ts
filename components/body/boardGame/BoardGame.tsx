@@ -20,6 +20,8 @@ const BoardGame = () => {
     gomokuCal(board, latestCol, latestRow, !isPlayer1);
   }, [board, latestCol, latestRow, isPlayer1]);
 
+
+  // need to change render based on server data
   return (
     <div
       ref={screenRef}

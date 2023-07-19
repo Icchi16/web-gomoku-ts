@@ -1,20 +1,8 @@
 import { BoxValueProps } from "@/types/boardType";
 import {
-  __,
   apply,
-  count,
-  equals,
-  filter,
-  gt,
-  gte,
-  is,
-  lte,
-  map,
-  max,
-  propEq,
-  propSatisfies,
-  when,
-  where,
+  reverse,
+
 } from "ramda";
 import { useBoardSlice } from "../store/boardSlice";
 import { useStore } from "zustand";
@@ -40,33 +28,67 @@ export const gomokuCal = (
   latestRow: number,
   isPlayer1: boolean
 ) => {
-  const XRange: RangeProps = {
-    max: +latestCol + 5,
-    min: +latestCol - 5,
-  };
-
-  // get horizontal Array
-  const XArrayCondition = (boxValue) => {
-    return (
-      boxValue.value?.row === latestRow &&
-      boxValue.value?.col > +latestCol - 5 &&
-      boxValue.value?.col < +latestCol + 5
-    );
-  };
+  // get Array length of 9 in 4 directions
 
   const xArray = board
     .filter((value, index) => {
+      const boxCol = index % MAX_COL;
+      const boxRow = Math.floor(index / MAX_COL);
+
       return (
-        index % MAX_COL > +latestCol - 5 &&
-        index % MAX_COL < +latestCol + 5 &&
-        Math.floor(index / MAX_COL) === +latestRow
+        boxCol > +latestCol - 5 &&
+        boxCol < +latestCol + 5 &&
+        boxRow === +latestRow
       );
     })
     .map((value) => {
       return value.player1 === isPlayer1 ? value : {};
     });
 
-  let counter = [1];
+  const yArray = board
+    .filter((value, index) => {
+      const boxCol = index % MAX_COL;
+      const boxRow = Math.floor(index / MAX_COL);
+
+      return (
+        boxCol === +latestCol &&
+        boxRow > +latestRow - 5 &&
+        boxRow < +latestRow + 5
+      );
+    })
+    .map((value) => {
+      return value.player1 === isPlayer1 ? value : {};
+    });
+
+  const diagArrayUL2BR = board
+    .filter((value, index) => {
+      const boxCol = index % MAX_COL;
+      const boxRow = Math.floor(index / MAX_COL);
+      const boxDiff = Math.abs(boxCol - boxRow);
+      const LatestDiff = Math.abs(+latestCol - +latestRow);
+
+      return boxDiff === LatestDiff && Math.abs(boxCol - latestCol) < 5;
+    })
+    .map((value) => {
+      return value.player1 === isPlayer1 ? value : {};
+    });
+
+  const diagArrayBL2UR = reverse(
+    board
+      .filter((value, index) => {
+        const boxCol = index % MAX_COL;
+        const boxRow = Math.floor(index / MAX_COL);
+        const boxSum = Math.abs(boxCol + boxRow);
+        const LatestSum = Math.abs(+latestCol + +latestRow);
+
+        return boxSum === LatestSum && Math.abs(boxCol - latestCol) < 5;
+      })
+      .map((value) => {
+        return value.player1 === isPlayer1 ? value : {};
+      })
+  );
+
+  let counter: number[] = [1];
   if (xArray[0]) {
     xArray.reduce((prevValue, curValue) => {
       if (prevValue.player1 === curValue.player1) {
