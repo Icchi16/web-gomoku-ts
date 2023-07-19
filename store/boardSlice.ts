@@ -7,6 +7,10 @@ import zukeeper from "zukeeper";
 
 interface BoardSliceProps {
   board: any;
+  latestRow: number;
+  latestCol: number;
+  latestRowUpdate: (row: number) => void;
+  latestColUpdate: (col: number) => void;
   boardUpdate: (
     id: number,
     col: number,
@@ -18,19 +22,19 @@ const { MAX_BOX } = boardSettings;
 
 const boardArray: any = new Array(MAX_BOX).fill({});
 
-export const useBoardSlice = create<BoardSliceProps>(
-  zukeeper((set, get) => ({
-    board: boardArray,
-    boardUpdate: (id, col, row, isPlayer1P) => {
-      set((state) => ({
-        board: update(
-          id,
-          { value: { row: row, col: col }, player1: isPlayer1P },
-          state.board
-        ),
-      }));
-    },
-  }))
-);
-
-window.store = useBoardSlice;
+export const useBoardSlice = create<BoardSliceProps>((set, get) => ({
+  board: boardArray,
+  latestRow: -100,
+  latestCol: -100,
+  latestRowUpdate: (row) => set({ latestRow: row }),
+  latestColUpdate: (col) => set({ latestCol: col }),
+  boardUpdate: (id, col, row, isPlayer1P) => {
+    set((state) => ({
+      board: update(
+        id,
+        { value: { row: row, col: col }, player1: isPlayer1P },
+        state.board
+      ),
+    }));
+  },
+}));

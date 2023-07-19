@@ -4,24 +4,27 @@ import { useBoardSlice } from "@/store/boardSlice";
 import BoardBox from "./BoardBox";
 import boardSettings from "./boardSettings";
 import { useElementSize } from "usehooks-ts";
-import { useEffect } from "react";
+import { use, useCallback, useEffect, useMemo } from "react";
+import { gomokuCal } from "@/services/boardRule";
+import { usePlayerSlice } from "@/store/playerSlice";
 
 const BoardGame = () => {
   const { MAX_COL, MAX_ROW } = boardSettings;
   const [screenRef, { width }] = useElementSize();
   const board = useBoardSlice((state) => state.board);
+  const latestRow = useBoardSlice((state) => state.latestRow);
+  const latestCol = useBoardSlice((state) => state.latestCol);
+  const isPlayer1 = usePlayerSlice((state) => state.isPlayer1);
 
-  useEffect(() => {
-    useBoardSlice.setState({ board: board });
-    console.log(board);
-  }, [board]);
+  useMemo(() => {
+    gomokuCal(board, latestCol, latestRow, !isPlayer1);
+  }, [board, latestCol, latestRow, isPlayer1]);
 
   return (
     <div
       ref={screenRef}
       className="flex flex-wrap justify-center items-center w-full"
     >
-      <div className="sr-only">{board.length}</div>
       <div className="flex flex-col rounded-lg overflow-hidden">
         {[...Array(MAX_ROW)].map((valueRow, indexRow) => {
           return (

@@ -2,7 +2,7 @@
 
 import { usePlayerSlice } from "@/store/playerSlice";
 import { useTheme } from "@material-tailwind/react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Mark from "./Mark";
 import { useBoardSlice } from "@/store/boardSlice";
 
@@ -28,19 +28,26 @@ const BoardBox: React.FC<BoardBoxProps> = ({
   const changePlayer = usePlayerSlice((state) => state.changePlayer);
 
   const boardUpdate = useBoardSlice((state) => state.boardUpdate);
+  const latestRowUpdate = useBoardSlice((state) => state.latestRowUpdate);
+  const latestColUpdate = useBoardSlice((state) => state.latestColUpdate);
 
   const [boxState, setBoxState] = useState({ blank: true, disabled: false });
   const [XMark, setXMark] = useState(isPlayer1);
 
-  const handleClick = (event: any) => {
-    const { id, col, row } = event.currentTarget.attributes;
-    event.preventDefault();
+  const handleClick = useCallback(
+    (event: any) => {
+      const { id, col, row } = event.currentTarget.attributes;
+      event.preventDefault();
 
-    setXMark(isPlayer1);
-    setBoxState({ blank: false, disabled: true });
-    boardUpdate(id.value, col.value, row.value, isPlayer1);
-    changePlayer();
-  };
+      setXMark(isPlayer1);
+      setBoxState({ blank: false, disabled: true });
+      latestColUpdate(col.value);
+      latestRowUpdate(row.value);
+      boardUpdate(id.value, col.value as number, row.value as number, isPlayer1);
+      changePlayer();
+    },
+    [boardUpdate, changePlayer, isPlayer1, latestColUpdate, latestRowUpdate]
+  );
 
   return (
     <div
