@@ -1,11 +1,14 @@
 import { create } from "zustand";
 
 interface PlayerSliceProps {
-  isPlayer1: boolean;
+  currentPlayer: "player1" | "player2";
   changePlayer: () => void;
 }
 
 export const usePlayerSlice = create<PlayerSliceProps>((set) => ({
-  isPlayer1: true,
-  changePlayer: () => set((state) => ({ isPlayer1: !state.isPlayer1 })),
+  currentPlayer: "player1",
+  changePlayer: () =>
+    set((state) => ({
+      currentPlayer: state.currentPlayer === "player1" ? "player2" : "player1",
+    })),
 }));

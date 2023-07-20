@@ -2,7 +2,7 @@
 
 import { usePlayerSlice } from "@/store/playerSlice";
 import { useTheme } from "@material-tailwind/react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Mark from "./Mark";
 import { useBoardSlice } from "@/store/boardSlice";
 import { BoxValueProps } from "@/types/boardType";
@@ -28,19 +28,21 @@ const BoardBox: React.FC<BoardBoxProps> = ({
 }) => {
   const { boxVariant1, boxVariant2, markVariant1, markVariant2 } =
     useTheme().colors;
-    
-  const isPlayer1 = usePlayerSlice((state) => state.isPlayer1);
+
+  const isPlayer1 = usePlayerSlice((state) =>
+    state.currentPlayer === "player1" ? true : false
+  );
   const changePlayer = usePlayerSlice((state) => state.changePlayer);
 
+  const board = useBoardSlice((state) => state.board);
+  const boardStatus = useBoardSlice((state) => state.boardStatus);
   const boardUpdate = useBoardSlice((state) => state.boardUpdate);
+
   const latestRowUpdate = useBoardSlice((state) => state.latestRowUpdate);
   const latestColUpdate = useBoardSlice((state) => state.latestColUpdate);
 
-
   const handleClick = useCallback(
     (event: any) => {
-      console.log(boxData);
-
       let { id, col, row } = event.currentTarget.attributes;
       id = +id.value;
       col = +col.value;

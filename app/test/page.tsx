@@ -10,12 +10,6 @@ const UserPage = () => {
   const theme = useTheme();
   const { bgColor1 } = theme.colors;
 
-  const board = useBoardSlice((state) => state.board);
-
-  useEffect(() => {
-    console.log(board);
-  }, [board]);
-
   return (
     <div
       className="h-full bg-blue-gray-900"
@@ -26,7 +20,7 @@ const UserPage = () => {
           <Header />
         </div>
         <div className="flex h-full justify-center items-center mx-20">
-          <BoardGame board={board} />
+          <BoardGame />
         </div>
       </div>
     </div>

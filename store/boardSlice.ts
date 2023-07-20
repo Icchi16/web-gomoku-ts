@@ -7,10 +7,12 @@ import zukeeper from "zukeeper";
 
 interface BoardSliceProps {
   board: any;
+  boardStatus: "continue" | "over";
   latestRow: number | undefined;
   latestCol: number | undefined;
   latestRowUpdate: (row: number) => void;
   latestColUpdate: (col: number) => void;
+  boardStatusUpdate: () => void;
   boardUpdate: (
     id: number,
     col: number,
@@ -25,18 +27,26 @@ const boardArray: BoxValueProps[] = new Array(MAX_BOX)
 
 export const useBoardSlice = create<BoardSliceProps>((set, get) => ({
   board: boardArray,
+  boardStatus: "continue",
   latestRow: undefined,
   latestCol: undefined,
   latestRowUpdate: (row) => set({ latestRow: row }),
   latestColUpdate: (col) => set({ latestCol: col }),
-  boardUpdate: (id, col, row, isPlayer1P) => {
+
+  boardStatusUpdate: () => {
+    set((state) => ({
+      boardStatus: state.boardStatus === "continue" ? "over" : "continue",
+    }));
+  },
+
+  boardUpdate: (id, col, row, isPlayer1) => {
     set((state) => ({
       board: update(
         id,
         {
           ...state.board[id],
           coordinate: { row: row, col: col },
-          player1: isPlayer1P,
+          player1: isPlayer1,
           isBlank: !state.board[id].isBlank,
         },
         state.board
