@@ -5,8 +5,11 @@ import { useTheme } from "@material-tailwind/react";
 import { useCallback, useState } from "react";
 import Mark from "./Mark";
 import { useBoardSlice } from "@/store/boardSlice";
+import { BoxValueProps } from "@/types/boardType";
+import { type } from "os";
 
 interface BoardBoxProps {
+  boxData: BoxValueProps;
   col: number;
   row: number;
   width: number;
@@ -16,6 +19,7 @@ interface BoardBoxProps {
 }
 
 const BoardBox: React.FC<BoardBoxProps> = ({
+  boxData,
   width,
   isVariant1,
   id,
@@ -24,6 +28,7 @@ const BoardBox: React.FC<BoardBoxProps> = ({
 }) => {
   const { boxVariant1, boxVariant2, markVariant1, markVariant2 } =
     useTheme().colors;
+    
   const isPlayer1 = usePlayerSlice((state) => state.isPlayer1);
   const changePlayer = usePlayerSlice((state) => state.changePlayer);
 
@@ -31,19 +36,20 @@ const BoardBox: React.FC<BoardBoxProps> = ({
   const latestRowUpdate = useBoardSlice((state) => state.latestRowUpdate);
   const latestColUpdate = useBoardSlice((state) => state.latestColUpdate);
 
-  const [boxState, setBoxState] = useState({ blank: true, disabled: false });
-  const [XMark, setXMark] = useState(isPlayer1);
 
   const handleClick = useCallback(
     (event: any) => {
-      const { id, col, row } = event.currentTarget.attributes;
+      console.log(boxData);
+
+      let { id, col, row } = event.currentTarget.attributes;
+      id = +id.value;
+      col = +col.value;
+      row = +row.value;
       event.preventDefault();
 
-      setXMark(isPlayer1);
-      setBoxState({ blank: false, disabled: true });
-      latestColUpdate(col.value);
-      latestRowUpdate(row.value);
-      boardUpdate(id.value, col.value as number, row.value as number, isPlayer1);
+      latestColUpdate(col);
+      latestRowUpdate(row);
+      boardUpdate(id, col, row, isPlayer1);
       changePlayer();
     },
     [boardUpdate, changePlayer, isPlayer1, latestColUpdate, latestRowUpdate]
@@ -62,15 +68,13 @@ const BoardBox: React.FC<BoardBoxProps> = ({
         id={id}
         col={col}
         row={row}
-        onClick={boxState.disabled ? () => {} : handleClick}
+        onClick={boxData.isBlank ? handleClick : () => {}}
         className="h-full w-full flex items-center justify-center"
       >
-        {boxState.blank ? (
+        {boxData.isBlank ? (
           <div></div>
-        ) : XMark ? (
-          <Mark isMarkX width={width} />
         ) : (
-          <Mark isMarkX={false} width={width} />
+          <Mark isMarkX={boxData.player1} width={width} />
         )}
       </div>
     </div>

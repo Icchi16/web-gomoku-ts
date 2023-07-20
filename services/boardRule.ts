@@ -1,9 +1,5 @@
 import { BoxValueProps } from "@/types/boardType";
-import {
-  apply,
-  reverse,
-
-} from "ramda";
+import { apply, reverse } from "ramda";
 import { useBoardSlice } from "../store/boardSlice";
 import { useStore } from "zustand";
 import { ThemeProps } from "@/themes/theme";
@@ -24,8 +20,8 @@ const { MAX_ROW, MAX_COL } = boardSettings;
 
 export const gomokuCal = (
   board: BoxValueProps[],
-  latestCol: number,
-  latestRow: number,
+  latestCol: number | undefined,
+  latestRow: number | undefined,
   isPlayer1: boolean
 ) => {
   // get Array length of 9 in 4 directions
@@ -34,7 +30,7 @@ export const gomokuCal = (
     .filter((value, index) => {
       const boxCol = index % MAX_COL;
       const boxRow = Math.floor(index / MAX_COL);
-
+      console.log(typeof latestCol);
       return (
         boxCol > +latestCol - 5 &&
         boxCol < +latestCol + 5 &&
@@ -107,5 +103,4 @@ export const gomokuCal = (
   }
 
   // try using reduce and counter = 1
-  console.log(xArray, counter);
 };

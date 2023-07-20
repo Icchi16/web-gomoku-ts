@@ -7,19 +7,23 @@ import { useElementSize } from "usehooks-ts";
 import { use, useCallback, useEffect, useMemo } from "react";
 import { gomokuCal } from "@/services/boardRule";
 import { usePlayerSlice } from "@/store/playerSlice";
+import { BoxValueProps } from "@/types/boardType";
 
-const BoardGame = () => {
+interface BoardProps {
+  board: BoxValueProps[];
+}
+
+const BoardGame: React.FC<BoardProps> = ({ board }) => {
+  // const board = useBoardSlice((state) => state.board);
   const { MAX_COL, MAX_ROW } = boardSettings;
   const [screenRef, { width }] = useElementSize();
-  const board = useBoardSlice((state) => state.board);
   const latestRow = useBoardSlice((state) => state.latestRow);
   const latestCol = useBoardSlice((state) => state.latestCol);
   const isPlayer1 = usePlayerSlice((state) => state.isPlayer1);
 
-  useMemo(() => {
+  useEffect(() => {
     gomokuCal(board, latestCol, latestRow, !isPlayer1);
   }, [board, latestCol, latestRow, isPlayer1]);
-
 
   // need to change render based on server data
   return (
@@ -42,6 +46,7 @@ const BoardGame = () => {
                     : true;
                 return (
                   <BoardBox
+                    boxData={board[indexCol + indexRow * MAX_COL]}
                     key={indexCol + indexRow * MAX_COL}
                     id={indexCol + indexRow * MAX_COL}
                     col={indexCol}

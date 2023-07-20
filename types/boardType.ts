@@ -1,4 +1,6 @@
 export interface BoxValueProps {
-  value?: { row: number; col: number };
+  id: number;
+  isBlank?: boolean;
+  coordinate?: { row: number; col: number };
   player1?: boolean;
 }

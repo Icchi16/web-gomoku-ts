@@ -1,7 +1,7 @@
 import { useTheme } from "@material-tailwind/react";
 
 interface MarkProps {
-  isMarkX: boolean;
+  isMarkX?: boolean;
   width: number;
 }
 
