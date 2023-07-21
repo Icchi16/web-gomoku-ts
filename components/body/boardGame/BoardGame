@@ -1,0 +1,83 @@
+// "use client";
+
+// import { useBoardSlice } from "@/store/boardSlice";
+// import BoardBox from "./BoardBox";
+// import boardSettings from "./boardSettings";
+// import { useElementSize } from "usehooks-ts";
+// import { usePlayerSlice } from "@/store/playerSlice";
+// import clsx from "clsx";
+// import ModalComp from "@/components/ModalComp";
+// import { shallow } from "zustand/shallow";
+
+// const BoardGame = () => {
+//   const board = useBoardSlice((state) => state.board, shallow);
+//   const { MAX_COL, MAX_ROW } = boardSettings;
+//   const [screenRef, { width }] = useElementSize();
+
+//   // const currentPlayer = usePlayerSlice((state) => state.currentPlayer);
+
+//   const boardStatus = useBoardSlice((state) => state.boardStatus, shallow);
+
+//   console.log("board rerendered");
+
+//   return (
+//     <div
+//       ref={screenRef}
+//       className={clsx(
+//         boardStatus === "over" && "pointer-events-none",
+//         "flex flex-wrap justify-center items-center w-full"
+//       )}
+//     >
+//       <div className="flex flex-col rounded-lg overflow-hidden relative">
+//         {/* decorate winning status here */}
+//         {boardStatus === "over" && (
+//           <>
+//             <div className=" absolute inset-0 flex justify-center items-center ">
+//               <div
+//                 className="absolute inset-0 bg-opacity-20 bg-indigo-700 "
+//                 // style={{ background: bgColor2 }}
+//               />
+//               <ModalComp>
+//                 <div className="absolute inset-0 flex items-center justify-center ">
+//                   <div className="bg-white w-full h-36" />
+//                 </div>
+//                 <div className="relative z-50 text-2xl font-bold">
+//                   The Winner is found
+//                 </div>
+//               </ModalComp>
+//             </div>
+//           </>
+//         )}
+
+//         {[...Array(MAX_ROW)].map((valueRow, indexRow) => {
+//           return (
+//             <div key={indexRow} className="flex">
+//               {[...Array(MAX_COL)].map((valueCol, indexCol) => {
+//                 const variant =
+//                   indexRow % 2 === 0
+//                     ? indexCol % 2 === 0
+//                       ? true
+//                       : false
+//                     : indexCol % 2 === 0
+//                     ? false
+//                     : true;
+//                 return (
+//                   <BoardBox
+//                     key={board[indexCol + indexRow * MAX_COL].id}
+//                     id={board[indexCol + indexRow * MAX_COL].id}
+//                     col={indexCol}
+//                     row={indexRow}
+//                     width={width / MAX_COL}
+//                     isVariant1={variant}
+//                   />
+//                 );
+//               })}
+//             </div>
+//           );
+//         })}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default BoardGame;

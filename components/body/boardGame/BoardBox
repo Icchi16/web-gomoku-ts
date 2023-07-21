@@ -1,0 +1,95 @@
+// "use client";
+
+// import { usePlayerSlice } from "@/store/playerSlice";
+// import { useTheme } from "@material-tailwind/react";
+// import { useCallback, useEffect, useState, memo } from "react";
+// import Mark from "./Mark";
+// import { useBoardSlice } from "@/store/boardSlice";
+// import { BoxValueProps } from "@/types/boardType";
+// import { type } from "os";
+// import { gomokuCal } from "@/services/boardRule";
+// import { shallow } from "zustand/shallow";
+
+// interface BoardBoxProps {
+//   col: number;
+//   row: number;
+//   width: number;
+//   height?: number;
+//   isVariant1?: boolean;
+//   id: number;
+// }
+
+// const BoardBox: React.FC<BoardBoxProps> = memo(function BoardBox({
+//   width,
+//   isVariant1,
+//   id,
+//   col,
+//   row,
+// }) {
+//   const { boxVariant1, boxVariant2, markVariant1, markVariant2 } =
+//     useTheme().colors;
+
+//   const currentPlayer = usePlayerSlice((state) => state.currentPlayer, shallow);
+//   const isPlayer1 = currentPlayer === "player1" ? true : false;
+
+//   const changePlayer = usePlayerSlice((state) => state.changePlayer, shallow);
+
+//   const board = useBoardSlice((state) => state.board, shallow);
+//   const boardUpdate = useBoardSlice((state) => state.boardUpdate, shallow);
+//   const boardStatusUpdate = useBoardSlice(
+//     (state) => state.boardStatusUpdate,
+//     shallow
+//   );
+
+//   console.log("box rerendered");
+
+//   const handleClick = (event: any) => {
+//     event.preventDefault();
+
+//     let { id, col, row } = event.currentTarget.attributes;
+//     id = +id.value;
+//     col = +col.value;
+//     row = +row.value;
+
+//     boardUpdate(id, col, row, isPlayer1);
+//   };
+
+//   useEffect(() => {
+//     if (
+//       board[id].coordinate &&
+//       board[id].coordinate.col === col &&
+//       board[id].coordinate.row === row
+//     ) {
+//       gomokuCal(board, col, row, isPlayer1)
+//         ? boardStatusUpdate()
+//         : changePlayer();
+//     }
+//   }, [board[id]]);
+
+//   return (
+//     <div
+//       style={{
+//         width: width,
+//         height: width,
+//         backgroundColor: isVariant1 ? boxVariant1 : boxVariant2,
+//         color: col % 2 === 0 ? markVariant1 : markVariant2,
+//       }}
+//     >
+//       <div
+//         id={id}
+//         col={col}
+//         row={row}
+//         onClick={board[id].isBlank ? handleClick : () => {}}
+//         className="h-full w-full flex items-center justify-center"
+//       >
+//         {board[id].isBlank ? (
+//           <div></div>
+//         ) : (
+//           <Mark isMarkX={board[id].player1} width={width} />
+//         )}
+//       </div>
+//     </div>
+//   );
+// });
+
+// export default BoardBox;

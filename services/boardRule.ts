@@ -86,7 +86,7 @@ export const gomokuCal = (
       let counter: number[] = [1];
       if (clickArray[0]) {
         clickArray.reduce((prevValue, curValue) => {
-          if (prevValue.player1 === curValue.player1) {
+          if (prevValue && prevValue.player1 === curValue.player1) {
             counter[0]++;
             return curValue;
           } else {
@@ -103,8 +103,6 @@ export const gomokuCal = (
   )
     ? true
     : false;
-
-  console.log([xArray, yArray, diagArrayUL2BR, diagArrayBL2UR]);
 
   return checkWinArray;
 };

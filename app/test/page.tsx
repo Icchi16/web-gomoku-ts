@@ -1,6 +1,6 @@
 "use client";
 
-import BoardGame from "@/components/body/boardGame/BoardGame";
+import Board from "@/components/body/boardGame/Board";
 import Header from "@/components/body/header/Header";
 import { useBoardSlice } from "@/store/boardSlice";
 import { useTheme } from "@material-tailwind/react";
@@ -20,7 +20,7 @@ const UserPage = () => {
           <Header />
         </div>
         <div className="flex h-full justify-center items-center mx-20">
-          <BoardGame />
+          <Board />
         </div>
       </div>
     </div>
