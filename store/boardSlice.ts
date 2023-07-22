@@ -1,38 +1,28 @@
 import boardSettings from "@/components/body/boardGame/boardSettings";
 import { create } from "zustand";
-import { subscribeWithSelector } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { is, map, update } from "ramda";
 import { BoxValueProps } from "@/types/boardType";
-import zukeeper from "zukeeper";
+import { usePlayerSlice } from "./playerSlice";
 
 interface BoardSliceProps {
   board: BoxValueProps[];
+  updateBox: (id: number) => void;
   boardWidth: number;
   setBoardWidth: (width: number) => void;
   boardStatus: "continue" | "over";
-  latestRow: number | undefined;
-  latestCol: number | undefined;
-  latestRowUpdate: (row: number) => void;
-  latestColUpdate: (col: number) => void;
   boardStatusUpdate: () => void;
-  boardUpdate: (
-    id: number,
-    col: number,
-    row: number,
-    isPlayer1: boolean
-  ) => void;
-
-  updateCol: (newCol: number, index: number) => void;
+  currentPlayer: BoxValueProps["player"];
 }
+
 const { MAX_BOX, MAX_COL } = boardSettings;
+
 const boardArray: BoxValueProps[] = new Array(MAX_BOX).fill({}).map(
   (value, index) =>
     (value = {
       id: index,
       col: index % MAX_COL,
       row: Math.floor(index / MAX_COL),
-      isPlayer1: undefined,
+      player: undefined,
       isBlank: true,
     })
 );
@@ -41,18 +31,12 @@ export const useBoardSlice = create(
   immer<BoardSliceProps>((set, get) => ({
     board: boardArray,
 
+    currentPlayer: 1,
+
     boardWidth: 0,
     setBoardWidth: (width) => set({ boardWidth: width }),
 
     boardStatus: "continue",
-    latestRow: undefined,
-    latestCol: undefined,
-    latestRowUpdate: (row) => set({ latestRow: row }),
-    latestColUpdate: (col) => set({ latestCol: col }),
-    updateCol: (newCol, index) =>
-      set((state) => {
-        state.board[index] = { ...state.board[index], col: newCol };
-      }),
 
     boardStatusUpdate: () => {
       set((state) => ({
@@ -60,19 +44,18 @@ export const useBoardSlice = create(
       }));
     },
 
-    boardUpdate: (id, col, row, isPlayer1) => {
-      set((state) => ({
-        board: update(
-          id,
-          {
-            ...state.board[id],
-            coordinate: { row: row, col: col },
-            player1: isPlayer1,
-            isBlank: !state.board[id].isBlank,
-          },
-          state.board
-        ),
-      }));
+    updateBox: (index) => {
+      set((state) => {
+        const currentPlayer = state.currentPlayer;
+
+        state.board[index] = {
+          ...state.board[index],
+          player: currentPlayer,
+          isBlank: false,
+        };
+
+        state.currentPlayer = state.currentPlayer === 1 ? 2 : 1;
+      });
     },
   }))
 );

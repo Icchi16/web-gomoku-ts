@@ -3,5 +3,5 @@ export interface BoxValueProps {
   isBlank: boolean;
   row: number;
   col: number;
-  player: 1 | 2;
+  player: 1 | 2 | undefined;
 }

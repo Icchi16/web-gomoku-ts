@@ -1,5 +1,5 @@
 import { useBoardSlice } from "@/store/boardSlice";
-import BoardBox from "./BoardBox2";
+import BoardBox from "./BoardBox";
 import boardSettings from "./boardSettings";
 import { useElementSize } from "usehooks-ts";
 import { useEffect, useMemo } from "react";
@@ -12,14 +12,14 @@ const BoardGame = () => {
 
   useEffect(() => {
     setBoardWidth(width);
-  }, [width, setBoardWidth]);
+  }, [width, setBoardWidth, board]);
 
   return (
     <div
       ref={screenRef}
       className={"flex flex-wrap justify-center items-center w-full"}
     >
-      <div className="flex flex-col">
+      <div className="flex flex-col rounded-lg overflow-hidden">
         {[...Array(MAX_ROW)].map((value, rowIndex) => (
           <div key={rowIndex} className="flex">
             {[...Array(MAX_COL)].map((value, colIndex) => {

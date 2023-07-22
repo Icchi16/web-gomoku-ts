@@ -1,9 +1,22 @@
 import { useBoardSlice } from "@/store/boardSlice";
 import { toString, update } from "ramda";
-import { MouseEventHandler, ReactEventHandler, memo } from "react";
+import {
+  MouseEventHandler,
+  ReactEventHandler,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import boardSettings from "./boardSettings";
 import { BoxValueProps } from "@/types/boardType";
 import { useTheme } from "@material-tailwind/react";
+import Mark from "./Mark";
+import { gomokuCal } from "@/services/boardRule";
+import { shallow } from "zustand/shallow";
+import { current } from "immer";
 
 type BoxVariant = {
   variant: number;
@@ -17,18 +30,22 @@ const BoardBox: React.FC<BoxValueProps & BoxVariant> = memo(function BoardBox({
   variant,
   isBlank,
 }) {
-  console.log("box rendered");
   const { boxVariant1, boxVariant2 } = useTheme().colors;
 
-  const { MAX_COL } = boardSettings;
-
-  const updateCol = useBoardSlice((state) => state.updateCol);
   const boardWidth = useBoardSlice((state) => state.boardWidth);
+  const { MAX_COL } = boardSettings;
   const width = Math.floor(boardWidth / MAX_COL);
 
-  const handleClick = (id, col, row) => {
-    updateCol(2, id);
-  };
+  const updateBox = useBoardSlice((state) => state.updateBox);
+
+  console.log("box rendered");
+
+  const handleClick = useCallback(
+    (id: number) => {
+      !isBlank ? () => {} : updateBox(id);
+    },
+    [updateBox, isBlank]
+  );
 
   return (
     <div
@@ -38,10 +55,14 @@ const BoardBox: React.FC<BoxValueProps & BoxVariant> = memo(function BoardBox({
         backgroundColor: variant === 1 ? boxVariant1 : boxVariant2,
       }}
       onClick={() => {
-        handleClick(id, col, row);
+        handleClick(id);
       }}
     >
-      {col}
+      {isBlank ? (
+        <div></div>
+      ) : (
+        <Mark isMarkX={player === 1 ? true : false} width={width} />
+      )}
     </div>
   );
 });
