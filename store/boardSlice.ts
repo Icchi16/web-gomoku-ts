@@ -2,16 +2,18 @@ import boardSettings from "@/components/body/boardGame/boardSettings";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { BoxValueProps } from "@/types/boardType";
-import { usePlayerSlice } from "./playerSlice";
+import { gomokuCal } from "@/services/boardRule";
+import { current } from "immer";
 
 interface BoardSliceProps {
   board: BoxValueProps[];
-  updateBox: (id: number) => void;
+  updateBox: (index: number) => void;
   boardWidth: number;
   setBoardWidth: (width: number) => void;
   boardStatus: "continue" | "over";
   boardStatusUpdate: () => void;
   currentPlayer: BoxValueProps["player"];
+  gomokuCal: (index: number) => void;
 }
 
 const { MAX_BOX, MAX_COL } = boardSettings;
@@ -53,8 +55,27 @@ export const useBoardSlice = create(
           player: currentPlayer,
           isBlank: false,
         };
+      });
+    },
 
-        state.currentPlayer = state.currentPlayer === 1 ? 2 : 1;
+    gomokuCal: (index) => {
+      set((state) => {
+        const currentBoard = get().board;
+        const currentPlayer = get().currentPlayer;
+
+        const calWinner = gomokuCal(
+          currentBoard,
+          currentBoard[index].col,
+          currentBoard[index].row,
+          currentPlayer
+        );
+
+        console.log(calWinner);
+        if (calWinner) {
+          state.boardStatus = "over";
+        } else {
+          state.currentPlayer = state.currentPlayer === 1 ? 2 : 1;
+        }
       });
     },
   }))

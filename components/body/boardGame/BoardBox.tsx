@@ -6,6 +6,7 @@ import {
   memo,
   useCallback,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -37,15 +38,20 @@ const BoardBox: React.FC<BoxValueProps & BoxVariant> = memo(function BoardBox({
   const width = Math.floor(boardWidth / MAX_COL);
 
   const updateBox = useBoardSlice((state) => state.updateBox);
+  const gomokuCal = useBoardSlice((state) => state.gomokuCal);
 
-  console.log("box rendered");
 
   const handleClick = useCallback(
     (id: number) => {
-      !isBlank ? () => {} : updateBox(id);
+      if (isBlank) {
+        updateBox(id);
+        gomokuCal(id);
+      }
     },
-    [updateBox, isBlank]
+    [updateBox, gomokuCal, isBlank]
   );
+
+  useLayoutEffect(() => {}, []);
 
   return (
     <div

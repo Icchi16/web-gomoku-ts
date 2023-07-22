@@ -16,8 +16,8 @@ function boardConstructor(
 }
 
 // Change Board Settings here
-const BOARD_COLUMN = 4; //42
-const BOARD_ROW = 2; //23
+const BOARD_COLUMN = 42; //42
+const BOARD_ROW = 23; //23
 
 const boardSettings: BoardSettingProps = new (boardConstructor as any)(
   BOARD_ROW,

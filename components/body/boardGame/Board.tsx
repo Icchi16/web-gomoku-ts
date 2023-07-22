@@ -3,12 +3,18 @@ import BoardBox from "./BoardBox";
 import boardSettings from "./boardSettings";
 import { useElementSize } from "usehooks-ts";
 import { useEffect, useMemo } from "react";
+import { gomokuCal } from "@/services/boardRule";
+import { shallow } from "zustand/shallow";
 
 const BoardGame = () => {
   const board = useBoardSlice((state) => state.board);
+  const boardStatus = useBoardSlice((state) => state.boardStatus);
+
   const { MAX_COL, MAX_ROW } = boardSettings;
   const [screenRef, { width }] = useElementSize();
   const setBoardWidth = useBoardSlice((state) => state.setBoardWidth);
+
+  console.log(boardStatus);
 
   useEffect(() => {
     setBoardWidth(width);

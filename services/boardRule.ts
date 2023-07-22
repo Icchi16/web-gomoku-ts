@@ -6,6 +6,7 @@ import { ThemeProps } from "@/themes/theme";
 import { value } from "@material-tailwind/react/types/components/chip";
 import boardSettings from "@/components/body/boardGame/boardSettings";
 import { escape } from "querystring";
+import { current } from "immer";
 interface GomokuType {
   id: number;
   row: number;
@@ -23,7 +24,7 @@ export const gomokuCal = (
   board: BoxValueProps[],
   latestCol: number | undefined,
   latestRow: number | undefined,
-  isPlayer1: boolean
+  isPlayer1: BoxValueProps["player"]
 ) => {
   // get Array length of 9 in 4 directions
 
@@ -31,12 +32,13 @@ export const gomokuCal = (
     .filter((value, index) => {
       const boxCol = index % MAX_COL;
       const boxRow = Math.floor(index / MAX_COL);
+
       return (
         boxCol > latestCol - 5 && boxCol < latestCol + 5 && boxRow === latestRow
       );
     })
     .map((value) => {
-      return value.player1 === isPlayer1 ? value : {};
+      return value.player === isPlayer1 ? value : {};
     });
 
   const yArray = board
@@ -49,7 +51,7 @@ export const gomokuCal = (
       );
     })
     .map((value) => {
-      return value.player1 === isPlayer1 ? value : {};
+      return value.player === isPlayer1 ? value : {};
     });
 
   const diagArrayUL2BR = board
@@ -62,7 +64,7 @@ export const gomokuCal = (
       return Math.abs(boxCol - latestCol) < 5 && boxDiff === latestDiff;
     })
     .map((value) => {
-      return value.player1 === isPlayer1 ? value : {};
+      return value.player === isPlayer1 ? value : {};
     });
 
   const diagArrayBL2UR = reverse(
@@ -76,33 +78,36 @@ export const gomokuCal = (
         return boxSum === LatestSum && Math.abs(boxCol - latestCol) < 5;
       })
       .map((value) => {
-        return value.player1 === isPlayer1 ? value : {};
+        return value.player === isPlayer1 ? value : {};
       })
   );
 
-  const checkWinArray = find(
-    (value) => value === true,
-    [xArray, yArray, diagArrayUL2BR, diagArrayBL2UR].map((clickArray) => {
-      let counter: number[] = [1];
-      if (clickArray[0]) {
-        clickArray.reduce((prevValue, curValue) => {
-          if (prevValue && prevValue.player1 === curValue.player1) {
-            counter[0]++;
-            return curValue;
-          } else {
-            counter.push(counter[0]);
-            counter[0] = 1;
-            return curValue;
-          }
-        });
-      }
-      if (apply(Math.max, counter) >= 5) {
-        return true;
-      } else return false;
-    })
-  )
-    ? true
-    : false;
+  const checkWinArrays: any = [xArray, yArray, diagArrayUL2BR, diagArrayBL2UR];
 
-  return checkWinArray;
+  const checkWin = (clickedArrays: any) => {
+    const clickedArray = clickedArrays.map((clickedArray: any) => {
+      const counter = [1];
+      const counterArray = clickedArray.reduce(
+        (prevBox: BoxValueProps, nextBox: BoxValueProps) => {
+          if (prevBox.player) {
+            if (prevBox.player === nextBox.player) {
+              counter[0]++;
+              return nextBox;
+            } else {
+              counter.push(counter[0]);
+              counter[0] = 1;
+              return nextBox;
+            }
+          }
+          return nextBox;
+        }
+      );
+
+      return apply(Math.max, counter) >= 5 ? true : false;
+    });
+
+    return find((value) => value === true)(clickedArray) ? true : false;
+  };
+
+  return checkWin(checkWinArrays);
 };
