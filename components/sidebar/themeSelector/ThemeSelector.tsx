@@ -4,7 +4,7 @@ import { useThemeSlice } from "@/store/themeSlice";
 import ButtonComp from "@/components/ButtonComp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faCheck } from "@fortawesome/free-solid-svg-icons";
-import { ReactNode, useState } from "react";
+import { ReactNode, useCallback, useState } from "react";
 import {
   Collapse,
   TabsHeader,
@@ -14,25 +14,27 @@ import {
 } from "@material-tailwind/react";
 import clsx from "clsx";
 import ThemeBall from "./ThemeBall";
-import { themes } from "@/themes/theme";
+import { ThemeProps, themes } from "@/themes/theme";
 
 const ThemeSelector = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const theme = useTheme();
-  const { primaryColor } = theme.colors;
+  const { baseTextColor } = theme.colors as ThemeProps["colors"];
   const [activeThemeBall, setActiveThemeBall] = useState(theme.themeId);
-  const themeStore = useThemeSlice((state) => state.theme);
   const themeSelect = useThemeSlice((state) => state.themeSelect);
 
-  const handleClick = (event: React.MouseEvent<HTMLDivElement>) => {
-    const themeId: string = event.currentTarget.id;
-    themeSelect(themes[parseInt(themeId)]);
-  };
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLDivElement>) => {
+      const themeId: string = event.currentTarget.id;
+      themeSelect(themes[parseInt(themeId)]);
+    },
+    [theme, themeSelect]
+  );
 
   return (
     <div className=" items-end relative">
       <Collapse open={isModalOpen} className="z-50 space-y-4">
-        <hr className="border-gray-300 w-full" />
+        <hr className=" w-full" style={{ borderColor: baseTextColor }} />
         <Tabs
           value={activeThemeBall}
           className="flex flex-col w-full rounded-lg overflow-hidden space-y-2 "
@@ -42,7 +44,7 @@ const ThemeSelector = () => {
               <TabsHeader
                 key={indexRow}
                 indicatorProps={{
-                  style: { backgroundColor: primaryColor },
+                  style: { backgroundColor: baseTextColor },
                   className: "rounded-full outline-2 blur-[2px]",
                 }}
                 className="flex flex-row flex-nowrap justify-between w-full bg-opacity-0"
@@ -73,6 +75,7 @@ const ThemeSelector = () => {
       </Collapse>
       <div className="flex flex-col items-end relative space-y-4">
         <hr
+          style={{ borderColor: baseTextColor }}
           className={clsx(
             `relative w-full`,
             !isModalOpen && "border-gray-300",
@@ -80,23 +83,24 @@ const ThemeSelector = () => {
           )}
         />
         <ButtonComp
+          secondary
           variant="text"
           onClick={() => {
             setIsModalOpen((current) => !current);
           }}
         >
           {isModalOpen ? (
-            <div className="flex justify-end space-x-4 text-sm">
-              <div>Done</div>
+            <div className="flex justify-end space-x-4 text-sm duration-[600ms]">
+              <div className=" text-inherit">Done</div>
               <div>
-                <FontAwesomeIcon icon={faCheck} />
+                <FontAwesomeIcon className="text-inherit" icon={faCheck} />
               </div>
             </div>
           ) : (
             <div className="flex justify-end space-x-4 text-sm">
-              <div>Change Theme</div>
+              <div className="text-inherit">Change Theme</div>
               <div>
-                <FontAwesomeIcon icon={faArrowRight} />
+                <FontAwesomeIcon icon={faArrowRight} className="text-inherit" />
               </div>
             </div>
           )}

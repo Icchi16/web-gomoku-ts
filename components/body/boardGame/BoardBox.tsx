@@ -31,15 +31,16 @@ const BoardBox: React.FC<BoxValueProps & BoxVariant> = memo(function BoardBox({
   variant,
   isBlank,
 }) {
-  const { boxVariant1, boxVariant2 } = useTheme().colors;
+  console.log("rendered");
+
+  const { boxVariant1, boxVariant2, bgColor1 } = useTheme().colors;
 
   const boardWidth = useBoardSlice((state) => state.boardWidth);
   const { MAX_COL } = boardSettings;
-  const width = Math.floor(boardWidth / MAX_COL);
+  const width = Math.floor(boardWidth / MAX_COL) - 1.5;
 
   const updateBox = useBoardSlice((state) => state.updateBox);
   const gomokuCal = useBoardSlice((state) => state.gomokuCal);
-
 
   const handleClick = useCallback(
     (id: number) => {
@@ -58,7 +59,7 @@ const BoardBox: React.FC<BoxValueProps & BoxVariant> = memo(function BoardBox({
       style={{
         width: width,
         height: width,
-        backgroundColor: variant === 1 ? boxVariant1 : boxVariant2,
+        backgroundColor: bgColor1,
       }}
       onClick={() => {
         handleClick(id);

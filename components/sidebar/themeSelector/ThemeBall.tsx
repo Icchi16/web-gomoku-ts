@@ -1,5 +1,6 @@
 "use client";
 
+import { ThemeProps } from "@/themes/theme";
 import clsx from "clsx";
 import { LegacyRef, Ref } from "react";
 
@@ -16,7 +17,8 @@ const ThemeBall: React.FC<ThemeBallProps> = ({
   onClick,
   isModalOpen,
 }) => {
-  const { markVariant1, markVariant2, boxVariant1, boxVariant2 } = theme.colors;
+  const { markVariant1, markVariant2, bgColor1 } =
+    theme.colors as ThemeProps["colors"];
   return (
     <div
       id={id}
@@ -28,14 +30,10 @@ const ThemeBall: React.FC<ThemeBallProps> = ({
     >
       <div
         className="w-full flex-1 pointer-events-none"
-        style={{ backgroundColor: boxVariant1 }}
-      ></div>
-      <div
-        className="w-full flex-1 pointer-events-none"
-        style={{ backgroundColor: boxVariant2 }}
+        style={{ backgroundColor: bgColor1 }}
       ></div>
       <div className="absolute inset-0 flex pointer-events-none justify-center items-center">
-        <div className="w-3/5 h-3/5 rounded-full flex flex-col overflow-hidden pointer-events-none">
+        <div className="w-3/5 h-3/5 rounded-full flex overflow-hidden pointer-events-none">
           <div
             className="flex-1 pointer-events-none"
             style={{ backgroundColor: markVariant1 }}

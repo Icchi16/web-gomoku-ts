@@ -1,29 +1,13 @@
 import { BoxValueProps } from "@/types/boardType";
 import { apply, find, findIndex, has, of, reverse } from "ramda";
-import { useBoardSlice } from "../store/boardSlice";
-import { useStore } from "zustand";
-import { ThemeProps } from "@/themes/theme";
-import { value } from "@material-tailwind/react/types/components/chip";
 import boardSettings from "@/components/body/boardGame/boardSettings";
-import { escape } from "querystring";
-import { current } from "immer";
-interface GomokuType {
-  id: number;
-  row: number;
-  col: number;
-}
-
-interface RangeProps {
-  max: number;
-  min: number;
-}
 
 const { MAX_ROW, MAX_COL } = boardSettings;
 
 export const gomokuCal = (
   board: BoxValueProps[],
-  latestCol: number | undefined,
-  latestRow: number | undefined,
+  latestCol: number,
+  latestRow: number,
   isPlayer1: BoxValueProps["player"]
 ) => {
   // get Array length of 9 in 4 directions
@@ -82,13 +66,21 @@ export const gomokuCal = (
       })
   );
 
-  const checkWinArrays: any = [xArray, yArray, diagArrayUL2BR, diagArrayBL2UR];
+  type InnerArrayType = BoxValueProps[] | {}[];
+  type OuterArrayType = InnerArrayType[];
 
-  const checkWin = (clickedArrays: any) => {
-    const clickedArray = clickedArrays.map((clickedArray: any) => {
+  const checkWinArrays: OuterArrayType = [
+    xArray,
+    yArray,
+    diagArrayUL2BR,
+    diagArrayBL2UR,
+  ];
+
+  const checkWin = (clickedArrays: OuterArrayType) => {
+    const clickedArray = clickedArrays.map((clickedArray: InnerArrayType) => {
       const counter = [1];
       const counterArray = clickedArray.reduce(
-        (prevBox: BoxValueProps, nextBox: BoxValueProps) => {
+        (prevBox: Partial<BoxValueProps>, nextBox: Partial<BoxValueProps>) => {
           if (prevBox.player) {
             if (prevBox.player === nextBox.player) {
               counter[0]++;

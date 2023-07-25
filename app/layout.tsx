@@ -2,6 +2,7 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import ThemeProviderClient from "@/themes/MaterialUIServerSide";
 import Sidebar from "@/components/sidebar/Sidebar";
+import StyledComponentsRegistry from "@/libs/StyledCompReg";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,12 +20,14 @@ export default function RootLayout({
     <ThemeProviderClient>
       <html lang="en">
         <body className={inter.className}>
-          <div className="fixed inset-0 w-80 h-full">
-            <Sidebar />
-          </div>
-          <div className="h-screen">
-            <main className="h-full">{children}</main>
-          </div>
+          <StyledComponentsRegistry>
+            <div className="fixed inset-0 w-80 h-full">
+              <Sidebar />
+            </div>
+            <div className="h-screen">
+              <main className="h-full">{children}</main>
+            </div>
+          </StyledComponentsRegistry>
         </body>
       </html>
     </ThemeProviderClient>

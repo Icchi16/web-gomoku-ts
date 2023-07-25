@@ -2,7 +2,6 @@
 
 import { useThemeSlice } from "@/store/themeSlice";
 import { ThemeProvider } from "@material-tailwind/react";
-
 interface ThemeProviderProps {
   children: React.ReactNode;
 }

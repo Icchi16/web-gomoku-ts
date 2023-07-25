@@ -1,3 +1,4 @@
+import { ThemeProps } from "@/themes/theme";
 import { useTheme } from "@material-tailwind/react";
 
 interface MarkProps {
@@ -6,7 +7,7 @@ interface MarkProps {
 }
 
 const Mark: React.FC<MarkProps> = ({ isMarkX, width }) => {
-  const { markVariant1, markVariant2 } = useTheme().colors;
+  const { markVariant1, markVariant2 } = useTheme().colors as ThemeProps["colors"];
   return (
     <>
       {isMarkX ? (

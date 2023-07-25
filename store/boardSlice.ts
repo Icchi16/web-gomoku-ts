@@ -3,7 +3,6 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { BoxValueProps } from "@/types/boardType";
 import { gomokuCal } from "@/services/boardRule";
-import { current } from "immer";
 
 interface BoardSliceProps {
   board: BoxValueProps[];
@@ -70,7 +69,6 @@ export const useBoardSlice = create(
           currentPlayer
         );
 
-        console.log(calWinner);
         if (calWinner) {
           state.boardStatus = "over";
         } else {
