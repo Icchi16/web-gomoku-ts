@@ -1,5 +1,3 @@
-import type { ButtonStyleTypes } from "@material-tailwind/react";
-
 export interface ThemeProps {
   themeId: number;
   colors: {

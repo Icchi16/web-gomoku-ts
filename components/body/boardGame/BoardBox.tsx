@@ -1,23 +1,9 @@
 import { useBoardSlice } from "@/store/boardSlice";
-import { toString, update } from "ramda";
-import {
-  MouseEventHandler,
-  ReactEventHandler,
-  memo,
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { memo, useCallback, useLayoutEffect } from "react";
 import boardSettings from "./boardSettings";
 import { BoxValueProps } from "@/types/boardType";
-import { useTheme } from "@material-tailwind/react";
+import { useTheme } from "@material-tailwind/react/context/theme";
 import Mark from "./Mark";
-import { gomokuCal } from "@/services/boardRule";
-import { shallow } from "zustand/shallow";
-import { current } from "immer";
 
 type BoxVariant = {
   variant: number;

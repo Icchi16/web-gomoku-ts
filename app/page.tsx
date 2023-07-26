@@ -3,7 +3,6 @@
 import EmptyState from "@/components/EmptyState";
 import { ThemeProps } from "@/themes/theme";
 import { useTheme } from "@material-tailwind/react";
-import { useEffect } from "react";
 
 export default function Home() {
   const { bgColor1, baseTextColor } = useTheme().colors as ThemeProps["colors"];

@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { persist, createJSONStorage, devtools } from "zustand/middleware";
 import { ThemeProps, themes } from "@/themes/theme";
-import { ThemeConfig } from "tailwindcss/types/config";
 
 interface ThemeSliceProps {
   theme: ThemeProps;
