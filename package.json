@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@auth/supabase-adapter": "^0.1.2",
-    "@emotion/react": "^11.11.1",
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
@@ -23,15 +22,15 @@
     "@types/react-dom": "18.2.6",
     "autoprefixer": "10.4.14",
     "axios": "^1.4.0",
+    "bcrypt": "^5.1.0",
     "clsx": "^1.2.1",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.7",
-    "immer": "^10.0.2",
+    "jsonwebtoken": "^9.0.1",
     "localforage": "^1.10.0",
     "next": "13.4.7",
     "next-auth": "^4.22.1",
     "postcss": "8.4.24",
-    "prisma": "^4.16.2",
     "ramda": "^0.29.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
@@ -39,7 +38,6 @@
     "tailwindcss": "3.3.2",
     "typescript": "5.1.6",
     "usehooks-ts": "^2.9.1",
-    "zukeeper": "^1.0.2",
     "zustand": "^4.3.9"
   }
 }
