@@ -1,5 +1,42 @@
 create schema if not exists "next_auth";
 
+CREATE OR REPLACE FUNCTION next_auth.gen_unique_username()
+ RETURNS text
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+  numrows int;
+  result text;
+BEGIN
+  result = random_username();
+  LOOP
+    EXECUTE FORMAT('SELECT 1 FROM %I."users" WHERE %I = %L', 'next_auth', 'userName', result);
+    GET DIAGNOSTICS numrows = ROW_COUNT;
+    IF numrows = 0 THEN
+      RETURN result; 
+    END if;
+    result = random_string(len);
+  END loop;
+END;
+$function$
+;
+
+CREATE OR REPLACE FUNCTION next_auth.random_username()
+ RETURNS text
+ LANGUAGE plpgsql
+AS $function$
+DECLARE
+  chars text[] := '{0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z}';
+  result text := '';
+BEGIN
+  FOR i IN 1..6 LOOP
+    result := result || chars[1 + floor(random() * (array_length(chars, 1) - 1))];
+  END LOOP;
+  return result;
+END;
+$function$
+;
+
 create table "next_auth"."accounts" (
     "id" uuid not null default gen_random_uuid(),
     "type" text not null,
@@ -32,7 +69,7 @@ create table "next_auth"."users" (
     "email" text,
     "emailVerified" timestamp with time zone,
     "image" text,
-    "userName" text not null default gen_unique_username()
+    "userName" text not null default next_auth.gen_unique_username()
 );
 
 
@@ -145,42 +182,5 @@ alter table "public"."room" add constraint "room_users_id_fkey" FOREIGN KEY (use
 alter table "public"."room" validate constraint "room_users_id_fkey";
 
 set check_function_bodies = off;
-
-CREATE OR REPLACE FUNCTION public.gen_unique_username()
- RETURNS text
- LANGUAGE plpgsql
-AS $function$
-DECLARE
-  numrows int;
-  result text;
-BEGIN
-  result = random_username();
-  LOOP
-    EXECUTE FORMAT('SELECT 1 FROM %I."users" WHERE %I = %L', 'next_auth', 'userName', result);
-    GET DIAGNOSTICS numrows = ROW_COUNT;
-    IF numrows = 0 THEN
-      RETURN result; 
-    END if;
-    result = random_string(len);
-  END loop;
-END;
-$function$
-;
-
-CREATE OR REPLACE FUNCTION public.random_username()
- RETURNS text
- LANGUAGE plpgsql
-AS $function$
-DECLARE
-  chars text[] := '{0,1,2,3,4,5,6,7,8,9,a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z}';
-  result text := '';
-BEGIN
-  FOR i IN 1..6 LOOP
-    result := result || chars[1 + floor(random() * (array_length(chars, 1) - 1))];
-  END LOOP;
-  return result;
-END;
-$function$
-;
 
 

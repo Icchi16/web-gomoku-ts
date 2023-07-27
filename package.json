@@ -9,12 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@auth/supabase-adapter": "^0.1.2",
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@heroicons/react": "^2.0.18",
     "@material-tailwind/react": "^2.0.6",
+    "@next-auth/supabase-adapter": "^0.2.1",
     "@supabase/supabase-js": "^2.29.0",
     "@types/node": "20.3.3",
     "@types/ramda": "^0.29.3",
@@ -39,5 +39,8 @@
     "typescript": "5.1.6",
     "usehooks-ts": "^2.9.1",
     "zustand": "^4.3.9"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.2"
   }
 }
