@@ -1,7 +1,7 @@
 "use client";
 
 import { ThemeProps } from "@/themes/theme";
-import { Button, useTheme } from "@material-tailwind/react";
+import { Button as MuiButton, useTheme } from "@material-tailwind/react";
 import clsx from "clsx";
 import { set } from "ramda";
 import { ReactNode, useMemo, useState } from "react";
@@ -16,7 +16,7 @@ interface ButtonCompProps {
   variant: "filled" | "gradient" | "outlined" | "text" | undefined;
 }
 
-const ButtonComp: React.FC<ButtonCompProps> = ({
+const Button: React.FC<ButtonCompProps> = ({
   secondary,
   children,
   type,
@@ -37,11 +37,9 @@ const ButtonComp: React.FC<ButtonCompProps> = ({
     variant === "text" ? setIsHovering(false) : () => {};
   };
 
-
-  console.log("button rendered")
   return (
-    <Button
-      className="transition-all duration-[600ms] ease-in-out "
+    <MuiButton
+      className="transition-all duration-[600ms] ease-in-out text-sm px-0 "
       variant={variant}
       fullWidth={fullWidth}
       type={type}
@@ -67,8 +65,8 @@ const ButtonComp: React.FC<ButtonCompProps> = ({
       onMouseLeave={handleMouseLeave}
     >
       {children}
-    </Button>
+    </MuiButton>
   );
 };
 
-export default ButtonComp;
+export default Button;

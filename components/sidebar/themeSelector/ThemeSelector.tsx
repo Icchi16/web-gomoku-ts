@@ -1,7 +1,7 @@
 "use client";
 
 import { useThemeSlice } from "@/store/themeSlice";
-import ButtonComp from "@/components/ButtonComp";
+import Button from "@/components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { ReactNode, useCallback, useState } from "react";
@@ -82,7 +82,7 @@ const ThemeSelector = () => {
             isModalOpen && "border-none"
           )}
         />
-        <ButtonComp
+        <Button
           secondary
           variant="text"
           onClick={() => {
@@ -90,21 +90,17 @@ const ThemeSelector = () => {
           }}
         >
           {isModalOpen ? (
-            <div className="flex justify-end space-x-4 text-sm duration-[600ms]">
+            <div className="flex justify-end items-center space-x-4 text-sm duration-[600ms]">
               <div className=" text-inherit">Done</div>
-              <div>
-                <FontAwesomeIcon className="text-inherit" icon={faCheck} />
-              </div>
+              <FontAwesomeIcon className="text-inherit" icon={faCheck} />
             </div>
           ) : (
-            <div className="flex justify-end space-x-4 text-sm">
+            <div className="flex justify-end items-center space-x-4 text-sm">
               <div className="text-inherit">Change Theme</div>
-              <div>
-                <FontAwesomeIcon icon={faArrowRight} className="text-inherit" />
-              </div>
+              <FontAwesomeIcon icon={faArrowRight} className="text-inherit" />
             </div>
           )}
-        </ButtonComp>
+        </Button>
       </div>
     </div>
   );
