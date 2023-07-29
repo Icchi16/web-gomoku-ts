@@ -90,14 +90,14 @@ const ThemeSelector = () => {
           }}
         >
           {isModalOpen ? (
-            <div className="flex justify-end items-center space-x-4 text-sm duration-[600ms]">
-              <div className=" text-inherit">Done</div>
-              <FontAwesomeIcon className="text-inherit" icon={faCheck} />
+            <div className="flex justify-end items-center gap-4 text-sm duration-[600ms] px-4">
+              Done
+              <FontAwesomeIcon icon={faCheck} />
             </div>
           ) : (
-            <div className="flex justify-end items-center space-x-4 text-sm">
-              <div className="text-inherit">Change Theme</div>
-              <FontAwesomeIcon icon={faArrowRight} className="text-inherit" />
+            <div className="flex justify-end items-center gap-4 text-sm px-4">
+              Change Theme
+              <FontAwesomeIcon icon={faArrowRight} />
             </div>
           )}
         </Button>

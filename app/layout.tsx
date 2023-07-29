@@ -20,14 +20,12 @@ export default function RootLayout({
     <ThemeProviderClient>
       <html lang="en">
         <body className={inter.className}>
-          <StyledComponentsRegistry>
-            <div className="fixed inset-0 w-80 h-full">
-              <Sidebar />
-            </div>
-            <div className="h-screen">
-              <main className="h-full">{children}</main>
-            </div>
-          </StyledComponentsRegistry>
+          <div className="fixed inset-0 w-80 h-full">
+            <Sidebar />
+          </div>
+          <div className="h-screen">
+            <main className="h-full">{children}</main>
+          </div>
         </body>
       </html>
     </ThemeProviderClient>

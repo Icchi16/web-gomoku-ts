@@ -30,6 +30,6 @@
     ".next/types/**/*.ts",
     "components/body/boardGame/BoardBox",
     "components/body/boardGame/BoardGame"
-  ],
+, "middleware.ts.sdfasd"  ],
   "exclude": ["node_modules"]
 }

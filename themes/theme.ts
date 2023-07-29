@@ -1,5 +1,5 @@
 export interface ThemeProps {
-  themeId: number;
+  themeId: number | null;
   colors: {
     primaryColor: string;
     primaryShadow: string;
@@ -11,14 +11,10 @@ export interface ThemeProps {
     bgColor2: string;
     border: string;
   };
-  test?: any;
 }
 
 export const themes: ThemeProps[] = [
   {
-    test: {
-      color: "text-rose-600",
-    },
     themeId: 0,
     colors: {
       primaryColor: "#61624f",
@@ -34,9 +30,6 @@ export const themes: ThemeProps[] = [
   },
 
   {
-    test: {
-      color: "text-blue-600",
-    },
     themeId: 1,
     colors: {
       primaryColor: "#646862",
@@ -52,9 +45,6 @@ export const themes: ThemeProps[] = [
   },
 
   {
-    test: {
-      color: "text-red-600",
-    },
     themeId: 2,
     colors: {
       primaryColor: "#808f9e",
@@ -70,9 +60,6 @@ export const themes: ThemeProps[] = [
   },
 
   {
-    test: {
-      color: "text-green-600",
-    },
     themeId: 3,
     colors: {
       primaryColor: "#666666",
@@ -88,9 +75,6 @@ export const themes: ThemeProps[] = [
   },
 
   {
-    test: {
-      color: "text-pink-600",
-    },
     themeId: 4,
     colors: {
       primaryColor: "#e2e2e2",
@@ -106,9 +90,6 @@ export const themes: ThemeProps[] = [
   },
 
   {
-    test: {
-      color: "text-purple-600",
-    },
     themeId: 5,
     colors: {
       primaryColor: "#e2e2e2",

@@ -2,8 +2,7 @@ import NextAuth, { AuthOptions } from "next-auth";
 import { SupabaseAdapter } from "@next-auth/supabase-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import jwt from "jsonwebtoken";
-import { createClient } from "@supabase/supabase-js";
-import supabase from "../../../../libs/supabase";
+import supabase from "../../../../libs/SupabaseProvider";
 
 const authOptions: AuthOptions = {
   providers: [

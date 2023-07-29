@@ -39,7 +39,7 @@ const Button: React.FC<ButtonCompProps> = ({
 
   return (
     <MuiButton
-      className="transition-all duration-[600ms] ease-in-out text-sm px-0 "
+      className="transition-all duration-[600ms] ease-in-out text-sm px-0"
       variant={variant}
       fullWidth={fullWidth}
       type={type}
@@ -49,16 +49,10 @@ const Button: React.FC<ButtonCompProps> = ({
       style={{
         color: secondary ? baseTextColor : primaryTextColor,
         backgroundColor:
-          variant === "text"
-            ? "#FFFFFF00"
-            : secondary
-            ? "#FFFFFF00"
-            : primaryColor,
+          variant !== "text" && !secondary ? primaryColor : "#ffffff00",
         boxShadow:
-          variant === "text"
-            ? isHovering
-              ? `0px 6px 15px -2px ${primaryShadow}`
-              : ""
+          variant === "text" && isHovering
+            ? `0px 6px 15px -2px ${primaryShadow}`
             : "",
       }}
       onMouseEnter={handelMouseEnter}
