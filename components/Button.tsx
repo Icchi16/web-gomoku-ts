@@ -1,10 +1,9 @@
 "use client";
 
+import { useTheme } from "@/hooks/useTheme";
 import { ThemeProps } from "@/themes/theme";
-import { Button as MuiButton, useTheme } from "@material-tailwind/react";
-import clsx from "clsx";
-import { set } from "ramda";
-import { ReactNode, useMemo, useState } from "react";
+import { Button as MuiButton } from "@material-tailwind/react/components/Button";
+import { ReactNode, useState } from "react";
 
 interface ButtonCompProps {
   secondary?: boolean;
@@ -14,6 +13,7 @@ interface ButtonCompProps {
   onClick?: () => void;
   type?: "button" | "submit" | "reset" | undefined;
   variant: "filled" | "gradient" | "outlined" | "text" | undefined;
+  extra?: any;
 }
 
 const Button: React.FC<ButtonCompProps> = ({

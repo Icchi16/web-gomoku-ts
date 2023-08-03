@@ -1,3 +1,5 @@
+"use client";
+
 import { useBoardSlice } from "@/store/boardSlice";
 import BoardBox from "./BoardBox";
 import boardSettings from "./boardSettings";
@@ -5,7 +7,7 @@ import { useElementSize } from "usehooks-ts";
 import { useLayoutEffect } from "react";
 import { ThemeProps } from "@/themes/theme";
 import clsx from "clsx";
-import { useTheme } from "@material-tailwind/react";
+import { useTheme } from "@/hooks/useTheme";
 
 const BoardGame = () => {
   const { border } = useTheme().colors as ThemeProps["colors"];

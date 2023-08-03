@@ -1,9 +1,0 @@
-import { NextResponse } from "next/server";
-import { NextRequest } from "next/server";
-import supabase from "@/libs/supabase";
-import { createMiddlewareClient } from "@supabase/authentication/middleware";
-
-export async function middleware(request: NextRequest) {
-  const response = NextResponse.next();
-  const supabase = createMiddlewareClient({ request, response });
-}

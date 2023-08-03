@@ -1,17 +1,16 @@
 "use client";
 
 import { ThemeProps } from "@/themes/theme";
-import { Input as MuiInput, useTheme } from "@material-tailwind/react";
+import { Input as MuiInput } from "@material-tailwind/react/components/Input";
 import type { InputProps } from "@material-tailwind/react";
 import clsx from "clsx";
-import { set, values } from "ramda";
-import { useEffect, useState } from "react";
+import { useTheme } from "@/hooks/useTheme";
+import { useState } from "react";
 import {
   FieldValues,
   FieldErrors,
   UseFormRegister,
   UseFormGetFieldState,
-  useController,
   UseFormGetValues,
 } from "react-hook-form";
 interface InputCompProps {
@@ -91,16 +90,20 @@ const Input: React.FC<InputCompProps> = ({
     }
   };
 
-  useEffect(() => {
-    const value = getValues(id);
-    console.log(value);
-    value !== "" ? setIsFieldDirty(true) : setIsFieldDirty(false);
-  }, []);
-
   return (
     <div className="relative">
-      <div className="absolute inset-0">
-        {getFieldState(id).isDirty ? "touched" : "not touched"}
+      <div className="absolute min-h-[1rem] -top-4 left-0 right-1 pointer-events-none flex justify-end overflow-hidden">
+        {tooltipContent && (
+          <div
+            className={clsx(
+              getFieldState(id).error ? "translate-y-0" : "translate-y-4",
+              "text-xs rounded-t-md px-3 transition-all duration-300 select-none"
+            )}
+            style={{ backgroundColor: baseTextColor, color: bgColor2 }}
+          >
+            {tooltipContent}
+          </div>
+        )}
       </div>
 
       <MuiInput
@@ -131,23 +134,23 @@ const Input: React.FC<InputCompProps> = ({
       />
       <div
         className={clsx(
-          isFocus ? "outline-2 border-[3px]" : "border outline-0",
-          "absolute inset-0 pointer-events-none rounded-md transition-all duration-0 ease-in-out"
+          isFocus ? "outline-2 border-2" : "border outline-0",
+          "absolute inset-0 pointer-events-none rounded-md transition-all duration-0 outline ease-in-out"
         )}
-        style={{ borderColor: baseTextColor }}
+        style={{ borderColor: baseTextColor, outlineColor: baseTextColor }}
       />
       <div className="absolute inset-x-0 bottom-0 -top-[0.4rem] flex justify-start pointer-events-none">
         <div className=" min-w-[0.5rem] pointer-events-none"></div>
         <div
           className={clsx(
             isFieldDirty
-              ? "text-xs transform -translate-y-0 font-semibold"
+              ? "text-xs transform -translate-y-[0.2rem] font-semibold"
               : "text-base translate-y-[0.8rem]",
             "flex pointer-events-none transition-all duration-200 transform-gpu ease-in-out"
           )}
         >
           <div
-            className="h-fit px-2 rounded-md"
+            className="h-fit px-2 rounded-md select-none"
             style={{ background: bgColor2, color: baseTextColor }}
           >
             {label}

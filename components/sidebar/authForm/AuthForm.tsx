@@ -1,16 +1,16 @@
-// "use client";
+"use client";
 
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { ThemeProps } from "@/themes/theme";
-import { useTheme } from "@material-tailwind/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
-import axios from "axios";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
-import supabase from "@/libs/SupabaseProvider";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { useTheme } from "@/hooks/useTheme";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -18,37 +18,7 @@ const AuthForm = () => {
   const [variant, setVariant] = useState<Variant>("LOGIN");
   const [isLoading, setIsLoading] = useState(false);
   const { baseTextColor } = useTheme().colors as ThemeProps["colors"];
-
-  const toggleVariant = useCallback(() => {
-    if (!isLoading) {
-      if (variant === "LOGIN") {
-        setVariant("REGISTER");
-      } else {
-        setVariant("LOGIN");
-      }
-    }
-  }, [variant, isLoading]);
-
-  const onSubmit: SubmitHandler<FieldValues> = async (data, event) => {
-    event?.preventDefault();
-    setIsLoading(false); //! Change this
-
-    const { email, password } = data;
-
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-    });
-
-    console.log(user);
-    console.log(error);
-    // if (variant === "REGISTER") {
-    //   axios.post("/api/register", data);
-    // }
-  };
+  const router = useRouter();
 
   const {
     register,
@@ -61,12 +31,44 @@ const AuthForm = () => {
       username: "",
       email: "",
       password: "",
+      isGuest: true,
     },
   });
 
+  const toggleVariant = useCallback(() => {
+    if (!isLoading) {
+      if (variant === "LOGIN") {
+        setVariant("REGISTER");
+      } else {
+        setVariant("LOGIN");
+      }
+    }
+  }, [variant, isLoading]);
+
+  // Event handlers
+  const onUserSubmit: SubmitHandler<FieldValues> = async (data, event) => {
+    event?.preventDefault();
+    setIsLoading(false); //! Change this
+
+    console.log(data);
+
+    if (variant === "REGISTER") {
+      axios.post("/api/register/", data).then(() => {
+        router.refresh();
+      });
+    }
+  };
+
+  const onGuestSubmit = async (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {};
+
   return (
-    <form className="flex flex-col space-y-5" onSubmit={handleSubmit(onSubmit)}>
-      <div className="flex flex-col space-y-4">
+    <form
+      className="flex flex-col space-y-5"
+      onSubmit={handleSubmit(onUserSubmit)}
+    >
+      <div className="flex flex-col space-y-6">
         {variant === "REGISTER" && (
           <Input
             id="username"
@@ -111,6 +113,7 @@ const AuthForm = () => {
               variant="filled"
               type="submit"
               disabled={isLoading}
+              extra="notGuest"
             >
               {isLoading ? (
                 <div className="flex justify-center items-center gap-2">
@@ -126,6 +129,7 @@ const AuthForm = () => {
           </div>
           <div className="flex-1">
             <Button
+              onClick={() => {}}
               fullWidth
               secondary
               variant="text"

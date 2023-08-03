@@ -5,3 +5,9 @@ export interface BoxValueProps {
   col: number;
   player: 1 | 2 | undefined;
 }
+
+export interface UserDetails {
+  id: string;
+  username: string;
+  avatar?: string;
+}

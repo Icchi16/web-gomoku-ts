@@ -1,9 +1,11 @@
+"use client";
+
 import { useBoardSlice } from "@/store/boardSlice";
 import { memo, useCallback, useLayoutEffect } from "react";
 import boardSettings from "./boardSettings";
-import { BoxValueProps } from "@/types/boardType";
-import { useTheme } from "@material-tailwind/react/context/theme";
+import { BoxValueProps } from "@/types/types";
 import Mark from "./Mark";
+import { useTheme } from "@/hooks/useTheme";
 
 type BoxVariant = {
   variant: number;
@@ -11,15 +13,10 @@ type BoxVariant = {
 
 const BoardBox: React.FC<BoxValueProps & BoxVariant> = memo(function BoardBox({
   id,
-  col,
-  row,
   player,
-  variant,
   isBlank,
 }) {
-  console.log("rendered");
-
-  const { boxVariant1, boxVariant2, bgColor1 } = useTheme().colors;
+  const {  bgColor1 } = useTheme().colors;
 
   const boardWidth = useBoardSlice((state) => state.boardWidth);
   const { MAX_COL } = boardSettings;
@@ -37,8 +34,6 @@ const BoardBox: React.FC<BoxValueProps & BoxVariant> = memo(function BoardBox({
     },
     [updateBox, gomokuCal, isBlank]
   );
-
-  useLayoutEffect(() => {}, []);
 
   return (
     <div

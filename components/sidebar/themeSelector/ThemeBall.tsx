@@ -1,8 +1,5 @@
-"use client";
-
 import { ThemeProps } from "@/themes/theme";
 import clsx from "clsx";
-import { LegacyRef, Ref } from "react";
 
 interface ThemeBallProps {
   id: string | undefined;

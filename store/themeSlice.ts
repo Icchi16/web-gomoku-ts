@@ -1,19 +1,26 @@
 import { create } from "zustand";
 import { persist, createJSONStorage, devtools } from "zustand/middleware";
 import { ThemeProps, themes } from "@/themes/theme";
-import theme from "@material-tailwind/react/theme";
 
 interface ThemeSliceProps {
   theme: ThemeProps | null;
   themeSelect: (theme: ThemeProps) => void;
 }
 
+let theme: ThemeProps;
+if (typeof window !== "undefined") {
+  const storedTheme = window.localStorage.getItem("theme-storage");
+  if (storedTheme) {
+    theme = JSON.parse(storedTheme).theme;
+  } else {
+    theme = themes[0];
+  }
+}
+
 export const useThemeSlice = create<ThemeSliceProps>()(
   persist(
     (set) => ({
-      theme: localStorage.getItem("theme-storage")
-        ? JSON.parse(localStorage.getItem("theme-storage") as string)
-        : themes[0],
+      theme: theme,
       themeSelect: (theme: ThemeProps) => set(() => ({ theme: theme })),
     }),
     {

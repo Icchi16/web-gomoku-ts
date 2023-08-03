@@ -1,4 +1,4 @@
-import { BoxValueProps } from "@/types/boardType";
+import { BoxValueProps } from "@/types/types";
 import { apply, find, findIndex, has, of, reverse } from "ramda";
 import boardSettings from "@/components/body/boardGame/boardSettings";
 

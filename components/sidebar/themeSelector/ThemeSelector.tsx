@@ -4,17 +4,12 @@ import { useThemeSlice } from "@/store/themeSlice";
 import Button from "@/components/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight, faCheck } from "@fortawesome/free-solid-svg-icons";
-import { ReactNode, useCallback, useState } from "react";
-import {
-  Collapse,
-  TabsHeader,
-  Tabs,
-  Tab,
-  useTheme,
-} from "@material-tailwind/react";
+import { useCallback, useState } from "react";
+import { Collapse, TabsHeader, Tabs, Tab } from "@material-tailwind/react";
 import clsx from "clsx";
 import ThemeBall from "./ThemeBall";
 import { ThemeProps, themes } from "@/themes/theme";
+import { useTheme } from "@/hooks/useTheme";
 
 const ThemeSelector = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

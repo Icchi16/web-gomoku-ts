@@ -1,7 +1,7 @@
 import boardSettings from "@/components/body/boardGame/boardSettings";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { BoxValueProps } from "@/types/boardType";
+import { BoxValueProps } from "@/types/types";
 import { gomokuCal } from "@/services/boardRule";
 
 interface BoardSliceProps {
