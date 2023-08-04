@@ -5,21 +5,13 @@ import ThemeSelector from "./themeSelector/ThemeSelector";
 import Logo from "./Logo";
 import { ThemeProps } from "@/themes/theme";
 import ProfileBoard from "./profileBoard/ProfileBoard";
-import { useUser } from "@/hooks/useUser";
-import { useEffect, useState } from "react";
 import { useTheme } from "@/hooks/useTheme";
-import { UserDetails } from "../../types/types";
+import { useSessionContext } from "@supabase/auth-helpers-react";
+import { useEffect, useState } from "react";
 
 const Sidebar = () => {
   const { bgColor2, baseTextColor } = useTheme().colors as ThemeProps["colors"];
-  const { user } = useUser();
-  const [signedIn, setSignedIn] = useState(false);
-
-  useEffect(() => {
-    if (user) {
-      setSignedIn(true);
-    }
-  }, [user]);
+  const { session } = useSessionContext();
 
   return (
     <div className="h-full rounded-r-2xl" style={{ backgroundColor: bgColor2 }}>
@@ -28,7 +20,7 @@ const Sidebar = () => {
           <Logo />
           <hr className=" w-full" style={{ borderColor: baseTextColor }} />
 
-          {signedIn ? <ProfileBoard /> : <AuthForm />}
+          {session ? <ProfileBoard /> : <AuthForm />}
 
           <hr className=" w-full" style={{ borderColor: baseTextColor }} />
         </div>

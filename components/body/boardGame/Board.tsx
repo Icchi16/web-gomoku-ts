@@ -12,7 +12,6 @@ import { useTheme } from "@/hooks/useTheme";
 const BoardGame = () => {
   const { border } = useTheme().colors as ThemeProps["colors"];
   const board = useBoardSlice((state) => state.board);
-  const boardStatus = useBoardSlice((state) => state.boardStatus);
 
   const { MAX_COL, MAX_ROW } = boardSettings;
   const [screenRef, { width }] = useElementSize();

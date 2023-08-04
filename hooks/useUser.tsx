@@ -1,9 +1,9 @@
+"use client";
+
 import { User } from "@supabase/supabase-js";
 import { createContext, useContext, useEffect, useState } from "react";
 
-import { Database } from "@/types/supabase.types";
 import { UserDetails } from "@/types/types";
-import { values } from "ramda";
 import {
   useSessionContext,
   useUser as useSupaUser,
@@ -39,11 +39,14 @@ export const CurrentUserContextProvider = (props: Props) => {
   const getUserDetails = () => supabase.from("profiles").select("*").single();
 
   useEffect(() => {
+    // console.log(isLoadingData, isLoadingUser);
     if (user && !isLoadingData && !userDetails) {
       setIsLoadingData(true);
+      // console.log("true");
 
       Promise.allSettled([getUserDetails()]).then((results) => {
         const userDetailsPromise = results[0];
+        // console.log(userDetailsPromise);
 
         if (userDetailsPromise.status === "fulfilled") {
           setUserDetails(userDetailsPromise.value.data as UserDetails);
@@ -52,9 +55,10 @@ export const CurrentUserContextProvider = (props: Props) => {
         setIsLoadingData(false);
       });
     } else if (!user && !isLoadingUser && !isLoadingData) {
+      // console.log("false");
       setUserDetails(null);
     }
-  }, [user, isLoadingData]);
+  }, [session, user, isLoadingData]);
 
   const value = {
     accessToken,

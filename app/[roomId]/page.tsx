@@ -2,7 +2,11 @@ import MainBody from "@/components/body/MainBody";
 import Board from "@/components/body/boardGame/Board";
 import Header from "@/components/body/header/Header";
 
-export default function UserPage() {
+export default async function UserPage() {
+
+
+
+  
   return (
     <MainBody>
       <div className="flex justify-center">

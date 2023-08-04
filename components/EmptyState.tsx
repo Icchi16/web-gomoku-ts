@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { useTheme } from "@/hooks/useTheme";
 import { ThemeProps } from "@/themes/theme";
@@ -6,7 +6,7 @@ import { ThemeProps } from "@/themes/theme";
 interface EmptyStateProps {}
 
 const EmptyState: React.FC<EmptyStateProps> = () => {
-  const { baseTextColor, bgColor1 } = useTheme().colors as ThemeProps["colors"];
+  const { baseTextColor } = useTheme().colors as ThemeProps["colors"];
 
   return (
     <div className="flex justify-center items-center h-full p-8">

@@ -3,7 +3,7 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { ThemeProps } from "@/themes/theme";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,14 +11,18 @@ import clsx from "clsx";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useTheme } from "@/hooks/useTheme";
+import supabase from "../../../libs/supabase";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { error } from "console";
 
 type Variant = "LOGIN" | "REGISTER";
 
 const AuthForm = () => {
   const [variant, setVariant] = useState<Variant>("LOGIN");
-  const [isLoading, setIsLoading] = useState(false);
   const { baseTextColor } = useTheme().colors as ThemeProps["colors"];
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const supabase = useSupabaseClient();
 
   const {
     register,
@@ -46,22 +50,51 @@ const AuthForm = () => {
   }, [variant, isLoading]);
 
   // Event handlers
-  const onUserSubmit: SubmitHandler<FieldValues> = async (data, event) => {
-    event?.preventDefault();
-    setIsLoading(false); //! Change this
+  const onUserSubmit: SubmitHandler<FieldValues> = async (data) => {
+    setIsLoading(true);
 
-    console.log(data);
+    const { username, email, password, isGuest } = data;
 
     if (variant === "REGISTER") {
-      axios.post("/api/register/", data).then(() => {
-        router.refresh();
+      await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            username: username,
+            is_guest: isGuest,
+          },
+          emailRedirectTo: `${location.origin}/api/callback`,
+        },
       });
+      router.refresh();
+    } else if (variant === "LOGIN") {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        setIsLoading(false);
+      }
+
+      router.refresh();
     }
   };
 
   const onGuestSubmit = async (
     event: React.MouseEvent<HTMLButtonElement>
   ) => {};
+
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => router.refresh());
+
+    return () => {
+      subscription.unsubscribe;
+    };
+  }, [supabase, router]);
 
   return (
     <form

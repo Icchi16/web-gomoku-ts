@@ -77,9 +77,9 @@ export const themes: ThemeProps[] = [
   {
     themeId: 4,
     colors: {
-      primaryColor: "#e2e2e2",
-      primaryShadow: "#e2e2e254",
-      primaryTextColor: "#a1a1a1",
+      primaryColor: "#5a5a5a",
+      primaryShadow: "#57575754",
+      primaryTextColor: "#e4e4e4",
       baseTextColor: "#7b7b7b",
       markVariant1: "#8ebf77",
       markVariant2: "#7fabc7",
@@ -92,9 +92,9 @@ export const themes: ThemeProps[] = [
   {
     themeId: 5,
     colors: {
-      primaryColor: "#e2e2e2",
-      primaryShadow: "#e2e2e254",
-      primaryTextColor: "#afafaf",
+      primaryColor: "#636668",
+      primaryShadow: "#7e848654",
+      primaryTextColor: "#ececec",
       baseTextColor: "#797979",
       markVariant1: "#f0c064",
       markVariant2: "#d7999e",

@@ -39,7 +39,7 @@ const Button: React.FC<ButtonCompProps> = ({
 
   return (
     <MuiButton
-      className="transition-all duration-[600ms] ease-in-out text-sm px-0"
+      className="transition-all duration-[600ms] ease-in-out text-sm px-0 overflow-hidden"
       variant={variant}
       fullWidth={fullWidth}
       type={type}
