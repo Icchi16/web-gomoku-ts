@@ -6,22 +6,29 @@ import type { Database } from "@/types/supabase.types";
 
 export const dynamic = "force-dynamic";
 
-export async function POST(request: Request) {
+export async function POST(request: Request, res: Response) {
   const requestUrl = new URL(request.url);
 
   const body = await request.json();
   const { email, password } = body;
-  
+
   const supabase = createRouteHandlerClient<Database>({ cookies });
 
+  // const {
+  //   data: { user },
+  //   error,
+  // } =
   await supabase.auth.signInWithPassword({
     email: email,
     password: password,
   });
 
-  return NextResponse.redirect(requestUrl.origin, {
-    status: 301,
-  });
+  const user = await supabase.auth.getUser()
+
+
+  return res;
 }
-
-
+//   return NextResponse.redirect(requestUrl.origin, {
+//     status: 301,
+//   });
+// }

@@ -4,10 +4,9 @@ import AuthForm from "./authForm/AuthForm";
 import ThemeSelector from "./themeSelector/ThemeSelector";
 import Logo from "./Logo";
 import { ThemeProps } from "@/themes/theme";
-import ProfileBoard from "./profileBoard/ProfileBoard";
+import MainMenu from "./mainMenu/MainMenu";
 import { useTheme } from "@/hooks/useTheme";
 import { useSessionContext } from "@supabase/auth-helpers-react";
-import { useEffect, useState } from "react";
 
 const Sidebar = () => {
   const { bgColor2, baseTextColor } = useTheme().colors as ThemeProps["colors"];
@@ -20,7 +19,7 @@ const Sidebar = () => {
           <Logo />
           <hr className=" w-full" style={{ borderColor: baseTextColor }} />
 
-          {session ? <ProfileBoard /> : <AuthForm />}
+          {session ? <MainMenu /> : <AuthForm />}
 
           <hr className=" w-full" style={{ borderColor: baseTextColor }} />
         </div>

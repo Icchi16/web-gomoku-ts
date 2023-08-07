@@ -1,5 +1,3 @@
-"use client";
-
 import { Database } from "@/types/supabase.types";
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 

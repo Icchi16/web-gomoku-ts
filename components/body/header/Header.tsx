@@ -1,5 +1,10 @@
 const Header = () => {
-  return <div>This is header</div>;
+
+  return (
+    <div className="flex justify-center items-center ">
+      This is header
+    </div>
+  );
 };
 
 export default Header;

@@ -51,7 +51,7 @@ const AuthForm = () => {
 
   // Event handlers
   const onUserSubmit: SubmitHandler<FieldValues> = async (data) => {
-    setIsLoading(true);
+    // setIsLoading(true);
 
     const { username, email, password, isGuest } = data;
 
@@ -61,7 +61,7 @@ const AuthForm = () => {
         password,
         options: {
           data: {
-            username: username,
+            // username: username,
             is_guest: isGuest,
           },
           emailRedirectTo: `${location.origin}/api/callback`,

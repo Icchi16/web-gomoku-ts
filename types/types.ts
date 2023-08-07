@@ -10,4 +10,5 @@ export interface UserDetails {
   id: string;
   username: string;
   avatar?: string;
+  is_guest: boolean;
 }
