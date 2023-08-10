@@ -10,21 +10,27 @@ import { ReactNode } from "react";
 
 export type MenuItemProps = {
   icon: IconProp;
-  btnVariant: variant;
   onClick?: () => void;
   active?: boolean;
+  disabled?: boolean;
   content: ReactNode;
 };
 
-const MenuItem: React.FC<any> = ({ data }: { data: MenuItemProps }) => {
+const MenuItem: React.FC<MenuItemProps> = ({
+  icon,
+  active,
+  disabled,
+  content,
+  onClick,
+}) => {
   const { bgColor2, primaryColor } = useTheme().colors;
 
   return (
-    <Button variant={data.btnVariant} onClick={data.onClick}>
+    <Button variant="filled" onClick={onClick} disabled={disabled}>
       <div className="flex h-full py-0">
         <div className="w-14 text-xl py-0 relative">
           <div className="absolute flex items-center justify-center inset-0">
-            <FontAwesomeIcon icon={data.icon} />
+            <FontAwesomeIcon icon={icon} />
           </div>
         </div>
         <div className="flex-1 flex justify-start relative px-4 ">
@@ -36,7 +42,7 @@ const MenuItem: React.FC<any> = ({ data }: { data: MenuItemProps }) => {
             }}
           ></div>
           <div className="z-10 text" style={{ color: primaryColor }}>
-            {data.content}
+            {content}
           </div>
         </div>
       </div>

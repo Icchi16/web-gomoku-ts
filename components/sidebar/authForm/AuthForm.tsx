@@ -14,6 +14,8 @@ import { useTheme } from "@/hooks/useTheme";
 import supabase from "../../../libs/supabase";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { error } from "console";
+import getGuest from "@/actions/getGuest";
+import { SignUpDetails } from "@/types/types";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -50,10 +52,11 @@ const AuthForm = () => {
   }, [variant, isLoading]);
 
   // Event handlers
-  const onUserSubmit: SubmitHandler<FieldValues> = async (data) => {
-    // setIsLoading(true);
+  const onUserSubmit: SubmitHandler<FieldValues> = async (data, event) => {
+    event?.preventDefault();
 
-    const { username, email, password, isGuest } = data;
+    const { username, email, password, isGuest } = data as SignUpDetails;
+    console.log(data);
 
     if (variant === "REGISTER") {
       await supabase.auth.signUp({
@@ -61,7 +64,7 @@ const AuthForm = () => {
         password,
         options: {
           data: {
-            // username: username,
+            username: username,
             is_guest: isGuest,
           },
           emailRedirectTo: `${location.origin}/api/callback`,
@@ -82,19 +85,24 @@ const AuthForm = () => {
     }
   };
 
-  const onGuestSubmit = async (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {};
+  const onGuestSubmit = async (event: React.MouseEvent) => {
+    event?.preventDefault();
 
-  useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => router.refresh());
+    const guestData = getGuest();
 
-    return () => {
-      subscription.unsubscribe;
-    };
-  }, [supabase, router]);
+    await supabase.auth.signUp({
+      email: guestData.email,
+      password: guestData.password,
+      options: {
+        data: {
+          is_guest: false,
+        },
+        emailRedirectTo: `${location.origin}/api/callback`,
+      },
+    });
+  };
+
+
 
   return (
     <form
@@ -162,7 +170,7 @@ const AuthForm = () => {
           </div>
           <div className="flex-1">
             <Button
-              onClick={() => {}}
+              onClick={onGuestSubmit}
               fullWidth
               secondary
               variant="text"

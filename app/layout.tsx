@@ -4,6 +4,7 @@ import ThemeProviderClient from "@/providers/MaterialUIServerSide";
 import Sidebar from "@/components/sidebar/Sidebar";
 import SupabaseProvider from "@/providers/SupabaseProvider";
 import UserProvider from "@/providers/UserProvider";
+import MainBody from "@/components/body/MainBody";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,7 +28,9 @@ export default function RootLayout({
                 <Sidebar />
               </div>
               <div className="h-screen">
-                <main className="h-full">{children}</main>
+                <main className="h-full">
+                  <MainBody>{children}</MainBody>
+                </main>
               </div>
             </UserProvider>
           </SupabaseProvider>

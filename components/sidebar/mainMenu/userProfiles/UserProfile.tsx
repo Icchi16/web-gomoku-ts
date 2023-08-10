@@ -1,31 +1,50 @@
 import { useTheme } from "@/hooks/useTheme";
 import { useUser } from "@/hooks/useUser";
 import { UserDetails } from "@/types/types";
-import { Avatar } from "@material-tailwind/react";
+import { faCamera } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Avatar, Badge } from "@material-tailwind/react";
+import { useState, Suspense, useEffect } from "react";
+import ProfilesModal from "./ProfilesModal";
 
 const UserProfiles = () => {
   const { baseTextColor } = useTheme().colors;
   const { userDetails } = useUser();
-  const username = userDetails?.username;
+  const username = userDetails?.username.replace(/"/g, "");
   const isGuest = userDetails?.is_guest;
   const avatar = userDetails?.avatar;
 
+  const [isOpen, setIsOpen] = useState(false);
+  const handleClickAvatar = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <div>
-      <div className="flex space-x-4 items-center">
-        <Avatar
-          size="xl"
-          alt="avatar"
-          src={avatar ? avatar : "/placeholder.png"}
-          className="border border-green-500 shadow-xl shadow-green-900/20 ring-4 ring-green-500/30"
-        />
+      <ProfilesModal isOpen={isOpen} handlerOpen={handleClickAvatar} />
+      <div className="flex items-center">
+        <div className="relative cursor-pointer" onClick={handleClickAvatar}>
+          <Badge
+            color="gray"
+            placement="bottom-end"
+            content={<FontAwesomeIcon icon={faCamera} className="text-xs" />}
+            className="bottom-3 right-3"
+            withBorder
+          >
+            <Avatar
+              size="xl"
+              alt="avatar"
+              src={avatar ? avatar : "/placeholder.png"}
+              withBorder
+            />
+          </Badge>
+        </div>
         <div
           className="text-white flex flex-col flex-1 items-center"
           style={{ color: baseTextColor }}
         >
-          <div className="text-sm text-center">Welcome to Kombat</div>
-          <div className="text-xl font-bold uppercase">
-            {" "}
+          <div className="text text-center">Welcome to Kombat</div>
+          <div className="text-2xl font-bold uppercase">
             {isGuest ? username : `#${username}`}
           </div>
         </div>

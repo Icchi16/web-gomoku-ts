@@ -9,34 +9,46 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { NextResponse } from "next/server";
 import MenuItem, { MenuItemProps } from "./MenuItem";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useTransition } from "react";
+import { boardArray } from "@/store/boardSlice";
+import { useIsClient } from "usehooks-ts";
+import getCurrentUser from "@/actions/getCurrentUser";
+import axios from "axios";
+import openHandler from "../../modals/CreateRoomModal";
+import CreateRoomModal from "../../modals/CreateRoomModal";
+import { useModalSlice } from "@/store/modalSlice";
 
 const MainMenu = () => {
+  const handleRoomModal = useModalSlice((state) => state.changeRoomModalState);
+
   const initialMenu: MenuItemProps[] = [
     {
       icon: faRobot,
-      btnVariant: "filled",
       content: "Play against computer",
+      disabled: true,
       onClick: () => {},
     },
     {
       icon: faUser,
-      btnVariant: "filled",
       content: "Play against human",
-      onClick: async () => {
-        try {
-          setMenu(inRoomMenu);
-          router.push("/123114-wewer-124");
-        } catch (error) {
-          console.log(error);
-          throw new NextResponse("Some thing went wrong!", { status: 500 });
-        }
+      disabled: false,
+      // onClick: async () => {
+      //   startTransition(() => {
+      //     axios.post("/api/room").then((response) => {
+      //       const { data: newRoom } = response;
+
+      //       router.push(`/${newRoom.id}`);
+      //     });
+      //   });
+      // },
+      onClick: () => {
+        handleRoomModal();
       },
     },
     {
       icon: faRankingStar,
-      btnVariant: "filled",
       content: "Leaderboard",
+      disabled: true,
       onClick: () => {},
     },
   ];
@@ -45,9 +57,16 @@ const MainMenu = () => {
   const inRoomMenu: MenuItemProps[] = [
     {
       icon: faRobot,
-      btnVariant: "filled",
       content: "Forfeit",
-      onClick: () => {},
+      disabled: false,
+      onClick: async () => {
+        try {
+          router.push("/");
+        } catch (error) {
+          console.log(error);
+          throw new NextResponse("Some thing went wrong!", { status: 500 });
+        }
+      },
     },
   ];
 
@@ -61,18 +80,28 @@ const MainMenu = () => {
     router.refresh();
   };
 
+  const paramMemo = useMemo(() => {
+    if (param?.roomId) {
+      return true;
+    } else return false;
+  }, [param]);
+
   useEffect(() => {
-    if (param) {
-      setMenu(inRoomMenu);
-    }
-  }, []);
+    paramMemo ? setMenu(inRoomMenu) : setMenu(initialMenu);
+  }, [paramMemo]);
 
   return (
     <div className="flex flex-col text-white space-y-4">
       <UserProfiles />
       <div className="flex flex-col space-y-6">
-        {menu.map((data, index) => (
-          <MenuItem key={index} data={data} />
+        {menu.map((menuProps, index) => (
+          <MenuItem
+            key={index}
+            icon={menuProps.icon}
+            content={menuProps.content}
+            disabled={menuProps.disabled}
+            onClick={menuProps.onClick}
+          />
         ))}
 
         <Button variant="filled" fullWidth onClick={handleLogout}>

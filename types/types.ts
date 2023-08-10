@@ -12,3 +12,10 @@ export interface UserDetails {
   avatar?: string;
   is_guest: boolean;
 }
+
+export interface SignUpDetails {
+  username: string;
+  email: string;
+  password: string;
+  isGuest: boolean;
+}

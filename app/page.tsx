@@ -1,10 +1,9 @@
-import EmptyState from "@/components/EmptyState";
-import MainBody from "@/components/body/MainBody";
+import Modal from "@/components/modals/Modal";
 
 export default function Home() {
   return (
-    <MainBody>
-      <EmptyState />
-    </MainBody>
+    <div className="h-full">
+      <Modal />
+    </div>
   );
 }

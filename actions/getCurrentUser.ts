@@ -1,5 +1,4 @@
 import getSession from "./getSessionServer";
-import supabase from "@/libs/supabase";
 
 const getCurrentUser = async () => {
   try {

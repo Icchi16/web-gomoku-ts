@@ -7,10 +7,26 @@ import { ThemeProps } from "@/themes/theme";
 import MainMenu from "./mainMenu/MainMenu";
 import { useTheme } from "@/hooks/useTheme";
 import { useSessionContext } from "@supabase/auth-helpers-react";
+import { useEffect } from "react";
+import supabase from "@/libs/supabase";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
 
 const Sidebar = () => {
   const { bgColor2, baseTextColor } = useTheme().colors as ThemeProps["colors"];
   const { session } = useSessionContext();
+  const router = useRouter();
+  const supabase = createClientComponentClient();
+
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => router.refresh());
+
+    return () => {
+      subscription.unsubscribe;
+    };
+  }, [supabase, router]);
 
   return (
     <div className="h-full rounded-r-2xl" style={{ backgroundColor: bgColor2 }}>

@@ -16,7 +16,7 @@ const BoardBox: React.FC<BoxValueProps & BoxVariant> = memo(function BoardBox({
   player,
   isBlank,
 }) {
-  const {  bgColor1 } = useTheme().colors;
+  const { bgColor1 } = useTheme().colors;
 
   const boardWidth = useBoardSlice((state) => state.boardWidth);
   const { MAX_COL } = boardSettings;
@@ -34,6 +34,7 @@ const BoardBox: React.FC<BoxValueProps & BoxVariant> = memo(function BoardBox({
     },
     [updateBox, gomokuCal, isBlank]
   );
+
 
   return (
     <div

@@ -12,21 +12,21 @@ export interface Database {
       boards: {
         Row: {
           created_at: string | null;
-          data: Json | null;
+          board_data: Json | null;
           id: number;
           last_played_at: string | null;
           player_turn: string | null;
         };
         Insert: {
           created_at?: string | null;
-          data?: Json | null;
+          board_data?: Json | null;
           id?: number;
           last_played_at?: string | null;
           player_turn?: string | null;
         };
         Update: {
           created_at?: string | null;
-          data?: Json | null;
+          board_data?: Json | null;
           id?: number;
           last_played_at?: string | null;
           player_turn?: string | null;

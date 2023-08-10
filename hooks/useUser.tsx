@@ -36,27 +36,28 @@ export const CurrentUserContextProvider = (props: Props) => {
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
 
-  const getUserDetails = () => supabase.from("profiles").select("*").single();
+  const getUserDetails = () =>
+    supabase.from("profiles").select("*").eq("id", user?.id).single();
 
   useEffect(() => {
-    // console.log(isLoadingData, isLoadingUser);
-    if (user && !isLoadingData && !userDetails) {
-      setIsLoadingData(true);
-      // console.log("true");
+    try {
+      if (user && !isLoadingData && !userDetails) {
+        setIsLoadingData(true);
 
-      Promise.allSettled([getUserDetails()]).then((results) => {
-        const userDetailsPromise = results[0];
-        // console.log(userDetailsPromise);
+        Promise.allSettled([getUserDetails()]).then((results) => {
+          const userDetailsPromise = results[0];
 
-        if (userDetailsPromise.status === "fulfilled") {
-          setUserDetails(userDetailsPromise.value.data as UserDetails);
-        }
+          if (userDetailsPromise.status === "fulfilled") {
+            setUserDetails(userDetailsPromise.value.data as UserDetails);
+          }
 
-        setIsLoadingData(false);
-      });
-    } else if (!user && !isLoadingUser && !isLoadingData) {
-      // console.log("false");
-      setUserDetails(null);
+          setIsLoadingData(false);
+        });
+      } else if (!user && !isLoadingUser && !isLoadingData) {
+        setUserDetails(null);
+      }
+    } catch (error) {
+      console.log(error);
     }
   }, [session, user, isLoadingData]);
 

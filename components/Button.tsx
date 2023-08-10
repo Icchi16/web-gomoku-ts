@@ -10,7 +10,7 @@ interface ButtonCompProps {
   children?: ReactNode;
   disabled?: boolean;
   fullWidth?: boolean;
-  onClick?: () => void;
+  onClick?: (...args : any) => void;
   type?: "button" | "submit" | "reset" | undefined;
   variant: "filled" | "gradient" | "outlined" | "text" | undefined;
   extra?: any;
