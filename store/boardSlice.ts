@@ -3,7 +3,7 @@ import { StateCreator, StoreApi, create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { BoxValueProps } from "@/types/types";
 import { gomokuCal } from "@/services/boardRule";
-import { devtools } from "zustand/middleware";
+import { combine, devtools } from "zustand/middleware";
 import axios from "axios";
 import { Database } from "@/types/supabase.types";
 import { BoardData, RoomData } from "@/app/[roomId]/page";
@@ -19,9 +19,6 @@ export interface BoardSliceProps {
   room: RoomData | null;
   setRoom: (RoomData: RoomData) => void;
 
-  currentPlayer: RoomData["currentPlayer"] | null;
-  changeCurrentPlayer: (currentPlayer: RoomData["currentPlayer"]) => void;
-
   updateBox: (index: number) => void;
 
   boardWidth: number;
@@ -33,13 +30,7 @@ export interface BoardSliceProps {
   gomokuCal: (index: number) => void;
 }
 
-type Middleware<S> = (
-  config: StateCreator<S>
-) => (
-  set: StoreApi<S>["setState"],
-  get: StoreApi<S>["getState"],
-  api: StoreApi<S>
-) => S;
+// Partial<BoardSliceProps> | ((state: BoardSliceProps) => BoardSliceProps | Partial<...>)
 
 const { MAX_BOX, MAX_COL } = boardSettings;
 
@@ -54,201 +45,149 @@ export const boardArray: BoxValueProps[] = new Array(MAX_BOX).fill({}).map(
     })
 );
 
-const boardMiddleware: Middleware<BoardSliceProps> =
-  (config) => (set, get, api) =>
-    config(
-      async (...args) => {
-        const prevBoard = get().board;
+type Middleware<S> = (
+  config: StateCreator<S>
+) => (
+  set: StoreApi<S>["setState"],
+  get: StoreApi<S>["getState"],
+  api: StoreApi<S>
+) => S;
 
-        set(...args);
-        const newBoard = get().board;
-        const currentPlayer = get().currentPlayer;
+const boardMiddleware: Middleware<BoardSliceProps> = (config) =>
+  immer(
+    devtools((set, get, api) =>
+      config(
+        async (...args) => {
+          const prevBoard = get().board;
+          const prevPlayer = get().room?.currentPlayer;
 
-        if (prevBoard && prevBoard !== newBoard) {
-          const nextPlayer: string[] = filter(
-            (player) => player !== currentPlayer,
-            get().room!.players!
-          );
-          const newRoom = {
-            ...get().room,
-            currentPlayer: nextPlayer[0],
-            isOver: get().boardStatus === "over" ? true : false,
-            lastPlayedAt: new Date(Date.now()),
-          };
-          axios.put("/api/board", newBoard).then((result) => {
-            console.log(result);
-          });
-          axios.put("api/room", newRoom).then((result) => {
-            console.log(result);
-          });
-        }
-      },
-      get,
-      api
-    );
+          set(...args);
+          const newBoard = get().board;
+          const newPlayer = get().room?.currentPlayer;
+          if (prevBoard && prevBoard !== newBoard) {
+            axios.put("/api/board", newBoard).then((result) => {
+              console.log(result);
+            });
+          }
+
+          if (prevPlayer && prevPlayer !== newPlayer) {
+            const newRoom = {
+              ...get().room,
+              currentPlayer: newPlayer,
+              isOver: get().boardStatus === "over" ? true : false,
+              lastPlayedAt: new Date(Date.now()),
+            };
+
+            axios.put("api/room", newRoom).then((result) => {
+              console.log(result);
+            });
+          }
+        },
+        get,
+        api
+      )
+    )
+  );
 
 export const useBoardSlice = create<BoardSliceProps>()(
   boardMiddleware(
-    immer(
-      devtools((set, get) => ({
-        board: null,
+    // immer(
+    //   devtools(
+    (set, get) => ({
+      board: null,
 
-        setBoard: (boardData: BoardData) => {
-          set((state) => {
-            state.board = {
+      setBoard: (boardData: BoardData) => {
+        set((state) => {
+          return {
+            ...state,
+            board: {
               boardId: boardData.boardId,
               boxData: boardData.boxData,
-            };
-          });
-        },
+            },
+          };
+        });
+      },
 
-        room: null,
+      room: null,
 
-        setRoom: (roomData: RoomData) => {
-          set((state) => {
-            state.room = {
+      setRoom: (roomData: RoomData) => {
+        set((state) => {
+          return {
+            ...state,
+            room: {
               roomId: roomData.roomId,
               players: roomData.players,
-            };
-          });
-        },
+              currentPlayer: roomData.currentPlayer,
+            },
+          };
+        });
+      },
 
-        currentPlayer: null,
-        changeCurrentPlayer: (currentPlayer) => {
-          set((state) => {
-            state.currentPlayer = currentPlayer;
-          });
-        },
+      boardWidth: 0,
+      setBoardWidth: (width) => {
+        set((state) => {
+          return { ...state, boardWidth: width };
+        });
+      },
 
-        boardWidth: 0,
-        setBoardWidth: (width) => {
-          set((state) => {
-            state.boardWidth = width;
-          });
-        },
+      boardStatus: "continue",
 
-        boardStatus: "continue",
+      boardStatusUpdate: () => {
+        set((state) => {
+          return {
+            ...state,
+            boardStatus: state.boardStatus === "continue" ? "over" : "continue",
+          };
+        });
+      },
 
-        boardStatusUpdate: () => {
-          set((state) => {
-            state.boardStatus =
-              state.boardStatus === "continue" ? "over" : "continue";
-          });
-        },
+      updateBox: (index) => {
+        set((state) => {
+          const currentPlayer = get().room!.currentPlayer!;
+          const newBoardData = [...state.board!.boxData!];
+          newBoardData[index] = {
+            ...newBoardData[index],
+            player: currentPlayer,
+            isBlank: false,
+          };
 
-        updateBox: (index) => {
-          set((state) => {
-            const currentPlayer = get().currentPlayer;
+          return {
+            ...state,
+            board: { ...state.board!, boxData: newBoardData },
+          };
+        });
+      },
 
-            state.board!.boxData![index] = {
-              ...state.board!.boxData![index],
-              player: currentPlayer!,
-              isBlank: false,
-            };
-          });
-        },
+      gomokuCal: (index) => {
+        set((state) => {
+          const currentBoard = get().board!.boxData!;
+          const currentPlayer = get().room!.currentPlayer!;
+          const players = get().room!.players!;
 
-        gomokuCal: (index) => {
-          set((state) => {
-            const currentBoard = get().board!.boxData!;
-            const currentPlayer = get().currentPlayer!;
+          const calWinner = gomokuCal(
+            currentBoard,
+            currentBoard[index].col,
+            currentBoard[index].row,
+            currentPlayer
+          );
 
-            const calWinner = gomokuCal(
-              currentBoard,
-              currentBoard[index].col,
-              currentBoard[index].row,
-              currentPlayer
+          if (calWinner) {
+            return { ...state, boardStatus: "over" };
+          } else {
+            const nextPlayer: string[] = filter(
+              (player) => player !== currentPlayer,
+              players
             );
 
-            if (calWinner) {
-              state.boardStatus = "over";
-            } else {
-              const nextPlayer = filter(
-                (player) => player !== currentPlayer,
-                state.room!.players!
-              );
-
-              state.currentPlayer = nextPlayer[0];
-            }
-          });
-        },
-      }))
-    )
+            return {
+              ...state,
+              room: { ...state.room!, currentPlayer: nextPlayer[0] },
+            };
+          }
+        });
+      },
+    })
   )
+  // )
 );
-
-// export const useBoardSlice = create<BoardSliceProps>()(
-//   // boardMiddleware(
-//   immer(
-//     devtools((set, get) => ({
-//       board: null,
-
-//       setBoard: (boardData) => {
-//         set((state) => {
-//           state.board = {
-//             boardId: boardData.boardId,
-//             boxData: boardData.boxData,
-//           };
-//         });
-//       },
-
-//       room: null,
-
-//       setRoom: (roomData: RoomData) => {
-//         set((state) => {
-//           state.room = {
-//             roomId: roomData.roomId,
-//             players: roomData.players,
-//             currentPlayer: roomData.currentPlayer,
-//           };
-//         });
-//       },
-
-//       boardWidth: 0,
-//       setBoardWidth: (width) => set({ boardWidth: width }),
-
-//       boardStatus: "continue",
-
-//       boardStatusUpdate: () => {
-//         set((state) => ({
-//           boardStatus: state.boardStatus === "continue" ? "over" : "continue",
-//         }));
-//       },
-
-//       updateBox: (index) => {
-//         set((state) => {
-//           const currentPlayer = state.room?.currentPlayer;
-
-//           state.board!.boxData![index] = {
-//             ...state.board!.boxData![index],
-//             player: currentPlayer!,
-//             isBlank: false,
-//           };
-//           const board = get().board;
-//           console.log(board);
-//         });
-//       },
-
-//       gomokuCal: (index) => {
-//         set((state) => {
-//           const currentBoard = state.board?.boxData;
-//           const currentPlayer = state.room?.currentPlayer;
-
-//           const calWinner = gomokuCal(
-//             currentBoard!,
-//             currentBoard![index].col,
-//             currentBoard![index].row,
-//             currentPlayer
-//           );
-
-//           if (calWinner) {
-//             state.boardStatus = "over";
-//           } else {
-//             state.currentPlayer = state.currentPlayer === 1 ? 2 : 1;
-//           }
-//         });
-//       },
-//     }))
-//   )
-//   // )
 // );

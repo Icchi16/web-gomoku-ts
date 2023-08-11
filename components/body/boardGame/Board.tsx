@@ -8,7 +8,6 @@ import { useLayoutEffect, useEffect, useTransition, useState } from "react";
 import { ThemeProps } from "@/themes/theme";
 import clsx from "clsx";
 import { useTheme } from "@/hooks/useTheme";
-import { indexOf } from "ramda";
 import { BoardData, RoomData } from "../../../app/[roomId]/page";
 import BoardLoading from "./BoardLoading";
 import { useUser } from "@/hooks/useUser";
@@ -19,17 +18,17 @@ interface BoardProps {
 }
 
 const BoardGame: React.FC<BoardProps> = ({ boardData, roomData }) => {
-  const { boardId, boxData } = boardData;
-  const { roomId, currentPlayer, players } = roomData;
+  const { currentPlayer, players } = roomData;
   const userId = useUser().userDetails?.id;
 
   const { border } = useTheme().colors as ThemeProps["colors"];
   const board = useBoardSlice((state) => state.board)?.boxData;
-  const currentPlayerStore = useBoardSlice((state) => state.currentPlayer);
+  const currentPlayerStore = useBoardSlice(
+    (state) => state.room?.currentPlayer
+  );
 
   const setBoard = useBoardSlice((state) => state.setBoard);
   const setRoom = useBoardSlice((state) => state.setRoom);
-  const setCurrentPlayer = useBoardSlice((state) => state.changeCurrentPlayer);
 
   const { MAX_COL, MAX_ROW } = boardSettings;
   const [screenRef, { width }] = useElementSize();
@@ -44,7 +43,6 @@ const BoardGame: React.FC<BoardProps> = ({ boardData, roomData }) => {
   useLayoutEffect(() => {
     setBoard(boardData);
     setRoom(roomData);
-    setCurrentPlayer(currentPlayer);
   }, []);
 
   console.log(currentPlayerStore);
