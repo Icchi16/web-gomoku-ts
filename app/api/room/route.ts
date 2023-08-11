@@ -1,3 +1,4 @@
+import { RoomData } from "@/app/[roomId]/page";
 import { boardArray } from "@/store/boardSlice";
 import { Database } from "@/types/supabase.types";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
@@ -13,7 +14,6 @@ export async function POST(request: Request) {
     .from("boards")
     .insert({
       board_data: JSON.stringify(boardArray),
-      is_over: false,
     })
     .select();
 
@@ -41,6 +41,7 @@ export async function POST(request: Request) {
         players: players,
         board: newBoard![0].id,
         current_player: currentPlayer,
+        is_over: false,
       },
     ])
     .select();
@@ -53,4 +54,24 @@ export async function POST(request: Request) {
 }
 
 // PUT
-export async function PUT(request: Request) {}
+export async function PUT(request: Request) {
+  const supabase = createRouteHandlerClient<Database>({ cookies });
+
+  const body: RoomData = await request.json();
+  const { currentPlayer, lastPlayed, isOver, roomId } = body;
+
+  const { data: updatedRoom, error } = await supabase
+    .from("rooms")
+    .update({
+      current_player: currentPlayer,
+      is_over: isOver,
+    })
+    .eq("id", roomId)
+    .select();
+
+  if (error) {
+    throw new NextResponse(`${error.message}`, { status: 500 });
+  }
+
+  return NextResponse.json(updatedRoom);
+}

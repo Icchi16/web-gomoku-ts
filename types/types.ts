@@ -3,7 +3,7 @@ export interface BoxValueProps {
   isBlank: boolean;
   row: number;
   col: number;
-  player: 1 | 2 | undefined;
+  player: string | null;
 }
 
 export interface UserDetails {

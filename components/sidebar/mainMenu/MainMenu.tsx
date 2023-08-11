@@ -20,6 +20,7 @@ import { useModalSlice } from "@/store/modalSlice";
 
 const MainMenu = () => {
   const handleRoomModal = useModalSlice((state) => state.changeRoomModalState);
+  const [isPending, startTransition] = useTransition();
 
   const initialMenu: MenuItemProps[] = [
     {
@@ -32,18 +33,17 @@ const MainMenu = () => {
       icon: faUser,
       content: "Play against human",
       disabled: false,
-      // onClick: async () => {
-      //   startTransition(() => {
-      //     axios.post("/api/room").then((response) => {
-      //       const { data: newRoom } = response;
-
-      //       router.push(`/${newRoom.id}`);
-      //     });
-      //   });
-      // },
-      onClick: () => {
-        handleRoomModal();
+      onClick: async () => {
+        startTransition(() => {
+          axios.post("/api/room").then((response) => {
+            const { data: newRoom } = response;
+            router.push(`/${newRoom.id}`);
+          });
+        });
       },
+      // onClick: () => {
+      //   handleRoomModal();
+      // },
     },
     {
       icon: faRankingStar,

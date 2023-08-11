@@ -4,34 +4,32 @@ import { useBoardSlice } from "@/store/boardSlice";
 import BoardBox from "./BoardBox";
 import boardSettings from "./boardSettings";
 import { useElementSize } from "usehooks-ts";
-import { useLayoutEffect, useEffect, useTransition } from "react";
+import { useLayoutEffect, useEffect, useTransition, useState } from "react";
 import { ThemeProps } from "@/themes/theme";
 import clsx from "clsx";
 import { useTheme } from "@/hooks/useTheme";
 import { indexOf } from "ramda";
+import { BoardData, RoomData } from "../../../app/[roomId]/page";
+import BoardLoading from "./BoardLoading";
+import { useUser } from "@/hooks/useUser";
 
 interface BoardProps {
-  boardData: {
-    id: string;
-    board_data: string;
-  };
-  players: string[];
-  currentPlayer: string;
+  boardData: BoardData;
+  roomData: RoomData;
 }
 
-const BoardGame: React.FC<BoardProps> = ({
-  boardData,
-  players,
-  currentPlayer,
-}) => {
-  const userPlayerIndex = indexOf(currentPlayer, players) + 1;
-  const currentTurn = useBoardSlice((state) => state.currentPlayer);
+const BoardGame: React.FC<BoardProps> = ({ boardData, roomData }) => {
+  const { boardId, boxData } = boardData;
+  const { roomId, currentPlayer, players } = roomData;
+  const userId = useUser().userDetails?.id;
 
-  const initialBoard = JSON.parse(boardData?.board_data as string);
-  const boardId = +boardData.id;
   const { border } = useTheme().colors as ThemeProps["colors"];
-  const board = useBoardSlice((state) => state.board)?.boardData;
-  const setInitialBoard = useBoardSlice((state) => state.setInitialBoard);
+  const board = useBoardSlice((state) => state.board)?.boxData;
+  const currentPlayerStore = useBoardSlice((state) => state.currentPlayer);
+
+  const setBoard = useBoardSlice((state) => state.setBoard);
+  const setRoom = useBoardSlice((state) => state.setRoom);
+  const setCurrentPlayer = useBoardSlice((state) => state.changeCurrentPlayer);
 
   const { MAX_COL, MAX_ROW } = boardSettings;
   const [screenRef, { width }] = useElementSize();
@@ -43,20 +41,24 @@ const BoardGame: React.FC<BoardProps> = ({
     setBoardWidth(width);
   }, [width, setBoardWidth]);
 
-  useEffect(() => {
-    setInitialBoard(initialBoard, boardId);
+  useLayoutEffect(() => {
+    setBoard(boardData);
+    setRoom(roomData);
+    setCurrentPlayer(currentPlayer);
   }, []);
 
+  console.log(currentPlayerStore);
   return (
     <div
       ref={screenRef}
       className={clsx(
-        currentTurn !== userPlayerIndex && "pointer-events-none",
+        (!board || userId !== currentPlayer || userId !== currentPlayerStore) &&
+          "pointer-events-none",
         "flex flex-wrap justify-center items-center w-full"
       )}
     >
       {!board ? (
-        <div>Creating Board...</div>
+        <BoardLoading />
       ) : (
         <div className="flex flex-col gap-[2px]">
           {[...Array(MAX_ROW)].map((value, rowIndex) => {
@@ -104,7 +106,7 @@ const BoardGame: React.FC<BoardProps> = ({
                           id={colIndex + rowIndex * MAX_COL}
                           isBlank={board[colIndex + rowIndex * MAX_COL].isBlank}
                           player={board[colIndex + rowIndex * MAX_COL].player}
-                          variant={variant}
+                          players={players!}
                         />
                       </div>
                     );

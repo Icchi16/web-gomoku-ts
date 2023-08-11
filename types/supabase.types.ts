@@ -14,22 +14,16 @@ export interface Database {
           created_at: string | null;
           board_data: Json | null;
           id: number;
-          last_played_at: string | null;
-          player_turn: string | null;
         };
         Insert: {
           created_at?: string | null;
           board_data?: Json | null;
           id?: number;
-          last_played_at?: string | null;
-          player_turn?: string | null;
         };
         Update: {
           created_at?: string | null;
           board_data?: Json | null;
           id?: number;
-          last_played_at?: string | null;
-          player_turn?: string | null;
         };
         Relationships: [];
       };
@@ -39,18 +33,27 @@ export interface Database {
           created_at: string | null;
           id: number;
           players: string[] | null;
+          current_player: string | null;
+          last_played_at: string | null;
+          is_over: boolean | null;
         };
         Insert: {
           board?: number | null;
           created_at?: string | null;
           id?: number;
           players?: string[] | null;
+          current_player?: string | null;
+          last_played_at?: string | null;
+          is_over?: boolean | null;
         };
         Update: {
           board?: number | null;
           created_at?: string | null;
           id?: number;
           players?: string[] | null;
+          current_player?: string | null;
+          last_played_at?: string | null;
+          is_over?: boolean | null;
         };
         Relationships: [
           {

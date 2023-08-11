@@ -6,15 +6,17 @@ import boardSettings from "./boardSettings";
 import { BoxValueProps } from "@/types/types";
 import Mark from "./Mark";
 import { useTheme } from "@/hooks/useTheme";
+import { indexOf } from "ramda";
 
 type BoxVariant = {
-  variant: number;
+  players: string[];
 };
 
 const BoardBox: React.FC<BoxValueProps & BoxVariant> = memo(function BoardBox({
   id,
   player,
   isBlank,
+  players,
 }) {
   const { bgColor1 } = useTheme().colors;
 
@@ -35,7 +37,6 @@ const BoardBox: React.FC<BoxValueProps & BoxVariant> = memo(function BoardBox({
     [updateBox, gomokuCal, isBlank]
   );
 
-
   return (
     <div
       style={{
@@ -50,7 +51,10 @@ const BoardBox: React.FC<BoxValueProps & BoxVariant> = memo(function BoardBox({
       {isBlank ? (
         <div></div>
       ) : (
-        <Mark isMarkX={player === 1 ? true : false} width={width} />
+        <Mark
+          isMarkX={indexOf(player, players) === 0 ? true : false}
+          width={width}
+        />
       )}
     </div>
   );
