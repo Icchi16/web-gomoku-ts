@@ -4,30 +4,29 @@ import { useBoardSlice } from "@/store/boardSlice";
 import BoardBox from "./BoardBox";
 import boardSettings from "./boardSettings";
 import { useElementSize } from "usehooks-ts";
-import { useLayoutEffect, useEffect, useTransition, useState } from "react";
+import { useLayoutEffect, useEffect } from "react";
 import { ThemeProps } from "@/themes/theme";
 import clsx from "clsx";
 import { useTheme } from "@/hooks/useTheme";
-import { BoardData, RoomData } from "../../../app/[roomId]/page";
+import { RoomData } from "../../../app/[roomId]/page";
 import BoardLoading from "./BoardLoading";
 import { useUser } from "@/hooks/useUser";
+import { useParams, useRouter } from "next/navigation";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { Database } from "@/types/supabase.types";
 
-interface BoardProps {
-  boardData: BoardData;
-  roomData: RoomData;
-}
-
-const BoardGame: React.FC<BoardProps> = ({ boardData, roomData }) => {
+const Board = ({ roomData }: { roomData: RoomData }) => {
   const { currentPlayer, players } = roomData;
   const userId = useUser().userDetails?.id;
 
   const { border } = useTheme().colors as ThemeProps["colors"];
-  const board = useBoardSlice((state) => state.board)?.boxData;
+  const board = useBoardSlice((state) => state.room)?.boardData;
   const currentPlayerStore = useBoardSlice(
     (state) => state.room?.currentPlayer
   );
 
-  const setBoard = useBoardSlice((state) => state.setBoard);
+  console.log(board);
   const setRoom = useBoardSlice((state) => state.setRoom);
 
   const { MAX_COL, MAX_ROW } = boardSettings;
@@ -36,16 +35,60 @@ const BoardGame: React.FC<BoardProps> = ({ boardData, roomData }) => {
     MAX_ROW * (Math.floor(width / MAX_COL) - 1.5) + (MAX_ROW - 1) * 2;
   const setBoardWidth = useBoardSlice((state) => state.setBoardWidth);
 
+  const supabase = useSupabaseClient();
+  const { roomId } = useParams();
+  const router = useRouter();
+
   useLayoutEffect(() => {
     setBoardWidth(width);
   }, [width, setBoardWidth]);
 
   useLayoutEffect(() => {
-    setBoard(boardData);
     setRoom(roomData);
   }, []);
 
-  console.log(currentPlayerStore);
+  useEffect(() => {
+    const roomChannel = supabase
+      ?.channel(`room_${roomId}_update`)
+      .on(
+        "postgres_changes",
+        {
+          event: "UPDATE",
+          schema: "public",
+          table: "rooms",
+          filter: `id=eq.${roomId}`,
+        },
+        async () => {
+          const { data: fetchedRoom, error } = await supabase
+            .from("rooms")
+            .select("*")
+            .eq("id", roomId)
+            .single();
+
+          const {
+            board: newBoardData,
+            id: newRoomId,
+            players: newRoomPlayers,
+            current_player: currentPlayer,
+          } = fetchedRoom as Database["public"]["Tables"]["rooms"]["Row"];
+
+          const newRoom: RoomData = {
+            roomId: newRoomId,
+            players: newRoomPlayers,
+            currentPlayer: currentPlayer,
+            boardData: JSON.parse(newBoardData as string),
+          };
+
+          setRoom(newRoom);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(roomChannel);
+    };
+  }, [supabase, router]);
+
   return (
     <div
       ref={screenRef}
@@ -119,4 +162,4 @@ const BoardGame: React.FC<BoardProps> = ({ boardData, roomData }) => {
   );
 };
 
-export default BoardGame;
+export default Board;

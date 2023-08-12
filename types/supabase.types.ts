@@ -1,57 +1,41 @@
+import { BoxValueProps } from "./types";
 export type Json =
   | string
   | number
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[];
+  | Json[]
+  | BoxValueProps[];
 
 export interface Database {
   public: {
     Tables: {
-      boards: {
-        Row: {
-          created_at: string | null;
-          board_data: Json | null;
-          id: number;
-        };
-        Insert: {
-          created_at?: string | null;
-          board_data?: Json | null;
-          id?: number;
-        };
-        Update: {
-          created_at?: string | null;
-          board_data?: Json | null;
-          id?: number;
-        };
-        Relationships: [];
-      };
       rooms: {
         Row: {
-          board: number | null;
+          board: Json;
           created_at: string | null;
           id: number;
-          players: string[] | null;
-          current_player: string | null;
+          players: string[];
+          current_player: string;
           last_played_at: string | null;
           is_over: boolean | null;
         };
         Insert: {
-          board?: number | null;
+          board?: Json;
           created_at?: string | null;
           id?: number;
-          players?: string[] | null;
-          current_player?: string | null;
+          players?: string[];
+          current_player?: string;
           last_played_at?: string | null;
           is_over?: boolean | null;
         };
         Update: {
-          board?: number | null;
+          board?: Json;
           created_at?: string | null;
           id?: number;
-          players?: string[] | null;
-          current_player?: string | null;
+          players?: string[];
+          current_player?: string;
           last_played_at?: string | null;
           is_over?: boolean | null;
         };

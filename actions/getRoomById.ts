@@ -6,7 +6,7 @@ const getRoomById = async (roomId: string) => {
 
   const { data: room, error } = await supabase
     .from("rooms")
-    .select('*, board("*")')
+    .select('*')
     .eq("id", roomId)
     .single();
 

@@ -6,16 +6,13 @@ import { gomokuCal } from "@/services/boardRule";
 import { combine, devtools } from "zustand/middleware";
 import axios from "axios";
 import { Database } from "@/types/supabase.types";
-import { BoardData, RoomData } from "@/app/[roomId]/page";
+import { RoomData } from "@/app/[roomId]/page";
 import { filter } from "ramda";
 import supabase from "@/libs/supabase";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import next from "next";
 
 export interface BoardSliceProps {
-  board: BoardData | null;
-  setBoard: (boardData: BoardData) => void;
-
   room: RoomData | null;
   setRoom: (RoomData: RoomData) => void;
 
@@ -58,27 +55,21 @@ const boardMiddleware: Middleware<BoardSliceProps> = (config) =>
     devtools((set, get, api) =>
       config(
         async (...args) => {
-          const prevBoard = get().board;
           const prevPlayer = get().room?.currentPlayer;
 
           set(...args);
-          const newBoard = get().board;
           const newPlayer = get().room?.currentPlayer;
-          if (prevBoard && prevBoard !== newBoard) {
-            axios.put("/api/board", newBoard).then((result) => {
-              console.log(result);
-            });
-          }
 
           if (prevPlayer && prevPlayer !== newPlayer) {
             const newRoom = {
               ...get().room,
+              board: get().room!.boardData,
               currentPlayer: newPlayer,
               isOver: get().boardStatus === "over" ? true : false,
               lastPlayedAt: new Date(Date.now()),
             };
 
-            axios.put("api/room", newRoom).then((result) => {
+            axios.put("api/room/", newRoom).then((result) => {
               console.log(result);
             });
           }
@@ -94,20 +85,6 @@ export const useBoardSlice = create<BoardSliceProps>()(
     // immer(
     //   devtools(
     (set, get) => ({
-      board: null,
-
-      setBoard: (boardData: BoardData) => {
-        set((state) => {
-          return {
-            ...state,
-            board: {
-              boardId: boardData.boardId,
-              boxData: boardData.boxData,
-            },
-          };
-        });
-      },
-
       room: null,
 
       setRoom: (roomData: RoomData) => {
@@ -118,6 +95,7 @@ export const useBoardSlice = create<BoardSliceProps>()(
               roomId: roomData.roomId,
               players: roomData.players,
               currentPlayer: roomData.currentPlayer,
+              boardData: roomData.boardData,
             },
           };
         });
@@ -144,7 +122,9 @@ export const useBoardSlice = create<BoardSliceProps>()(
       updateBox: (index) => {
         set((state) => {
           const currentPlayer = get().room!.currentPlayer!;
-          const newBoardData = [...state.board!.boxData!];
+
+          const newBoardData = [...state.room!.boardData!];
+
           newBoardData[index] = {
             ...newBoardData[index],
             player: currentPlayer,
@@ -153,14 +133,14 @@ export const useBoardSlice = create<BoardSliceProps>()(
 
           return {
             ...state,
-            board: { ...state.board!, boxData: newBoardData },
+            room: { ...state.room!, boardData: newBoardData },
           };
         });
       },
 
       gomokuCal: (index) => {
         set((state) => {
-          const currentBoard = get().board!.boxData!;
+          const currentBoard = get().room!.boardData!;
           const currentPlayer = get().room!.currentPlayer!;
           const players = get().room!.players!;
 

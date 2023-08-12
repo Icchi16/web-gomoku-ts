@@ -10,17 +10,6 @@ export const dynamic = "force-dynamic";
 export async function POST(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
 
-  const { data: newBoard, error: newBoardError } = await supabase
-    .from("boards")
-    .insert({
-      board_data: JSON.stringify(boardArray),
-    })
-    .select();
-
-  if (newBoardError) {
-    throw new NextResponse(`${newBoardError}`, { status: 500 });
-  }
-
   const { data: currentSession, error: currentSessionError } =
     await supabase.auth.getSession();
 
@@ -39,31 +28,32 @@ export async function POST(request: Request) {
     .insert([
       {
         players: players,
-        board: newBoard![0].id,
         current_player: currentPlayer,
         is_over: false,
+        board: JSON.stringify(boardArray),
       },
     ])
-    .select();
+    .select()
+    .single();
 
   if (newRoomError) {
     throw new NextResponse(`${newRoomError}`, { status: 500 });
   }
 
-  return NextResponse.json(newRoom![0]);
+  return NextResponse.json(newRoom);
 }
 
-// PUT
 export async function PUT(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
 
   const body: RoomData = await request.json();
-  const { currentPlayer, lastPlayed, isOver, roomId } = body;
+  const { currentPlayer, boardData, isOver, roomId } = body;
 
   const { data: updatedRoom, error } = await supabase
     .from("rooms")
     .update({
-      current_player: currentPlayer,
+      board: JSON.stringify(boardData),
+      current_player: currentPlayer!,
       is_over: isOver,
     })
     .eq("id", roomId)
