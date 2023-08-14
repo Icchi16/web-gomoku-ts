@@ -1,3 +1,5 @@
+import { BoardSliceProps } from "@/store/boardSlice";
+
 export interface BoxValueProps {
   id: number;
   isBlank: boolean;
@@ -18,4 +20,15 @@ export interface SignUpDetails {
   email: string;
   password: string;
   isGuest: boolean;
+}
+
+export interface RoomDetails {
+  roomId: number | null;
+  currentPlayer?: string | null;
+  players: string[] | null;
+  lastPlayed?: any;
+  isOver?: BoardSliceProps["boardStatus"];
+  boardData: BoxValueProps[];
+  guestName?: string;
+  playerName?: string;
 }

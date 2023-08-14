@@ -1,4 +1,3 @@
-import { RoomData } from "@/app/[roomId]/page";
 import { boardArray } from "@/store/boardSlice";
 import { Database } from "@/types/supabase.types";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
@@ -46,7 +45,7 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   const supabase = createRouteHandlerClient<Database>({ cookies });
 
-  const body: RoomData = await request.json();
+  const body= await request.json();
   const { currentPlayer, boardData, isOver, roomId } = body;
 
   const { data: updatedRoom, error } = await supabase

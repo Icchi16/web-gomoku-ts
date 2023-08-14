@@ -1,20 +1,15 @@
 import boardSettings from "@/components/body/boardGame/boardSettings";
 import { StateCreator, StoreApi, create } from "zustand";
 import { immer } from "zustand/middleware/immer";
-import { BoxValueProps } from "@/types/types";
+import { BoxValueProps, RoomDetails } from "@/types/types";
 import { gomokuCal } from "@/services/boardRule";
-import { combine, devtools } from "zustand/middleware";
+import { devtools } from "zustand/middleware";
 import axios from "axios";
-import { Database } from "@/types/supabase.types";
-import { RoomData } from "@/app/[roomId]/page";
 import { filter } from "ramda";
-import supabase from "@/libs/supabase";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import next from "next";
 
 export interface BoardSliceProps {
-  room: RoomData | null;
-  setRoom: (RoomData: RoomData) => void;
+  room: RoomDetails | null;
+  setRoom: (RoomData: RoomDetails) => void;
 
   updateBox: (index: number) => void;
 
@@ -56,11 +51,15 @@ const boardMiddleware: Middleware<BoardSliceProps> = (config) =>
       config(
         async (...args) => {
           const prevPlayer = get().room?.currentPlayer;
-
+          const prevStatus = get().boardStatus;
           set(...args);
           const newPlayer = get().room?.currentPlayer;
+          const newStatus = get().boardStatus;
 
-          if (prevPlayer && prevPlayer !== newPlayer) {
+          if (
+            prevPlayer &&
+            (prevPlayer !== newPlayer || prevStatus !== newStatus)
+          ) {
             const newRoom = {
               ...get().room,
               board: get().room!.boardData,
@@ -87,10 +86,11 @@ export const useBoardSlice = create<BoardSliceProps>()(
     (set, get) => ({
       room: null,
 
-      setRoom: (roomData: RoomData) => {
+      setRoom: (roomData: RoomDetails) => {
         set((state) => {
           return {
             ...state,
+            boardStatus: roomData.isOver,
             room: {
               roomId: roomData.roomId,
               players: roomData.players,

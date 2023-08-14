@@ -1,10 +1,11 @@
 import MainBody from "@/components/body/MainBody";
+import BoardLoading from "@/components/body/boardGame/BoardLoading";
 
 const Loading = () => {
   return (
     <MainBody>
       <div className="flex h-full w-full justify-center items-center">
-        <div className="text-white text-2xl">Loading...</div>
+          <BoardLoading />
       </div>
     </MainBody>
   );

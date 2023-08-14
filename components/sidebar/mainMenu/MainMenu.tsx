@@ -3,6 +3,7 @@ import UserProfiles from "./userProfiles/UserProfile";
 import { useParams, useRouter } from "next/navigation";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import {
+  faDoorOpen,
   faRankingStar,
   faRobot,
   faUser,
@@ -56,7 +57,7 @@ const MainMenu = () => {
   //! In Room Menu
   const inRoomMenu: MenuItemProps[] = [
     {
-      icon: faRobot,
+      icon: faDoorOpen,
       content: "Forfeit",
       disabled: false,
       onClick: async () => {

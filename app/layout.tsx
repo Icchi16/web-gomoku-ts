@@ -24,7 +24,7 @@ export default function RootLayout({
         <body className={inter.className}>
           <SupabaseProvider>
             <UserProvider>
-              <div className="fixed inset-0 w-80 h-full">
+              <div className="fixed inset-0 w-80 h-full z-50">
                 <Sidebar />
               </div>
               <div className="h-screen">

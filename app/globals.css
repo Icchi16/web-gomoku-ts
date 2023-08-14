@@ -31,7 +31,17 @@ input:-webkit-autofill:active {
   animation-name: onAutoFillCancel;
 }
 
-@keyframes onAutoFillStart {
+.status-animation {
+  animation-name: onAppear;
+}
+
+@keyframes onAppear {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes onAutoFillCancel {

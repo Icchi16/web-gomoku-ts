@@ -48,7 +48,7 @@ export interface Database {
           }
         ];
       };
-      user: {
+      profiles: {
         Row: {
           avatar: string | null;
           created_at: string | null;

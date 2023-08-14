@@ -7,8 +7,7 @@ interface MarkProps {
 }
 
 const Mark: React.FC<MarkProps> = ({ isMarkX, width }) => {
-  const { markVariant1, markVariant2 } = useTheme()
-    .colors as ThemeProps["colors"];
+  const { markVariant1, markVariant2 } = useTheme().colors;
   return (
     <>
       {isMarkX ? (

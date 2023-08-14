@@ -5,29 +5,35 @@ import BoardBox from "./BoardBox";
 import boardSettings from "./boardSettings";
 import { useElementSize } from "usehooks-ts";
 import { useLayoutEffect, useEffect } from "react";
-import { ThemeProps } from "@/themes/theme";
 import clsx from "clsx";
 import { useTheme } from "@/hooks/useTheme";
-import { RoomData } from "../../../app/[roomId]/page";
 import BoardLoading from "./BoardLoading";
 import { useUser } from "@/hooks/useUser";
 import { useParams, useRouter } from "next/navigation";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Database } from "@/types/supabase.types";
+import MatchOverComp from "./MatchOverComp";
+import useRoom from "@/hooks/useRoom";
+import { RoomDetails } from "@/types/types";
 
-const Board = ({ roomData }: { roomData: RoomData }) => {
-  const { currentPlayer, players } = roomData;
-  const userId = useUser().userDetails?.id;
+const Board = () => {
+  const { isLoading: isLoadingRoom, roomDetails } = useRoom();
 
-  const { border } = useTheme().colors as ThemeProps["colors"];
+  const currentPlayer = roomDetails?.currentPlayer;
+  const players = roomDetails?.players;
+
+  const { isLoading: isLoadingUser, userDetails } = useUser();
+  const userId = userDetails?.id;
+
+  const { border } = useTheme().colors;
   const board = useBoardSlice((state) => state.room)?.boardData;
   const currentPlayerStore = useBoardSlice(
     (state) => state.room?.currentPlayer
   );
 
-  console.log(board);
   const setRoom = useBoardSlice((state) => state.setRoom);
+
+  const gameStatus = useBoardSlice((state) => state.boardStatus);
 
   const { MAX_COL, MAX_ROW } = boardSettings;
   const [screenRef, { width }] = useElementSize();
@@ -44,8 +50,10 @@ const Board = ({ roomData }: { roomData: RoomData }) => {
   }, [width, setBoardWidth]);
 
   useLayoutEffect(() => {
-    setRoom(roomData);
-  }, []);
+    if (roomDetails) {
+      setRoom(roomDetails);
+    }
+  }, [roomDetails]);
 
   useEffect(() => {
     const roomChannel = supabase
@@ -70,13 +78,15 @@ const Board = ({ roomData }: { roomData: RoomData }) => {
             id: newRoomId,
             players: newRoomPlayers,
             current_player: currentPlayer,
+            is_over: isOver,
           } = fetchedRoom as Database["public"]["Tables"]["rooms"]["Row"];
 
-          const newRoom: RoomData = {
+          const newRoom: RoomDetails = {
             roomId: newRoomId,
             players: newRoomPlayers,
             currentPlayer: currentPlayer,
             boardData: JSON.parse(newBoardData as string),
+            isOver: isOver ? "over" : "continue",
           };
 
           setRoom(newRoom);
@@ -89,16 +99,24 @@ const Board = ({ roomData }: { roomData: RoomData }) => {
     };
   }, [supabase, router]);
 
+  const boardStatus = useBoardSlice((state) => state.boardStatus);
+
   return (
     <div
       ref={screenRef}
       className={clsx(
-        (!board || userId !== currentPlayer || userId !== currentPlayerStore) &&
+        (isLoadingRoom ||
+          isLoadingUser ||
+          userId !== currentPlayer ||
+          userId !== currentPlayerStore ||
+          gameStatus === "over") &&
           "pointer-events-none",
-        "flex flex-wrap justify-center items-center w-full"
+        "flex flex-wrap justify-center items-center w-full relative"
       )}
     >
-      {!board ? (
+      {gameStatus === "over" && <MatchOverComp />}
+
+      {isLoadingRoom || isLoadingUser || !board ? (
         <BoardLoading />
       ) : (
         <div className="flex flex-col gap-[2px]">

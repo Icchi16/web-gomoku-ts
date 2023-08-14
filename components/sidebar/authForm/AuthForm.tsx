@@ -37,7 +37,7 @@ const AuthForm = () => {
       username: "",
       email: "",
       password: "",
-      isGuest: true,
+      isGuest: false,
     },
   });
 
