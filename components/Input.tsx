@@ -135,7 +135,7 @@ const Input: React.FC<InputCompProps> = ({
       <div
         className={clsx(
           isFocus ? "outline-2 border-2" : "border outline-0",
-          "absolute inset-0 pointer-events-none rounded-md transition-all duration-0 outline ease-in-out"
+          "absolute inset-0 pointer-events-none rounded-md transition-all duration-[70ms] outline ease-in-out"
         )}
         style={{ borderColor: baseTextColor, outlineColor: baseTextColor }}
       />
@@ -144,8 +144,8 @@ const Input: React.FC<InputCompProps> = ({
         <div
           className={clsx(
             isFieldDirty
-              ? "text-xs transform -translate-y-[0.2rem] font-semibold"
-              : "text-base translate-y-[0.8rem]",
+              ? "text-xs transform -translate-y-[0.1rem] font-semibold"
+              : "text-base translate-y-[0.9rem]",
             "flex pointer-events-none transition-all duration-200 transform-gpu ease-in-out"
           )}
         >

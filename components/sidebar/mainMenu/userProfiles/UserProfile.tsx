@@ -44,7 +44,7 @@ const UserProfiles = () => {
           style={{ color: baseTextColor }}
         >
           <div className="text text-center">Welcome to Kombat</div>
-          <div className="text-2xl font-bold uppercase">
+          <div className="text-2xl font-bold">
             {isGuest ? username : `#${username}`}
           </div>
         </div>

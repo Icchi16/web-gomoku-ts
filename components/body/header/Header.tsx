@@ -13,8 +13,9 @@ const Header = () => {
   const currentPlayer = useBoardSlice((state) => state.room?.currentPlayer);
   const { userDetails } = useUser();
 
-  const { bgColor2, markVariant1, markVariant2 } = useTheme().colors;
-  const [markVariant, setMarkVariant] = useState<string | null>(null);
+  const { bgColor2, markVariant1, markVariant2, primaryColor } =
+    useTheme().colors;
+  const [markVariant, setMarkVariant] = useState<string | null>(primaryColor);
 
   useEffect(() => {
     if (roomDetails?.players && currentPlayer) {
@@ -22,7 +23,7 @@ const Header = () => {
         ? setMarkVariant(markVariant1)
         : setMarkVariant(markVariant2);
     }
-  }, [currentPlayer]);
+  }, [currentPlayer, roomDetails, userDetails]);
 
   return (
     <div
@@ -35,7 +36,7 @@ const Header = () => {
           style={{ color: markVariant as string }}
         >
           {currentPlayer === userDetails.id ? (
-            <div>It&apos; your turn</div>
+            <div>It&apos;s your turn</div>
           ) : (
             <div>Waiting for {roomDetails.guestName}...</div>
           )}

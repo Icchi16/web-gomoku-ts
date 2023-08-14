@@ -48,7 +48,7 @@ const BoardBox: React.FC<BoxValueProps & BoxVariant> = memo(function BoardBox({
         handleClick(id);
       }}
     >
-      {isBlank ? (
+      {isBlank || !players || !player ? (
         <div></div>
       ) : (
         <Mark

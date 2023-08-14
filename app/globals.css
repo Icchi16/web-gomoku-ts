@@ -46,3 +46,7 @@ input:-webkit-autofill:active {
 
 @keyframes onAutoFillCancel {
 }
+
+.Toastify__toast-container {
+  position: absolute !important;
+}

@@ -34,14 +34,7 @@ const MainMenu = () => {
       icon: faUser,
       content: "Play against human",
       disabled: false,
-      onClick: async () => {
-        startTransition(() => {
-          axios.post("/api/room").then((response) => {
-            const { data: newRoom } = response;
-            router.push(`/${newRoom.id}`);
-          });
-        });
-      },
+
       // onClick: () => {
       //   handleRoomModal();
       // },
