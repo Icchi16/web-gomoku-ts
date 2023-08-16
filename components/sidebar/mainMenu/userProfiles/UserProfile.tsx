@@ -3,8 +3,9 @@ import { useUser } from "@/hooks/useUser";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Avatar, Badge } from "@material-tailwind/react";
-import { useState, Suspense, useEffect } from "react";
+import { useState } from "react";
 import ProfilesModal from "./ProfilesModal";
+import { placeholder } from "@/public/placeholder";
 
 const UserProfiles = () => {
   const { baseTextColor } = useTheme().colors;
@@ -34,7 +35,7 @@ const UserProfiles = () => {
             <Avatar
               size="xl"
               alt="avatar"
-              src={avatar ? avatar : "/placeholder.png"}
+              src={avatar ? avatar : placeholder}
               withBorder
             />
           </Badge>
