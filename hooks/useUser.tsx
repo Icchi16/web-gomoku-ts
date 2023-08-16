@@ -1,6 +1,6 @@
 "use client";
 
-import { User } from "@supabase/supabase-js";
+import { AuthChangeEvent, User } from "@supabase/supabase-js";
 import { createContext, useContext, useEffect, useState } from "react";
 import { UserDetails } from "@/types/types";
 import {
@@ -13,6 +13,7 @@ import ConfirmRoomToast, {
 } from "@/components/modals/ConfirmCreateRoomToast";
 import { useTheme } from "./useTheme";
 import { useRouter } from "next/navigation";
+import { Session } from "inspector";
 
 type UserContextType = {
   accessToken: string | null;
@@ -42,6 +43,7 @@ export const CurrentUserContextProvider = (props: Props) => {
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const router = useRouter();
+  const [stateSession, setStateSession] = useState<Session | null>(null);
 
   const getUserDetails = () =>
     supabase.from("profiles").select("*").eq("id", user?.id).single();
@@ -89,9 +91,32 @@ export const CurrentUserContextProvider = (props: Props) => {
     inviteChannel
       .on("broadcast", { event: "sendInvite" }, (payload) => {
         const senderId = payload?.payload?.senderId;
+
+        const modalOnClose = () => {
+          const responseChannel = supabase.channel(`response:${senderId}`, {
+            config: {
+              broadcast: {
+                ack: true,
+              },
+            },
+          });
+          responseChannel.subscribe(async (status) => {
+            if (status === "SUBSCRIBED") {
+              await responseChannel.send({
+                type: "broadcast",
+                event: "getResponse",
+                payload: {
+                  result: "declined",
+                },
+              });
+            }
+          });
+          toast.dismiss(senderId as string);
+        };
+
         toast(
           <ConfirmRoomToast senderId={senderId} />,
-          requestToastProps(theme, userDetails!.id)
+          requestToastProps(theme, senderId, modalOnClose)
         );
       })
       .subscribe();
@@ -105,7 +130,7 @@ export const CurrentUserContextProvider = (props: Props) => {
         const response = payload?.payload.result;
         const roomId = payload?.payload?.roomId;
 
-        if (response === "accept" && roomId) {
+        if (response === "accepted" && roomId) {
           toast.success("Your opponent have accepted your challenge!", {
             autoClose: 4000,
           });
@@ -113,7 +138,9 @@ export const CurrentUserContextProvider = (props: Props) => {
             router.push(`/${roomId}`);
           }, 5000);
         } else if (response === "declined") {
-          toast.error("You're too powerful! Your opponent had withdraw");
+          toast.error("You're too powerful! Your opponent had withdraw", {
+            autoClose: 4000,
+          });
         }
       })
       .subscribe();
@@ -123,6 +150,17 @@ export const CurrentUserContextProvider = (props: Props) => {
       supabase.removeChannel(resChannel);
     };
   }, [supabase, inviteChannel, resChannel]);
+
+  // const authEvent = supabase.auth.onAuthStateChange((event, session) => {
+  //   setSession(session);
+  // });
+
+  // // !asdasdasdas
+  // useEffect(() => {
+  //   return () => {
+  //     authEvent.data.subscription.unsubscribe();
+  //   };
+  // }, [session, authEvent]);
 
   const value = {
     accessToken,

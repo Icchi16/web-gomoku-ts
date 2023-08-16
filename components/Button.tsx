@@ -6,17 +6,21 @@ import { Button as MuiButton } from "@material-tailwind/react/components/Button"
 import { ReactNode, useState } from "react";
 
 interface ButtonCompProps {
+  danger?: boolean;
+  success?: boolean;
   secondary?: boolean;
   children?: ReactNode;
   disabled?: boolean;
   fullWidth?: boolean;
-  onClick?: (...args : any) => void;
+  onClick?: (...args: any) => void;
   type?: "button" | "submit" | "reset" | undefined;
   variant: "filled" | "gradient" | "outlined" | "text" | undefined;
   extra?: any;
 }
 
 const Button: React.FC<ButtonCompProps> = ({
+  success,
+  danger,
   secondary,
   children,
   type,
@@ -45,16 +49,20 @@ const Button: React.FC<ButtonCompProps> = ({
       type={type}
       disabled={disabled}
       onClick={onClick}
-      color="gray"
-      style={{
-        color: secondary ? baseTextColor : primaryTextColor,
-        backgroundColor:
-          variant !== "text" && !secondary ? primaryColor : "#ffffff00",
-        boxShadow:
-          variant === "text" && isHovering
-            ? `0px 6px 15px -2px ${primaryShadow}`
-            : "",
-      }}
+      color={success ? "light-green" : danger ? "red" : "gray"}
+      style={
+        !success && !danger
+          ? {
+              color: secondary ? baseTextColor : primaryTextColor,
+              backgroundColor:
+                variant !== "text" && !secondary ? primaryColor : "#ffffff00",
+              boxShadow:
+                variant === "text" && isHovering
+                  ? `0px 6px 15px -2px ${primaryShadow}`
+                  : "",
+            }
+          : {}
+      }
       onMouseEnter={handelMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

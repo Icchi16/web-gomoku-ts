@@ -9,7 +9,7 @@ const Modal = () => {
 
   return (
     <div className="flex justify-center items-center h-full">
-      {!roomModalState ? <CreateRoomModal /> : <EmptyState />}
+      {roomModalState ? <CreateRoomModal /> : <EmptyState />}
     </div>
   );
 };

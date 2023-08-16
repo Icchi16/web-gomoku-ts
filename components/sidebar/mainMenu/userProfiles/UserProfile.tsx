@@ -1,6 +1,5 @@
 import { useTheme } from "@/hooks/useTheme";
 import { useUser } from "@/hooks/useUser";
-import { UserDetails } from "@/types/types";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Avatar, Badge } from "@material-tailwind/react";
@@ -13,6 +12,7 @@ const UserProfiles = () => {
   const username = userDetails?.username.replace(/"/g, "");
   const isGuest = userDetails?.is_guest;
   const avatar = userDetails?.avatar;
+  console.log(avatar);
 
   const [isOpen, setIsOpen] = useState(false);
   const handleClickAvatar = () => {

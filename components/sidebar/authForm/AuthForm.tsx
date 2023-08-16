@@ -3,28 +3,29 @@
 import Button from "@/components/Button";
 import Input from "@/components/Input";
 import { ThemeProps } from "@/themes/theme";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import { useForm, FieldValues, SubmitHandler } from "react-hook-form";
 import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import clsx from "clsx";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useTheme } from "@/hooks/useTheme";
-import supabase from "../../../libs/supabase";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { error } from "console";
 import getGuest from "@/actions/getGuest";
 import { SignUpDetails } from "@/types/types";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { toast } from "react-toastify";
+import { Database } from "@/types/supabase.types";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { NextResponse } from "next/server";
 
 type Variant = "LOGIN" | "REGISTER";
 
 const AuthForm = () => {
-  const [variant, setVariant] = useState<Variant>("LOGIN");
-  const { baseTextColor } = useTheme().colors as ThemeProps["colors"];
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
   const supabase = useSupabaseClient();
+  const router = useRouter();
+  const { baseTextColor } = useTheme().colors as ThemeProps["colors"];
+  const [variant, setVariant] = useState<Variant>("LOGIN");
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     register,
@@ -51,58 +52,77 @@ const AuthForm = () => {
     }
   }, [variant, isLoading]);
 
+  const handleRegister = async (data: SignUpDetails) => {
+    try {
+      const supabase = createClientComponentClient<Database>({
+        supabaseKey: process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY as string,
+        supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+      });
+      const { username, email, password, isGuest } = data;
+      const { error } = await supabase.auth.admin.createUser({
+        user_metadata: {
+          username: username === "" ? null : username,
+          is_guest: isGuest,
+        },
+        email: email,
+        password: password,
+        email_confirm: true,
+      });
+      if (error) {
+        setIsLoading(false);
+        toast.error(error.message);
+      }
+      toast.success("Create user successful !");
+      router.refresh();
+    } catch (error) {
+      throw new Error("Can't find server!");
+    }
+  };
+
+  const handleSignIn = async (data: SignUpDetails) => {
+    const { email, password } = data;
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+    if (error) {
+      setIsLoading(false);
+      toast.error(error.message);
+    } else {
+      toast.success("Login successful !");
+    }
+    router.refresh();
+  };
+
   // Event handlers
   const onUserSubmit: SubmitHandler<FieldValues> = async (data, event) => {
     event?.preventDefault();
-
-    const { username, email, password, isGuest } = data as SignUpDetails;
-    console.log(data);
+    setIsLoading(true);
 
     if (variant === "REGISTER") {
-      await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            username: username,
-            is_guest: isGuest,
-          },
-          emailRedirectTo: `${location.origin}/api/callback`,
-        },
+      handleRegister(data as SignUpDetails).then(() => {
+        setTimeout(() => {
+          handleSignIn(data as SignUpDetails);
+        }, 10000);
       });
-      router.refresh();
     } else if (variant === "LOGIN") {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        setIsLoading(false);
-      }
-
-      router.refresh();
+      handleSignIn(data as SignUpDetails);
     }
   };
 
   const onGuestSubmit = async (event: React.MouseEvent) => {
     event?.preventDefault();
-
     const guestData = getGuest();
 
-    await supabase.auth.signUp({
+    const data: SignUpDetails = {
+      username: "",
       email: guestData.email,
       password: guestData.password,
-      options: {
-        data: {
-          is_guest: false,
-        },
-        emailRedirectTo: `${location.origin}/api/callback`,
-      },
-    });
+      isGuest: false,
+    };
+
+    handleSignIn(data);
   };
-
-
 
   return (
     <form

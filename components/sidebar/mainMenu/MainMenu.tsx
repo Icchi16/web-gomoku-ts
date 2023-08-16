@@ -21,7 +21,6 @@ import { useModalSlice } from "@/store/modalSlice";
 
 const MainMenu = () => {
   const handleRoomModal = useModalSlice((state) => state.changeRoomModalState);
-  const [isPending, startTransition] = useTransition();
 
   const initialMenu: MenuItemProps[] = [
     {
@@ -35,13 +34,13 @@ const MainMenu = () => {
       content: "Play against human",
       disabled: false,
 
-      // onClick: () => {
-      //   handleRoomModal();
-      // },
+      onClick: () => {
+        handleRoomModal();
+      },
     },
     {
       icon: faRankingStar,
-      content: "Leaderboard",
+      content: "Leader board",
       disabled: true,
       onClick: () => {},
     },

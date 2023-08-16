@@ -8,9 +8,9 @@ import Button from "../Button";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { NextResponse } from "next/server";
 import { toast } from "react-toastify";
-import { requestToastProps } from "./ConfirmCreateRoomToast";
-import ConfirmRoomToast from "./ConfirmCreateRoomToast";
 import { useUser } from "@/hooks/useUser";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 
 const CreateRoomModal = () => {
   const { baseTextColor, bgColor2 } = useTheme().colors;
@@ -35,14 +35,14 @@ const CreateRoomModal = () => {
     const { data: guestId, error } = await supabase
       .from("profiles")
       .select("id")
-      .eq("username", guestName)
+      .ilike("username", `%${guestName}%`)
       .single();
 
     if (error) {
-      console.log("can't find user");
+      toast.error("Can't find user");
       throw new NextResponse("can't find user", { status: 400 });
     } else {
-      console.log(guestId.id);
+      toast.info("Sending your challenge letter!");
 
       const channel = supabase.channel(`invite:${guestId.id}`, {
         config: {
@@ -68,30 +68,44 @@ const CreateRoomModal = () => {
 
   return (
     <form
-      className="flex flex-col justify-center items-center w-fit p-8 rounded-2xl"
+      className="flex flex-col justify-center items-center w-fit p-8 rounded-2xl "
       style={{ backgroundColor: bgColor2 }}
       onSubmit={handleSubmit(onSubmit)}
     >
       <h3
-        className="text-4xl font-bold tracking-wider"
+        className="text-4xl font-bold tracking-wider mb-10"
         style={{ color: baseTextColor }}
       >
         CHALLENGE AN OPPONENT
       </h3>
-      <Input
-        id="guestName"
-        label="Player ID"
-        register={register}
-        errors={errors}
-        disabled={isLoading}
-        tooltipContent="Error!"
-        getFieldState={getFieldState}
-        getValues={getValues}
-      />
-      <div>Player ID include ID and UserName</div>
-      <Button variant="filled" type="submit">
-        <div className="px-4">Invite Player</div>
-      </Button>
+      <div className=" px-28 w-full flex flex-col space-y-2 ">
+        <div className="mb-1">
+          <Input
+            id="guestName"
+            label="Player ID"
+            register={register}
+            errors={errors}
+            disabled={isLoading}
+            tooltipContent="Error!"
+            getFieldState={getFieldState}
+            getValues={getValues}
+          />
+        </div>
+        <div style={{ color: baseTextColor }} className="text-xs text-center ">
+          <div className="flex space-x-2 justify-center items-center mb-6">
+            <div className="text-lg">
+              <FontAwesomeIcon icon={faInfoCircle} />
+            </div>
+            <div className="flex flex-col items-start">
+              <p>Player ID include #ID and Username</p>
+              <p>You can look for ID on the right of your avatar</p>
+            </div>
+          </div>
+        </div>
+        <Button variant="filled" type="submit">
+          <div className="px-4">Invite Player</div>
+        </Button>
+      </div>
     </form>
   );
 };

@@ -10,6 +10,7 @@ export default function Home() {
         hideProgressBar={false}
         progressClassName="bg-red-400"
         theme="colored"
+        pauseOnHover={false}
       />
       <Modal />
     </div>

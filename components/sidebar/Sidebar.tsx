@@ -15,18 +15,6 @@ import { useRouter } from "next/navigation";
 const Sidebar = () => {
   const { bgColor2, baseTextColor } = useTheme().colors as ThemeProps["colors"];
   const { session } = useSessionContext();
-  const router = useRouter();
-  const supabase = createClientComponentClient();
-
-  useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => router.refresh());
-
-    return () => {
-      subscription.unsubscribe;
-    };
-  }, [supabase, router]);
 
   return (
     <div className="h-full rounded-r-2xl" style={{ backgroundColor: bgColor2 }}>

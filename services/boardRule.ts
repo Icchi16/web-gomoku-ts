@@ -66,7 +66,7 @@ export const gomokuCal = (
       })
   );
 
-  type InnerArrayType = BoxValueProps[] | {}[];
+  type InnerArrayType = (BoxValueProps | {})[];
   type OuterArrayType = InnerArrayType[];
 
   const checkWinArrays: OuterArrayType = [
@@ -76,13 +76,14 @@ export const gomokuCal = (
     diagArrayBL2UR,
   ];
 
-  const checkWin = (clickedArrays: OuterArrayType) => {
+  const checkWin = (clickedArrays: OuterArrayType): boolean => {
     const clickedArray = clickedArrays.map((clickedArray: InnerArrayType) => {
-      const counter = [1];
-      const counterArray = clickedArray.reduce(
-        (prevBox: Partial<BoxValueProps>, nextBox: Partial<BoxValueProps>) => {
-          if (prevBox.player) {
-            if (prevBox.player === nextBox.player) {
+      const counter: number[] = [1];
+
+      clickedArray.reduce(
+        (prevBox: BoxValueProps | {}, nextBox: BoxValueProps | {}) => {
+          if ("player" in prevBox) {
+            if ("player" in nextBox && prevBox.player === nextBox.player) {
               counter[0]++;
               return nextBox;
             } else {
@@ -95,10 +96,10 @@ export const gomokuCal = (
         }
       );
 
-      return apply(Math.max, counter) >= 5 ? true : false;
+      return Math.max(...counter) >= 5;
     });
 
-    return find((value) => value === true)(clickedArray) ? true : false;
+    return clickedArray.some((value) => value);
   };
 
   return checkWin(checkWinArrays);
