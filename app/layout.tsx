@@ -22,11 +22,11 @@ export default function RootLayout({
   return (
     <ThemeProviderClient>
       <html lang="en">
-        <body className={inter.className}>
+        <body className={inter.className} suppressHydrationWarning>
           <SupabaseProvider>
             <UserProvider>
               <div className="fixed inset-0 w-80 h-full z-50">
-                <Sidebar />
+                <Sidebar suppressHydrationWarning />
               </div>
               <div className="h-screen">
                 <main className="h-full">

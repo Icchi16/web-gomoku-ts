@@ -16,6 +16,8 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { toast } from "react-toastify";
 import { Database } from "@/types/supabase.types";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { createClient } from "@supabase/supabase-js";
+import { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/SupabaseAuthClient";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -53,12 +55,13 @@ const AuthForm = () => {
 
   const handleRegister = async (data: SignUpDetails) => {
     try {
-      const supabase = createClientComponentClient<Database>({
-        supabaseKey: process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY as string,
-        supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL as string,
-      });
+      const supabaseAdmin = createClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+        process.env.NEXT_PUBLIC_SUPABASE_SERVICE_KEY as string
+      );
+
       const { username, email, password, isGuest } = data;
-      const { error } = await supabase.auth.admin.createUser({
+      const { error } = await supabaseAdmin.auth.admin.createUser({
         user_metadata: {
           username: username === "" ? null : username,
           is_guest: isGuest,
