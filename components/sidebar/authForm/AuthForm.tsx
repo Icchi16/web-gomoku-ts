@@ -133,7 +133,7 @@ const AuthForm = () => {
 
   return (
     <form
-      className="flex flex-col space-y-5"
+      className="flex flex-col space-y-5 my-2"
       onSubmit={handleSubmit(onUserSubmit)}
     >
       <div className="flex flex-col space-y-6">
@@ -174,7 +174,7 @@ const AuthForm = () => {
       </div>
 
       <div>
-        <div className="mt-5 flex w-full justify-between space-x-4">
+        <div className="mt-4 flex w-full justify-between space-x-4">
           <div className="flex-1">
             <Button
               fullWidth

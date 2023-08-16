@@ -10,7 +10,7 @@ import { placeholder } from "@/public/public";
 const UserProfiles = () => {
   const { baseTextColor } = useTheme().colors;
   const { userDetails } = useUser();
-  const username = userDetails?.username.replace(/"/g, "");
+  const username = userDetails?.username.replace(/["']/g, "");
   const isGuest = userDetails?.is_guest;
   const avatar = userDetails?.avatar;
   console.log(avatar);
@@ -46,7 +46,7 @@ const UserProfiles = () => {
         >
           <div className="text text-center">Welcome to Kombat</div>
           <div className="text-2xl font-bold">
-            {isGuest ? username : `#${username}`}
+            {isGuest ? `#${username}` : username}
           </div>
         </div>
       </div>
