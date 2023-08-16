@@ -10,7 +10,7 @@ interface ThemeProviderProps {
 
 const ThemeProviderClient: React.FC<ThemeProviderProps> = ({ children }) => {
   const theme = useThemeSlice((state) => state.theme);
-  const [isClient, setIsClient] = useState(false);
+  // const [isClient, setIsClient] = useState(false);
 
   // useEffect(() => {
   //   setIsClient(true);
@@ -23,7 +23,7 @@ const ThemeProviderClient: React.FC<ThemeProviderProps> = ({ children }) => {
   // }, [theme]);
 
   return (
-    <ThemeProvider value={ theme }>
+    <ThemeProvider value={theme?.colors.baseTextColor ? theme : themes[0]}>
       {children}
     </ThemeProvider>
   );

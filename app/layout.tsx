@@ -26,7 +26,7 @@ export default function RootLayout({
           <SupabaseProvider>
             <UserProvider>
               <div className="fixed inset-0 w-80 h-full z-50">
-                <Sidebar suppressHydrationWarning />
+                <Sidebar />
               </div>
               <div className="h-screen">
                 <main className="h-full">
