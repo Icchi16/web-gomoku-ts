@@ -7,10 +7,6 @@ import { ThemeProps } from "@/themes/theme";
 import MainMenu from "./mainMenu/MainMenu";
 import { useTheme } from "@/hooks/useTheme";
 import { useSessionContext } from "@supabase/auth-helpers-react";
-import { useEffect } from "react";
-import supabase from "@/libs/supabase";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
-import { useRouter } from "next/navigation";
 
 const Sidebar = () => {
   const { bgColor2, baseTextColor } = useTheme().colors as ThemeProps["colors"];

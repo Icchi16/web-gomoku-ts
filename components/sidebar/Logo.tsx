@@ -1,4 +1,4 @@
-import { logo } from "@/public/logo";
+import { logo } from "@/public/public";
 import Image from "next/image";
 
 const Logo = () => {

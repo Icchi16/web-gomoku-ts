@@ -16,7 +16,6 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { toast } from "react-toastify";
 import { Database } from "@/types/supabase.types";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { NextResponse } from "next/server";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -71,10 +70,12 @@ const AuthForm = () => {
       if (error) {
         setIsLoading(false);
         toast.error(error.message);
+      } else {
+        toast.success("Create user successful !");
       }
-      toast.success("Create user successful !");
       router.refresh();
     } catch (error) {
+      toast.error("Can't connect to server");
       throw new Error("Can't find server!");
     }
   };
@@ -100,11 +101,14 @@ const AuthForm = () => {
     setIsLoading(true);
 
     if (variant === "REGISTER") {
-      handleRegister(data as SignUpDetails).then(() => {
-        setTimeout(() => {
-          handleSignIn(data as SignUpDetails);
-        }, 10000);
-      });
+      handleRegister(data as SignUpDetails).then(
+        () => {
+          setTimeout(() => {
+            handleSignIn(data as SignUpDetails);
+          }, 10000);
+        },
+        () => {}
+      );
     } else if (variant === "LOGIN") {
       handleSignIn(data as SignUpDetails);
     }
