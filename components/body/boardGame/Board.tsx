@@ -55,60 +55,62 @@ const Board = () => {
     }
   }, [roomDetails]);
 
-  const roomChannel = supabase.channel(`room_${roomId}_update`);
+  const roomChannel = roomId ? supabase.channel(`room_${roomId}_update`) : null;
 
   useEffect(() => {
-    roomChannel
-      .on(
-        "postgres_changes",
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "rooms",
-          filter: `id=eq.${roomId}`,
-        },
-        async () => {
-          const { data: fetchedRoom, error } = await supabase
-            .from("rooms")
-            .select("*")
-            .eq("id", roomId)
-            .single();
+    if (roomChannel) {
+      roomChannel
+        .on(
+          "postgres_changes",
+          {
+            event: "UPDATE",
+            schema: "public",
+            table: "rooms",
+            filter: `id=eq.${roomId}`,
+          },
+          async () => {
+            const { data: fetchedRoom } = await supabase
+              .from("rooms")
+              .select("*")
+              .eq("id", roomId)
+              .single();
 
-          const {
-            board: newBoardData,
-            id: newRoomId,
-            players: newRoomPlayers,
-            current_player: currentPlayer,
-            is_over: isOver,
-          } = fetchedRoom as Database["public"]["Tables"]["rooms"]["Row"];
+            const {
+              board: newBoardData,
+              id: newRoomId,
+              players: newRoomPlayers,
+              current_player: currentPlayer,
+              is_over: isOver,
+            } = fetchedRoom as Database["public"]["Tables"]["rooms"]["Row"];
 
-          const newRoom: RoomDetails = {
-            roomId: newRoomId,
-            players: newRoomPlayers,
-            currentPlayer: currentPlayer,
-            boardData: JSON.parse(newBoardData as string),
-            isOver: isOver ? "over" : "continue",
-          };
+            const newRoom: RoomDetails = {
+              roomId: newRoomId,
+              players: newRoomPlayers,
+              currentPlayer: currentPlayer,
+              boardData: JSON.parse(newBoardData as string),
+              isOver: isOver ? "over" : "continue",
+            };
 
-          setRoom(newRoom);
-        }
-      )
-      .subscribe();
+            setRoom(newRoom);
+          }
+        )
+        .subscribe();
 
-    console.log(
-      isLoadingRoom,
-      isLoadingUser,
-      userId !== currentPlayer,
-      userId !== currentPlayerStore,
-      gameStatus === "over"
-    );
+      console.log(
+        isLoadingRoom,
+        isLoadingUser,
+        userId !== currentPlayer,
+        userId !== currentPlayerStore,
+        gameStatus === "over"
+      );
+    }
 
     return () => {
-      supabase.removeChannel(roomChannel);
+      if (roomChannel) {
+        supabase.removeChannel(roomChannel);
+      }
     };
   }, [supabase, roomChannel, router]);
-
-  const boardStatus = useBoardSlice((state) => state.boardStatus);
 
   return (
     <div
