@@ -13,7 +13,6 @@ const UserProfiles = () => {
   const username = userDetails?.username.replace(/["']/g, "");
   const isGuest = userDetails?.is_guest;
   const avatar = userDetails?.avatar;
-  console.log(avatar);
 
   const [isOpen, setIsOpen] = useState(false);
   const handleClickAvatar = () => {

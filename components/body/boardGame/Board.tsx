@@ -55,9 +55,10 @@ const Board = () => {
     }
   }, [roomDetails]);
 
+  const roomChannel = supabase.channel(`room_${roomId}_update`);
+
   useEffect(() => {
-    const roomChannel = supabase
-      ?.channel(`room_${roomId}_update`)
+    roomChannel
       .on(
         "postgres_changes",
         {
@@ -97,7 +98,7 @@ const Board = () => {
     return () => {
       supabase.removeChannel(roomChannel);
     };
-  }, [supabase, router]);
+  }, [supabase, roomChannel]);
 
   const boardStatus = useBoardSlice((state) => state.boardStatus);
 
