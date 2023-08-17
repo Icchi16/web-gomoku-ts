@@ -96,13 +96,7 @@ const Board = () => {
         )
         .subscribe();
 
-      console.log(
-        isLoadingRoom,
-        isLoadingUser,
-        userId !== currentPlayer,
-        userId !== currentPlayerStore,
-        gameStatus === "over"
-      );
+      console.log(userId !== currentPlayer);
     }
 
     return () => {
@@ -118,7 +112,6 @@ const Board = () => {
       className={clsx(
         (isLoadingRoom ||
           isLoadingUser ||
-          userId !== currentPlayer ||
           userId !== currentPlayerStore ||
           gameStatus === "over") &&
           "pointer-events-none",
