@@ -19,7 +19,6 @@ import { RoomDetails } from "@/types/types";
 const Board = () => {
   const { isLoading: isLoadingRoom, roomDetails } = useRoom();
 
-  const currentPlayer = roomDetails?.currentPlayer;
   const players = roomDetails?.players;
 
   const { isLoading: isLoadingUser, userDetails } = useUser();
@@ -27,6 +26,7 @@ const Board = () => {
 
   const { border } = useTheme().colors;
   const board = useBoardSlice((state) => state.room)?.boardData;
+  const currentPlayer = roomDetails?.currentPlayer;
   const currentPlayerStore = useBoardSlice(
     (state) => state.room?.currentPlayer
   );
@@ -95,10 +95,18 @@ const Board = () => {
       )
       .subscribe();
 
+    console.log(
+      isLoadingRoom,
+      isLoadingUser,
+      userId !== currentPlayer,
+      userId !== currentPlayerStore,
+      gameStatus === "over"
+    );
+
     return () => {
       supabase.removeChannel(roomChannel);
     };
-  }, [supabase, roomChannel]);
+  }, [supabase, roomChannel, router]);
 
   const boardStatus = useBoardSlice((state) => state.boardStatus);
 
