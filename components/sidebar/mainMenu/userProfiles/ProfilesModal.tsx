@@ -1,68 +1,351 @@
+"use client";
+
+import { useTheme } from "@/hooks/useTheme";
+import { placeholder } from "@/public/public";
+import { useModalSlice } from "@/store/modalSlice";
+import { opacity } from "@/themes/theme";
+import { faClose, faUpload } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Drawer, Avatar, Input as MuiInput } from "@material-tailwind/react";
 import {
-  Button,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Checkbox,
-  Dialog,
-  Input,
-  Typography,
-} from "@material-tailwind/react";
+  MutableRefObject,
+  createRef,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import Input from "@/components/Input";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import Button from "@/components/Button";
+import { useUser } from "@/hooks/useUser";
+import Ripple from "react-ripples";
 
 interface ProfilesModalProps {
   isOpen: boolean;
-  handlerOpen: () => void;
 }
 
-const ProfilesModal: React.FC<ProfilesModalProps> = ({
-  isOpen,
-  handlerOpen,
-}) => {
+const ProfilesModal: React.FC<ProfilesModalProps> = ({ isOpen }) => {
+  const { bgColor2, baseTextColor, primaryColor } = useTheme().colors;
+  const handleProfileModal = useModalSlice(
+    (state) => state.changeProfileModalState
+  );
+
+  const { user, userDetails } = useUser();
+  const [newAvatar, setNewAvatar] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | undefined>();
+  const fileInputRef = useRef(null);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    getFieldState,
+    getValues,
+  } = useForm<FieldValues>({
+    defaultValues: {
+      "avatar-update": "",
+      "username-update": "",
+      "email-update": "",
+      "password-update": "",
+    },
+  });
+
+  const handleOnChange = (event: React.ChangeEvent) => {
+    const file = getValues("avatar-update")[0];
+
+    if (file && file.type.substr(0, 5) === "image") {
+      setNewAvatar(file);
+    } else {
+      setNewAvatar(null);
+    }
+  };
+
+  const onUpdateSubmit: SubmitHandler<FieldValues> = (data) => {
+    console.log(data);
+  };
+
+  useEffect(() => {
+    if (newAvatar) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+      };
+      reader.readAsDataURL(newAvatar);
+    }
+  }, [newAvatar]);
+
   return (
-    <Dialog
-      size="xs"
+    // <Drawer
+    //   dismiss={{
+    //     outsidePressEvent: "click",
+    //   }}
+    //   onClose={handleProfileModal}
+    //   open={isOpen}
+    //   className="absolute left-[19rem] -z-10 bg-transparent "
+    //   overlayProps={{ className: "fixed inset-0 -z-20 hidden " }}
+    // >
+    //   <div
+    //     className="relative h-full w-full rounded-e-2xl border-r border-y overflow-hidden"
+    //     style={{
+    //       borderColor: baseTextColor,
+    //     }}
+    //   >
+    //     <div
+    //       className="absolute inset-0 backdrop-blur-xl -z-10"
+    //       style={{
+    //         backgroundColor: `${bgColor2}${opacity[70]}`,
+    //       }}
+    //     />
+    //     <div className="absolute top-0 right-1 rounded ">
+    //       <Button variant="text">
+    //         <div
+    //           className="p-0 h-7 w-7 rounded flex items-center"
+    //           style={{ backgroundColor: bgColor2 }}
+    //         >
+    //           <FontAwesomeIcon
+    //             icon={faClose}
+    //             className="text-xl"
+    //             style={{
+    //               color: baseTextColor,
+    //             }}
+    //           />
+    //         </div>
+    //       </Button>
+    //     </div>
+    //     <div
+    //       className="flex flex-col py-5 px-4 h-full space-y-2"
+    //       style={{
+    //         color: baseTextColor,
+    //       }}
+    //     >
+    //       <div className="text-xl font-semibold text-center">Profile Edit</div>
+    //       <form
+    //         onSubmit={handleSubmit(onUpdateSubmit)}
+    //         action="submit"
+    //         className="flex flex-col justify-between space-y-3 flex-1"
+    //       >
+    //         <div className="flex justify-center items-center space-x-2">
+    //           <Avatar
+    //             alt="avatar"
+    //             src={userDetails?.avatar ?? placeholder}
+    //             withBorder
+    //             variant="circular"
+    //             style={{ borderColor: baseTextColor }}
+    //           />
+    //           <div className="relative flex flex-1 w-full">
+    //             <Button variant="text" onClick={handelUploadBtn}>
+    //               <FontAwesomeIcon icon={faUpload} />
+    //             </Button>
+
+    //             <Input
+    //               ref={fileInputRef}
+    //               id="avatar-update"
+    //               type="file"
+    //               errors={errors}
+    //               register={register}
+    //               getFieldState={getFieldState}
+    //               getValues={getValues}
+    //               disableLabel
+    //               onChange={handleOnChange}
+    //             />
+    //           </div>
+    //         </div>
+
+    //         <Input
+    //           disabled={userDetails?.is_guest}
+    //           id="username-update"
+    //           errors={errors}
+    //           register={register}
+    //           getFieldState={getFieldState}
+    //           getValues={getValues}
+    //           placeholder={
+    //             userDetails?.username.replace(/['"]/g, "") ?? "Username"
+    //           }
+    //           type="text"
+    //           disableLabel
+    //         />
+    //         <Input
+    //           disabled={userDetails?.is_guest}
+    //           id="email-update"
+    //           errors={errors}
+    //           register={register}
+    //           getFieldState={getFieldState}
+    //           getValues={getValues}
+    //           placeholder={
+    //             userDetails?.is_guest ? "Email" : user?.email ?? "Email"
+    //           }
+    //           type="email"
+    //           disableLabel
+    //         />
+    //         <Input
+    //           id="password-update"
+    //           errors={errors}
+    //           register={register}
+    //           getFieldState={getFieldState}
+    //           getValues={getValues}
+    //           placeholder="New password"
+    //           type="password"
+    //           disableLabel
+    //         />
+    //         <Input
+    //           id="password-validate"
+    //           errors={errors}
+    //           register={register}
+    //           getFieldState={getFieldState}
+    //           getValues={getValues}
+    //           placeholder="Confirm password"
+    //           type="password"
+    //           disableLabel
+    //         />
+
+    //         <Button type="submit" variant="filled" fullWidth>
+    //           Submit
+    //         </Button>
+    //       </form>
+    //     </div>
+    //   </div>
+    // </Drawer>
+
+    <Drawer
+      dismiss={{ outsidePressEvent: "click" }}
+      onClose={handleProfileModal}
       open={isOpen}
-      handler={handlerOpen}
-      className="bg-transparent shadow-none"
+      className="absolute left-[19rem] -z-10 bg-transparent"
+      overlayProps={{ className: "fixed inset-0 -z-20 hidden " }}
     >
-      <Card className="mx-auto w-full max-w-[24rem]">
-        <CardHeader
-          variant="gradient"
-          color="blue"
-          className="mb-4 grid h-28 place-items-center"
-        >
-          <Typography variant="h3" color="white">
-            Sign In
-          </Typography>
-        </CardHeader>
-        <CardBody className="flex flex-col gap-4">
-          <Input label="Email" size="lg" />
-          <Input label="Password" size="lg" />
-          <div className="-ml-2.5">
-            <Checkbox label="Remember Me" />
-          </div>
-        </CardBody>
-        <CardFooter className="pt-0">
-          <Button variant="gradient" onClick={handlerOpen} fullWidth>
-            Sign In
-          </Button>
-          <Typography variant="small" className="mt-6 flex justify-center">
-            Don&apos;t have an account?
-            <Typography
-              as="a"
-              href="#signup"
-              variant="small"
-              color="blue"
-              className="ml-1 font-bold"
-              onClick={handlerOpen}
+      <div
+        className="relative h-full w-full rounded-e-2xl border-r border-y overflow-hidden"
+        style={{
+          borderColor: baseTextColor,
+        }}
+      >
+        <div
+          className="absolute inset-0 backdrop-blur-xl -z-10"
+          style={{
+            backgroundColor: `${bgColor2}${opacity[70]}`,
+          }}
+        />
+        <div className="absolute top-0 right-1 rounded ">
+          <Button variant="text">
+            <div
+              className="p-0 h-7 w-7 rounded flex items-center"
+              style={{ backgroundColor: bgColor2 }}
             >
-              Sign up
-            </Typography>
-          </Typography>
-        </CardFooter>
-      </Card>
-    </Dialog>
+              <FontAwesomeIcon
+                icon={faClose}
+                className="text-xl"
+                style={{
+                  color: baseTextColor,
+                }}
+              />
+            </div>
+          </Button>
+        </div>
+        {/* !Something here */}
+        <div
+          className="flex flex-col py-5 px-4 h-full space-y-2"
+          style={{ color: baseTextColor }}
+        >
+          <div className="text-xl font-semibold text-center">Profile Edit</div>
+          <form
+            action="submit"
+            onSubmit={handleSubmit(onUpdateSubmit)}
+            className="flex flex-col h-full justify-between"
+          >
+            <div className="flex justify-center items-center space-x-2">
+              <div>
+                <Avatar
+                  alt="avatar"
+                  src={userDetails?.avatar ?? preview ? preview : placeholder}
+                  withBorder
+                  variant="circular"
+                  style={{ borderColor: baseTextColor }}
+                />
+              </div>
+              <div className="relative flex flex-1">
+                <div
+                  className="absolute left-1 inset-y-1 z-30 rounded "
+                  style={{ backgroundColor: primaryColor }}
+                >
+                  <Ripple className="h-full w-full">
+                    <label
+                      htmlFor="avatar-update"
+                      className="flex items-center cursor-pointer"
+                    >
+                      <div className="px-[0.6rem]">
+                        <FontAwesomeIcon
+                          icon={faUpload}
+                          style={{ color: bgColor2 }}
+                        />
+                      </div>
+                    </label>
+                  </Ripple>
+                </div>
+                <Input
+                  id="avatar-update"
+                  type="file"
+                  errors={errors}
+                  register={register}
+                  getFieldState={getFieldState}
+                  getValues={getValues}
+                  disableLabel
+                  onChange={handleOnChange}
+                />
+              </div>
+            </div>
+            <Input
+              disabled={userDetails?.is_guest}
+              id="username-update"
+              errors={errors}
+              register={register}
+              getFieldState={getFieldState}
+              getValues={getValues}
+              placeholder={
+                userDetails?.username.replace(/['"]/g, "") ?? "Username"
+              }
+              type="text"
+              disableLabel
+            />
+            <Input
+              disabled={userDetails?.is_guest}
+              id="email-update"
+              errors={errors}
+              register={register}
+              getFieldState={getFieldState}
+              getValues={getValues}
+              placeholder={
+                userDetails?.is_guest ? "Email" : user?.email ?? "Email"
+              }
+              type="email"
+              disableLabel
+            />
+            <Input
+              id="password-update"
+              errors={errors}
+              register={register}
+              getFieldState={getFieldState}
+              getValues={getValues}
+              placeholder="New password"
+              type="password"
+              disableLabel
+            />
+            <Input
+              id="password-validate"
+              errors={errors}
+              register={register}
+              getFieldState={getFieldState}
+              getValues={getValues}
+              placeholder="Confirm password"
+              type="password"
+              disableLabel
+            />
+            <Button type="submit" variant="filled" fullWidth>
+              Submit
+            </Button>
+          </form>
+        </div>
+      </div>
+    </Drawer>
   );
 };
 

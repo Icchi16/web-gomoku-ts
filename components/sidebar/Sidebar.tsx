@@ -13,7 +13,7 @@ const Sidebar = () => {
   const { session } = useSessionContext();
 
   return (
-    <div className="h-full rounded-r-2xl" style={{ backgroundColor: bgColor2 }}>
+    <div className="h-full rounded-r-2xl z-50" style={{ backgroundColor: bgColor2 }}>
       <div className="mx-4 flex flex-col h-full justify-between">
         <div className="flex flex-col space-y-6">
           <Logo />

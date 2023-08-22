@@ -55,7 +55,7 @@ const Button: React.FC<ButtonCompProps> = ({
           ? {
               color: secondary ? baseTextColor : primaryTextColor,
               backgroundColor:
-                variant !== "text" && !secondary ? primaryColor : "#ffffff00",
+                variant !== "text" && !secondary ? baseTextColor : "#ffffff00",
               boxShadow:
                 variant === "text" && isHovering
                   ? `0px 6px 15px -2px ${primaryShadow}`

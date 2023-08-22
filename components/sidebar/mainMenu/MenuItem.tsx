@@ -2,10 +2,8 @@
 
 import Button from "@/components/Button";
 import { useTheme } from "@/hooks/useTheme";
-import { ThemeProps } from "@/themes/theme";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { variant } from "@material-tailwind/react/types/components/button";
 import { ReactNode } from "react";
 
 export type MenuItemProps = {
@@ -18,12 +16,11 @@ export type MenuItemProps = {
 
 const MenuItem: React.FC<MenuItemProps> = ({
   icon,
-  active,
   disabled,
   content,
   onClick,
 }) => {
-  const { bgColor2, primaryColor } = useTheme().colors;
+  const { bgColor2, baseTextColor } = useTheme().colors;
 
   return (
     <Button variant="filled" onClick={onClick} disabled={disabled}>
@@ -38,10 +35,10 @@ const MenuItem: React.FC<MenuItemProps> = ({
             className="absolute inset-0 -inset-y-3 rounded-e-lg border-y border-r pointer-events-none ease-in-out transition-all duration-[600ms]"
             style={{
               backgroundColor: bgColor2,
-              borderColor: primaryColor,
+              borderColor: baseTextColor,
             }}
           ></div>
-          <div className="z-10 text" style={{ color: primaryColor }}>
+          <div className="z-10 text" style={{ color: baseTextColor }}>
             {content}
           </div>
         </div>

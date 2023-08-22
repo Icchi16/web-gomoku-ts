@@ -10,14 +10,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { NextResponse } from "next/server";
 import MenuItem, { MenuItemProps } from "./MenuItem";
-import { useState, useEffect, useMemo, useTransition } from "react";
-import { boardArray } from "@/store/boardSlice";
-import { useIsClient } from "usehooks-ts";
-import getCurrentUser from "@/actions/getCurrentUser";
-import axios from "axios";
-import openHandler from "../../modals/CreateRoomModal";
-import CreateRoomModal from "../../modals/CreateRoomModal";
+import { useState, useEffect, useMemo } from "react";
 import { useModalSlice } from "@/store/modalSlice";
+import ProfilesModal from "./userProfiles/ProfilesModal";
 
 const MainMenu = () => {
   const handleRoomModal = useModalSlice((state) => state.changeRoomModalState);
@@ -73,6 +68,8 @@ const MainMenu = () => {
     router.refresh();
   };
 
+  const isProfileModalOpen = useModalSlice((state) => state.profileModalState);
+
   const paramMemo = useMemo(() => {
     if (param?.roomId) {
       return true;
@@ -84,9 +81,15 @@ const MainMenu = () => {
   }, [paramMemo]);
 
   return (
-    <div className="flex flex-col text-white space-y-4">
-      <UserProfiles />
-      <div className="flex flex-col space-y-6">
+    <div className="flex flex-col text-white relative">
+      <div className="absolute -top-6 -bottom-[1.65rem] inset-x-0 -z-10">
+        <ProfilesModal isOpen={isProfileModalOpen} />
+      </div>
+      <div className="mb-4">
+        <UserProfiles />
+      </div>
+
+      <div className="flex flex-col space-y-6 ">
         {menu.map((menuProps, index) => (
           <MenuItem
             key={index}

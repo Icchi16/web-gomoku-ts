@@ -2,10 +2,11 @@ import { useTheme } from "@/hooks/useTheme";
 import { useUser } from "@/hooks/useUser";
 import { faCamera } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Avatar, Badge } from "@material-tailwind/react";
-import { useState } from "react";
+import { Avatar, Badge, Button } from "@material-tailwind/react";
+import { useCallback, useMemo, useState } from "react";
 import ProfilesModal from "./ProfilesModal";
 import { placeholder } from "@/public/public";
+import { useModalSlice } from "@/store/modalSlice";
 
 const UserProfiles = () => {
   const { baseTextColor } = useTheme().colors;
@@ -14,21 +15,32 @@ const UserProfiles = () => {
   const isGuest = userDetails?.is_guest;
   const avatar = userDetails?.avatar;
 
-  const [isOpen, setIsOpen] = useState(false);
+  const handleProfilesModal = useModalSlice(
+    (state) => state.changeProfileModalState
+  );
+  const profileModalState = useModalSlice(
+    (state) => state.profileModalState
+  ) as boolean;
+
   const handleClickAvatar = () => {
-    setIsOpen(!isOpen);
+    if (!profileModalState) {
+      handleProfilesModal();
+    }
   };
 
   return (
     <div>
-      <ProfilesModal isOpen={isOpen} handlerOpen={handleClickAvatar} />
       <div className="flex items-center">
-        <div className="relative cursor-pointer" onClick={handleClickAvatar}>
+        <div
+          id="avatar"
+          className="relative cursor-pointer"
+          onClick={handleClickAvatar}
+        >
           <Badge
             color="gray"
             placement="bottom-end"
             content={<FontAwesomeIcon icon={faCamera} className="text-xs" />}
-            className="bottom-3 right-3"
+            className="bottom-3 right-3 pointer-events-none"
             withBorder
           >
             <Avatar
@@ -36,6 +48,9 @@ const UserProfiles = () => {
               alt="avatar"
               src={avatar ? avatar : placeholder}
               withBorder
+              variant="circular"
+              className=" pointer-events-none border-[3px]"
+              style={{ borderColor: baseTextColor }}
             />
           </Badge>
         </div>

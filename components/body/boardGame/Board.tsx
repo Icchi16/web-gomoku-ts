@@ -1,24 +1,23 @@
 "use client";
 
-import { useBoardSlice } from "@/store/boardSlice";
+import clsx from "clsx";
 import BoardBox from "./BoardBox";
 import boardSettings from "./boardSettings";
+import BoardLoading from "./BoardLoading";
+import { useBoardSlice } from "@/store/boardSlice";
 import { useElementSize } from "usehooks-ts";
 import { useLayoutEffect, useEffect } from "react";
-import clsx from "clsx";
 import { useTheme } from "@/hooks/useTheme";
-import BoardLoading from "./BoardLoading";
 import { useUser } from "@/hooks/useUser";
 import { useParams, useRouter } from "next/navigation";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Database } from "@/types/supabase.types";
+import { RoomDetails } from "@/types/types";
 import MatchOverComp from "./MatchOverComp";
 import useRoom from "@/hooks/useRoom";
-import { RoomDetails } from "@/types/types";
 
 const Board = () => {
   const { isLoading: isLoadingRoom, roomDetails } = useRoom();
-
   const players = roomDetails?.players;
 
   const { isLoading: isLoadingUser, userDetails } = useUser();
@@ -26,7 +25,6 @@ const Board = () => {
 
   const { border } = useTheme().colors;
   const board = useBoardSlice((state) => state.room)?.boardData;
-  const currentPlayer = roomDetails?.currentPlayer;
   const currentPlayerStore = useBoardSlice(
     (state) => state.room?.currentPlayer
   );
@@ -43,8 +41,8 @@ const Board = () => {
 
   const supabase = useSupabaseClient();
   const { roomId } = useParams();
-  const router = useRouter();
-
+  const roomChannel = roomId ? supabase.channel(`room_${roomId}_update`) : null;
+  
   useLayoutEffect(() => {
     setBoardWidth(width);
   }, [width, setBoardWidth]);
@@ -55,7 +53,6 @@ const Board = () => {
     }
   }, [roomDetails]);
 
-  const roomChannel = roomId ? supabase.channel(`room_${roomId}_update`) : null;
 
   useEffect(() => {
     if (roomChannel) {
@@ -96,7 +93,7 @@ const Board = () => {
         )
         .subscribe();
 
-      console.log(userId !== currentPlayer);
+      // console.log(userId !== currentPlayer);
     }
 
     return () => {
@@ -104,7 +101,7 @@ const Board = () => {
         supabase.removeChannel(roomChannel);
       }
     };
-  }, [supabase, roomChannel, router]);
+  }, [supabase, roomChannel]);
 
   return (
     <div

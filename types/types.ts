@@ -32,3 +32,10 @@ export interface RoomDetails {
   guestName?: string;
   playerName?: string;
 }
+
+export interface UpdateProfileDetails {
+  avatar?: string;
+  username: string;
+  email: string;
+  password: string;
+}

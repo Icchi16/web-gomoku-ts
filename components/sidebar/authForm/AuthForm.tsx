@@ -85,6 +85,7 @@ const AuthForm = () => {
 
   const handleSignIn = async (data: SignUpDetails) => {
     const { email, password } = data;
+    console.log(data);
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,

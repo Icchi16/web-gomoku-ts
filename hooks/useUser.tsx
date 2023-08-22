@@ -43,7 +43,6 @@ export const CurrentUserContextProvider = (props: Props) => {
   const [isLoadingData, setIsLoadingData] = useState(false);
   const [userDetails, setUserDetails] = useState<UserDetails | null>(null);
   const router = useRouter();
-  const [stateSession, setStateSession] = useState<Session | null>(null);
 
   const getUserDetails = () =>
     supabase.from("profiles").select("*").eq("id", user?.id).single();
@@ -70,7 +69,7 @@ export const CurrentUserContextProvider = (props: Props) => {
     }
   }, [session, user, isLoadingData]);
 
-  const inviteChannel = supabase.channel(`invite:${userDetails?.id}`, {
+  const userInviteChannel = supabase.channel(`invite:${userDetails?.id}`, {
     config: {
       broadcast: {
         ack: true,
@@ -78,17 +77,49 @@ export const CurrentUserContextProvider = (props: Props) => {
     },
   });
 
-  const resChannel = supabase.channel(`response:${userDetails?.id}`, {
+  const userResponseChannel = supabase.channel(`response:${userDetails?.id}`, {
     config: {
       broadcast: {
         ack: true,
       },
     },
   });
+
+  // const onlineChannel = supabase.channel("online");
+
+  // useEffect(() => {
+  //   if (user && session) {
+  //     onlineChannel
+  //       .on("presence", { event: "sync" }, () => {
+  //         const sharedState = onlineChannel.presenceState();
+  //         console.log(sharedState);
+  //       })
+  //       // .on("presence", { event: "join" }, (payload) => {
+  //       //   console.log(payload);
+  //       // })
+  //       // .on("presence", { event: "leave" }, (payload) => {
+  //       //   console.log(payload);
+  //       // })
+
+  //       .subscribe(async (status) => {
+  //         if (status === "SUBSCRIBED") {
+  //           const presenceTrackStatus = await onlineChannel.track({
+  //             user: user.id,
+  //             online_at: new Date().toISOString(),
+  //           });
+  //           console.log(presenceTrackStatus);
+  //         }
+  //       });
+  //   }
+
+  //   return () => {
+  //     supabase.removeChannel(onlineChannel);
+  //   };
+  // }, [onlineChannel]);
 
   useEffect(() => {
     //for sending createRoom
-    inviteChannel
+    userInviteChannel
       .on("broadcast", { event: "sendInvite" }, (payload) => {
         const senderId = payload?.payload?.senderId;
 
@@ -121,12 +152,15 @@ export const CurrentUserContextProvider = (props: Props) => {
       })
       .subscribe();
 
+    return () => {
+      supabase.removeChannel(userInviteChannel);
+    };
+  }, [userInviteChannel]);
+
+  useEffect(() => {
     // for receiving response
-
-    resChannel
+    userResponseChannel
       .on("broadcast", { event: "getResponse" }, (payload) => {
-        console.log(payload);
-
         const response = payload?.payload.result;
         const roomId = payload?.payload?.roomId;
 
@@ -146,10 +180,9 @@ export const CurrentUserContextProvider = (props: Props) => {
       .subscribe();
 
     return () => {
-      supabase.removeChannel(inviteChannel);
-      supabase.removeChannel(resChannel);
+      supabase.removeChannel(userResponseChannel);
     };
-  }, [supabase, inviteChannel, resChannel]);
+  }, [userResponseChannel]);
 
   // const authEvent = supabase.auth.onAuthStateChange((event, session) => {
   //   setSession(session);

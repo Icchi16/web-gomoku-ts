@@ -26,6 +26,10 @@ interface InputCompProps {
   tooltipContent?: string;
   getFieldState: UseFormGetFieldState<FieldValues>;
   getValues: UseFormGetValues<FieldValues>;
+  disableLabel?: boolean;
+  placeholder?: string;
+  onChange?: ({ ...props }: any) => void;
+  ref?: any;
 }
 
 const Input: React.FC<InputCompProps> = ({
@@ -41,6 +45,9 @@ const Input: React.FC<InputCompProps> = ({
   tooltipContent,
   getFieldState,
   getValues,
+  disableLabel,
+  placeholder,
+  onChange,
 }) => {
   const { baseTextColor, bgColor2, primaryColor, primaryTextColor } = useTheme()
     .colors as ThemeProps["colors"];
@@ -108,18 +115,19 @@ const Input: React.FC<InputCompProps> = ({
 
       <MuiInput
         {...register(id, {
+          onChange: onChange,
           required,
           pattern: pattern(id),
         })}
+        id={id}
+        name={id}
         variant={variant}
         type={type}
         label={label}
         size={size}
         style={{
-          color: baseTextColor,
-          borderColor: baseTextColor,
+          color: type === "file" ? "#a9a9a9" : baseTextColor,
           backgroundColor: "#ffffff00",
-          borderWidth: "1px",
         }}
         error={errors[id] ? true : false}
         success={false}
@@ -129,8 +137,13 @@ const Input: React.FC<InputCompProps> = ({
         onFocus={handleOnFocus}
         onBlur={handleOffFocus}
         disabled={disabled}
-        className="input border-none"
+        className={clsx(
+          type === "file" ? "file:hidden pl-12" : "",
+          "input border-none"
+        )}
+        containerProps={{ className: "after:p-0" }}
         onAnimationStart={handelAutoFill}
+        placeholder={placeholder}
       />
       <div
         className={clsx(
@@ -139,7 +152,12 @@ const Input: React.FC<InputCompProps> = ({
         )}
         style={{ borderColor: baseTextColor, outlineColor: baseTextColor }}
       />
-      <div className="absolute inset-x-0 bottom-0 -top-[0.4rem] flex justify-start pointer-events-none">
+      <div
+        className={clsx(
+          disableLabel ? "hidden" : "",
+          "absolute inset-x-0 bottom-0 -top-[0.4rem] flex justify-start pointer-events-none"
+        )}
+      >
         <div className=" min-w-[0.5rem] pointer-events-none"></div>
         <div
           className={clsx(
