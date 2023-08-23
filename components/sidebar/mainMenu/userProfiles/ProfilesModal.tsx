@@ -19,6 +19,7 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import Button from "@/components/Button";
 import { useUser } from "@/hooks/useUser";
 import Ripple from "react-ripples";
+import clsx from "clsx";
 
 interface ProfilesModalProps {
   isOpen: boolean;
@@ -61,7 +62,7 @@ const ProfilesModal: React.FC<ProfilesModalProps> = ({ isOpen }) => {
   };
 
   const onUpdateSubmit: SubmitHandler<FieldValues> = (data) => {
-    console.log(data);
+    // console.log(data);
   };
 
   useEffect(() => {
@@ -75,142 +76,14 @@ const ProfilesModal: React.FC<ProfilesModalProps> = ({ isOpen }) => {
   }, [newAvatar]);
 
   return (
-    // <Drawer
-    //   dismiss={{
-    //     outsidePressEvent: "click",
-    //   }}
-    //   onClose={handleProfileModal}
-    //   open={isOpen}
-    //   className="absolute left-[19rem] -z-10 bg-transparent "
-    //   overlayProps={{ className: "fixed inset-0 -z-20 hidden " }}
-    // >
-    //   <div
-    //     className="relative h-full w-full rounded-e-2xl border-r border-y overflow-hidden"
-    //     style={{
-    //       borderColor: baseTextColor,
-    //     }}
-    //   >
-    //     <div
-    //       className="absolute inset-0 backdrop-blur-xl -z-10"
-    //       style={{
-    //         backgroundColor: `${bgColor2}${opacity[70]}`,
-    //       }}
-    //     />
-    //     <div className="absolute top-0 right-1 rounded ">
-    //       <Button variant="text">
-    //         <div
-    //           className="p-0 h-7 w-7 rounded flex items-center"
-    //           style={{ backgroundColor: bgColor2 }}
-    //         >
-    //           <FontAwesomeIcon
-    //             icon={faClose}
-    //             className="text-xl"
-    //             style={{
-    //               color: baseTextColor,
-    //             }}
-    //           />
-    //         </div>
-    //       </Button>
-    //     </div>
-    //     <div
-    //       className="flex flex-col py-5 px-4 h-full space-y-2"
-    //       style={{
-    //         color: baseTextColor,
-    //       }}
-    //     >
-    //       <div className="text-xl font-semibold text-center">Profile Edit</div>
-    //       <form
-    //         onSubmit={handleSubmit(onUpdateSubmit)}
-    //         action="submit"
-    //         className="flex flex-col justify-between space-y-3 flex-1"
-    //       >
-    //         <div className="flex justify-center items-center space-x-2">
-    //           <Avatar
-    //             alt="avatar"
-    //             src={userDetails?.avatar ?? placeholder}
-    //             withBorder
-    //             variant="circular"
-    //             style={{ borderColor: baseTextColor }}
-    //           />
-    //           <div className="relative flex flex-1 w-full">
-    //             <Button variant="text" onClick={handelUploadBtn}>
-    //               <FontAwesomeIcon icon={faUpload} />
-    //             </Button>
-
-    //             <Input
-    //               ref={fileInputRef}
-    //               id="avatar-update"
-    //               type="file"
-    //               errors={errors}
-    //               register={register}
-    //               getFieldState={getFieldState}
-    //               getValues={getValues}
-    //               disableLabel
-    //               onChange={handleOnChange}
-    //             />
-    //           </div>
-    //         </div>
-
-    //         <Input
-    //           disabled={userDetails?.is_guest}
-    //           id="username-update"
-    //           errors={errors}
-    //           register={register}
-    //           getFieldState={getFieldState}
-    //           getValues={getValues}
-    //           placeholder={
-    //             userDetails?.username.replace(/['"]/g, "") ?? "Username"
-    //           }
-    //           type="text"
-    //           disableLabel
-    //         />
-    //         <Input
-    //           disabled={userDetails?.is_guest}
-    //           id="email-update"
-    //           errors={errors}
-    //           register={register}
-    //           getFieldState={getFieldState}
-    //           getValues={getValues}
-    //           placeholder={
-    //             userDetails?.is_guest ? "Email" : user?.email ?? "Email"
-    //           }
-    //           type="email"
-    //           disableLabel
-    //         />
-    //         <Input
-    //           id="password-update"
-    //           errors={errors}
-    //           register={register}
-    //           getFieldState={getFieldState}
-    //           getValues={getValues}
-    //           placeholder="New password"
-    //           type="password"
-    //           disableLabel
-    //         />
-    //         <Input
-    //           id="password-validate"
-    //           errors={errors}
-    //           register={register}
-    //           getFieldState={getFieldState}
-    //           getValues={getValues}
-    //           placeholder="Confirm password"
-    //           type="password"
-    //           disableLabel
-    //         />
-
-    //         <Button type="submit" variant="filled" fullWidth>
-    //           Submit
-    //         </Button>
-    //       </form>
-    //     </div>
-    //   </div>
-    // </Drawer>
-
     <Drawer
       dismiss={{ outsidePressEvent: "click" }}
       onClose={handleProfileModal}
       open={isOpen}
-      className="absolute left-[19rem] -z-10 bg-transparent"
+      className={clsx(
+        userDetails?.is_guest && "hidden",
+        "absolute left-[19rem] -z-10 bg-transparent"
+      )}
       overlayProps={{ className: "fixed inset-0 -z-20 hidden " }}
     >
       <div
@@ -226,7 +99,7 @@ const ProfilesModal: React.FC<ProfilesModalProps> = ({ isOpen }) => {
           }}
         />
         <div className="absolute top-0 right-1 rounded ">
-          <Button variant="text">
+          <Button variant="text" onClick={handleProfileModal}>
             <div
               className="p-0 h-7 w-7 rounded flex items-center"
               style={{ backgroundColor: bgColor2 }}
@@ -241,16 +114,15 @@ const ProfilesModal: React.FC<ProfilesModalProps> = ({ isOpen }) => {
             </div>
           </Button>
         </div>
-        {/* !Something here */}
         <div
-          className="flex flex-col py-5 px-4 h-full space-y-2"
+          className="flex flex-col pt-10 px-4 h-full space-y-2"
           style={{ color: baseTextColor }}
         >
           <div className="text-xl font-semibold text-center">Profile Edit</div>
           <form
             action="submit"
             onSubmit={handleSubmit(onUpdateSubmit)}
-            className="flex flex-col h-full justify-between"
+            className="flex flex-col h-full space-y-5"
           >
             <div className="flex justify-center items-center space-x-2">
               <div>
@@ -293,8 +165,8 @@ const ProfilesModal: React.FC<ProfilesModalProps> = ({ isOpen }) => {
                 />
               </div>
             </div>
+
             <Input
-              disabled={userDetails?.is_guest}
               id="username-update"
               errors={errors}
               register={register}
@@ -306,19 +178,7 @@ const ProfilesModal: React.FC<ProfilesModalProps> = ({ isOpen }) => {
               type="text"
               disableLabel
             />
-            <Input
-              disabled={userDetails?.is_guest}
-              id="email-update"
-              errors={errors}
-              register={register}
-              getFieldState={getFieldState}
-              getValues={getValues}
-              placeholder={
-                userDetails?.is_guest ? "Email" : user?.email ?? "Email"
-              }
-              type="email"
-              disableLabel
-            />
+
             <Input
               id="password-update"
               errors={errors}
@@ -329,6 +189,7 @@ const ProfilesModal: React.FC<ProfilesModalProps> = ({ isOpen }) => {
               type="password"
               disableLabel
             />
+
             <Input
               id="password-validate"
               errors={errors}
@@ -338,7 +199,12 @@ const ProfilesModal: React.FC<ProfilesModalProps> = ({ isOpen }) => {
               placeholder="Confirm password"
               type="password"
               disableLabel
+              validate={(value, formData: FieldValues) =>
+              value === formData["password-update"]
+              }
+              tooltipContent="Password not match"
             />
+
             <Button type="submit" variant="filled" fullWidth>
               Submit
             </Button>

@@ -12,12 +12,9 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "@/hooks/useTheme";
 import getGuest from "@/actions/getGuest";
 import { SignUpDetails } from "@/types/types";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { toast } from "react-toastify";
-import { Database } from "@/types/supabase.types";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { createClient } from "@supabase/supabase-js";
-import { SupabaseAuthClient } from "@supabase/supabase-js/dist/module/lib/SupabaseAuthClient";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -61,9 +58,13 @@ const AuthForm = () => {
       );
 
       const { username, email, password, isGuest } = data;
+
+      const { data: genUsername, error: randomUsernameError } =
+        await supabase.rpc("gen_random_text");
+
       const { error } = await supabaseAdmin.auth.admin.createUser({
         user_metadata: {
-          username: username === "" ? null : username,
+          username: username ? username : genUsername,
           is_guest: isGuest,
         },
         email: email,
@@ -109,7 +110,7 @@ const AuthForm = () => {
         () => {
           setTimeout(() => {
             handleSignIn(data as SignUpDetails);
-          }, 10000);
+          }, 6000);
         },
         () => {}
       );
@@ -123,13 +124,20 @@ const AuthForm = () => {
     const guestData = getGuest();
 
     const data: SignUpDetails = {
-      username: "",
+      username: null,
       email: guestData.email,
       password: guestData.password,
-      isGuest: false,
+      isGuest: true,
     };
 
-    handleSignIn(data);
+    handleRegister(data).then(
+      () => {
+        setTimeout(() => {
+          handleSignIn(data as SignUpDetails);
+        }, 6000);
+      },
+      () => {}
+    );
   };
 
   return (
@@ -148,6 +156,7 @@ const AuthForm = () => {
             tooltipContent="3 - 20 characters"
             getFieldState={getFieldState}
             getValues={getValues}
+            regexValidate={/.{3,20}/}
           />
         )}
 
@@ -160,6 +169,8 @@ const AuthForm = () => {
           disabled={isLoading}
           getFieldState={getFieldState}
           getValues={getValues}
+          required
+          regexValidate={/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/}
         />
         <Input
           id="password"
@@ -171,6 +182,8 @@ const AuthForm = () => {
           tooltipContent="Above 3 characters"
           getFieldState={getFieldState}
           getValues={getValues}
+          required
+          regexValidate={/.{3,}/}
         />
       </div>
 

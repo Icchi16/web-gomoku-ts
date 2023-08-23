@@ -1,10 +1,8 @@
 import { useTheme } from "@/hooks/useTheme";
 import { useUser } from "@/hooks/useUser";
-import { faCamera } from "@fortawesome/free-solid-svg-icons";
+import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Avatar, Badge, Button } from "@material-tailwind/react";
-import { useCallback, useMemo, useState } from "react";
-import ProfilesModal from "./ProfilesModal";
+import { Avatar, Badge, } from "@material-tailwind/react";
 import { placeholder } from "@/public/public";
 import { useModalSlice } from "@/store/modalSlice";
 
@@ -39,7 +37,7 @@ const UserProfiles = () => {
           <Badge
             color="gray"
             placement="bottom-end"
-            content={<FontAwesomeIcon icon={faCamera} className="text-xs" />}
+            content={<FontAwesomeIcon icon={faPencilAlt} className="text-xs" />}
             className="bottom-3 right-3 pointer-events-none"
             withBorder
           >
@@ -60,7 +58,7 @@ const UserProfiles = () => {
         >
           <div className="text text-center">Welcome to Kombat</div>
           <div className="text-2xl font-bold">
-            {isGuest ? `#${username}` : username}
+            {isGuest ? `#${username}` : username} 
           </div>
         </div>
       </div>

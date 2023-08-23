@@ -12,6 +12,7 @@ import {
   UseFormRegister,
   UseFormGetFieldState,
   UseFormGetValues,
+  Validate,
 } from "react-hook-form";
 interface InputCompProps {
   id: string;
@@ -28,8 +29,9 @@ interface InputCompProps {
   getValues: UseFormGetValues<FieldValues>;
   disableLabel?: boolean;
   placeholder?: string;
-  onChange?: ({ ...props }: any) => void;
-  ref?: any;
+  onChange?: (...args: any[]) => void;
+  validate?: (...args: any[]) => boolean;
+  regexValidate?: RegExp;
 }
 
 const Input: React.FC<InputCompProps> = ({
@@ -48,6 +50,8 @@ const Input: React.FC<InputCompProps> = ({
   disableLabel,
   placeholder,
   onChange,
+  validate,
+  regexValidate,
 }) => {
   const { baseTextColor, bgColor2, primaryColor, primaryTextColor } = useTheme()
     .colors as ThemeProps["colors"];
@@ -74,29 +78,6 @@ const Input: React.FC<InputCompProps> = ({
       : setIsFieldDirty(false);
   };
 
-  const pattern = (id: string) => {
-    switch (id) {
-      case "username":
-        return {
-          value: /.{3,20}/,
-          message: "Username must be from 3 to 20 characters",
-        };
-        break;
-      case "email":
-        return {
-          value: /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/,
-          message: "Invalid email",
-        };
-        break;
-      default:
-        return {
-          value: /.{3,}/,
-          message: "Password must be above 3 characters",
-        };
-        break;
-    }
-  };
-
   return (
     <div className="relative">
       <div className="absolute min-h-[1rem] -top-4 left-0 right-1 pointer-events-none flex justify-end overflow-hidden">
@@ -115,9 +96,13 @@ const Input: React.FC<InputCompProps> = ({
 
       <MuiInput
         {...register(id, {
+          validate: validate,
           onChange: onChange,
           required,
-          pattern: pattern(id),
+          pattern: {
+            value: regexValidate ?? /./g,
+            message: tooltipContent ?? "",
+          },
         })}
         id={id}
         name={id}
@@ -129,7 +114,7 @@ const Input: React.FC<InputCompProps> = ({
           color: type === "file" ? "#a9a9a9" : baseTextColor,
           backgroundColor: "#ffffff00",
         }}
-        error={errors[id] ? true : false}
+        error={errors.id ? true : false}
         success={false}
         labelProps={{
           className: "hidden",

@@ -28,7 +28,6 @@ const MainMenu = () => {
       icon: faUser,
       content: "Play against human",
       disabled: false,
-
       onClick: () => {
         handleRoomModal();
       },
@@ -36,7 +35,7 @@ const MainMenu = () => {
     {
       icon: faRankingStar,
       content: "Leader board",
-      disabled: true,
+      disabled: false,
       onClick: () => {},
     },
   ];

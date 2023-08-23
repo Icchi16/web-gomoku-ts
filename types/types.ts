@@ -16,7 +16,7 @@ export interface UserDetails {
 }
 
 export interface SignUpDetails {
-  username: string;
+  username: string | null;
   email: string;
   password: string;
   isGuest: boolean;
@@ -36,6 +36,5 @@ export interface RoomDetails {
 export interface UpdateProfileDetails {
   avatar?: string;
   username: string;
-  email: string;
   password: string;
 }
