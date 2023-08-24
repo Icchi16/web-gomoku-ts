@@ -108,6 +108,7 @@ const ConfirmUpdateUserToast: React.FC<ConfirmUpdateUserToastProps> = ({
     }
 
     router.refresh();
+    toast.dismiss("update-profile");
   };
 
   const handleRefuse = () => {
