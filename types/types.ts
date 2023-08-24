@@ -34,7 +34,8 @@ export interface RoomDetails {
 }
 
 export interface UpdateProfileDetails {
-  avatar?: string;
+  id: string;
+  avatar?: File;
   username: string;
   password: string;
 }

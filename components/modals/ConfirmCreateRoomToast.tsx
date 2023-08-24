@@ -11,7 +11,6 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/hooks/useUser";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 interface ConfirmRoomToastProps {
   senderId: string | null;
@@ -24,7 +23,7 @@ export const requestToastProps = (
 ) => {
   const toastProps: ToastOptions = {
     toastId: senderId,
-    style: { backgroundColor: theme?.primaryColor && "" },
+    style: { backgroundColor: theme.baseTextColor },
     autoClose: 50000,
     closeOnClick: false,
     draggable: false,

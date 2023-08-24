@@ -7,34 +7,36 @@ import { opacity } from "@/themes/theme";
 import { faClose, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Drawer, Avatar, Input as MuiInput } from "@material-tailwind/react";
-import {
-  MutableRefObject,
-  createRef,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { useEffect, useRef, useState } from "react";
 import Input from "@/components/Input";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import Button from "@/components/Button";
 import { useUser } from "@/hooks/useUser";
 import Ripple from "react-ripples";
 import clsx from "clsx";
+import { UpdateProfileDetails } from "@/types/types";
+import supabase from "@/libs/supabase";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { error } from "console";
+import { toast } from "react-toastify";
+import ConfirmUpdateUserToast, {
+  updateUserToastProps,
+} from "./ConfirmUpdateUserToast";
 
 interface ProfilesModalProps {
   isOpen: boolean;
 }
 
 const ProfilesModal: React.FC<ProfilesModalProps> = ({ isOpen }) => {
-  const { bgColor2, baseTextColor, primaryColor } = useTheme().colors;
   const handleProfileModal = useModalSlice(
     (state) => state.changeProfileModalState
   );
 
-  const { user, userDetails } = useUser();
+  const theme = useTheme().colors;
+  const { userDetails } = useUser();
   const [newAvatar, setNewAvatar] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | undefined>();
-  const fileInputRef = useRef(null);
+  const supabase = useSupabaseClient();
 
   const {
     register,
@@ -44,9 +46,8 @@ const ProfilesModal: React.FC<ProfilesModalProps> = ({ isOpen }) => {
     getValues,
   } = useForm<FieldValues>({
     defaultValues: {
-      "avatar-update": "",
+      "avatar-update": async () => {},
       "username-update": "",
-      "email-update": "",
       "password-update": "",
     },
   });
@@ -61,8 +62,24 @@ const ProfilesModal: React.FC<ProfilesModalProps> = ({ isOpen }) => {
     }
   };
 
-  const onUpdateSubmit: SubmitHandler<FieldValues> = (data) => {
-    // console.log(data);
+  const onUpdateSubmit: SubmitHandler<FieldValues> = async (data, event) => {
+    const {
+      "avatar-update": avatar,
+      "username-update": username,
+      "password-update": password,
+    } = data;
+
+    toast(
+      <ConfirmUpdateUserToast
+        userUpdateData={{
+          avatar: avatar[0],
+          username,
+          password,
+          id: userDetails!.id,
+        }}
+      />,
+      updateUserToastProps(theme)
+    );
   };
 
   useEffect(() => {
@@ -77,7 +94,11 @@ const ProfilesModal: React.FC<ProfilesModalProps> = ({ isOpen }) => {
 
   return (
     <Drawer
-      dismiss={{ outsidePressEvent: "click" }}
+      dismiss={{
+        referencePressEvent: "click",
+        outsidePressEvent: "click",
+        outsidePress: false,
+      }}
       onClose={handleProfileModal}
       open={isOpen}
       className={clsx(
@@ -89,26 +110,26 @@ const ProfilesModal: React.FC<ProfilesModalProps> = ({ isOpen }) => {
       <div
         className="relative h-full w-full rounded-e-2xl border-r border-y overflow-hidden"
         style={{
-          borderColor: baseTextColor,
+          borderColor: theme.baseTextColor,
         }}
       >
         <div
           className="absolute inset-0 backdrop-blur-xl -z-10"
           style={{
-            backgroundColor: `${bgColor2}${opacity[70]}`,
+            backgroundColor: `${theme.bgColor2}${opacity[70]}`,
           }}
         />
         <div className="absolute top-0 right-1 rounded ">
           <Button variant="text" onClick={handleProfileModal}>
             <div
               className="p-0 h-7 w-7 rounded flex items-center"
-              style={{ backgroundColor: bgColor2 }}
+              style={{ backgroundColor: theme.bgColor2 }}
             >
               <FontAwesomeIcon
                 icon={faClose}
                 className="text-xl"
                 style={{
-                  color: baseTextColor,
+                  color: theme.baseTextColor,
                 }}
               />
             </div>
@@ -116,7 +137,7 @@ const ProfilesModal: React.FC<ProfilesModalProps> = ({ isOpen }) => {
         </div>
         <div
           className="flex flex-col pt-10 px-4 h-full space-y-2"
-          style={{ color: baseTextColor }}
+          style={{ color: theme.baseTextColor }}
         >
           <div className="text-xl font-semibold text-center">Profile Edit</div>
           <form
@@ -128,16 +149,22 @@ const ProfilesModal: React.FC<ProfilesModalProps> = ({ isOpen }) => {
               <div>
                 <Avatar
                   alt="avatar"
-                  src={userDetails?.avatar ?? preview ? preview : placeholder}
+                  src={
+                    preview
+                      ? preview
+                      : userDetails?.avatar
+                      ? userDetails?.avatar
+                      : placeholder
+                  }
                   withBorder
                   variant="circular"
-                  style={{ borderColor: baseTextColor }}
+                  style={{ borderColor: theme.baseTextColor }}
                 />
               </div>
               <div className="relative flex flex-1">
                 <div
                   className="absolute left-1 inset-y-1 z-30 rounded "
-                  style={{ backgroundColor: primaryColor }}
+                  style={{ backgroundColor: theme.primaryColor }}
                 >
                   <Ripple className="h-full w-full">
                     <label
@@ -147,7 +174,7 @@ const ProfilesModal: React.FC<ProfilesModalProps> = ({ isOpen }) => {
                       <div className="px-[0.6rem]">
                         <FontAwesomeIcon
                           icon={faUpload}
-                          style={{ color: bgColor2 }}
+                          style={{ color: theme.bgColor2 }}
                         />
                       </div>
                     </label>
@@ -200,7 +227,7 @@ const ProfilesModal: React.FC<ProfilesModalProps> = ({ isOpen }) => {
               type="password"
               disableLabel
               validate={(value, formData: FieldValues) =>
-              value === formData["password-update"]
+                value === formData["password-update"]
               }
               tooltipContent="Password not match"
             />

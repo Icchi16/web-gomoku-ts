@@ -1,6 +1,6 @@
 "use client";
 
-import { AuthChangeEvent, User } from "@supabase/supabase-js";
+import { User } from "@supabase/supabase-js";
 import { createContext, useContext, useEffect, useState } from "react";
 import { UserDetails } from "@/types/types";
 import {
@@ -13,7 +13,6 @@ import ConfirmRoomToast, {
 } from "@/components/modals/ConfirmCreateRoomToast";
 import { useTheme } from "./useTheme";
 import { useRouter } from "next/navigation";
-import { Session } from "inspector";
 
 type UserContextType = {
   accessToken: string | null;
