@@ -106,9 +106,9 @@ const ConfirmUpdateUserToast: React.FC<ConfirmUpdateUserToastProps> = ({
         throw new Error("Cannot upload to server!");
       }
     }
-
-    router.refresh();
+    
     toast.dismiss("update-profile");
+    router.refresh();
   };
 
   const handleRefuse = () => {
