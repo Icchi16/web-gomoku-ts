@@ -2,7 +2,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { useUser } from "@/hooks/useUser";
 import { faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Avatar, Badge, } from "@material-tailwind/react";
+import { Avatar, Badge } from "@material-tailwind/react";
 import { placeholder } from "@/public/public";
 import { useModalSlice } from "@/store/modalSlice";
 
@@ -28,39 +28,49 @@ const UserProfiles = () => {
 
   return (
     <div>
-      <div className="flex items-center">
-        <div
-          id="avatar"
-          className="relative cursor-pointer"
-          onClick={handleClickAvatar}
-        >
-          <Badge
-            color="gray"
-            placement="bottom-end"
-            content={<FontAwesomeIcon icon={faPencilAlt} className="text-xs" />}
-            className="bottom-3 right-3 pointer-events-none"
-            withBorder
-          >
-            <Avatar
-              size="xl"
-              alt="avatar"
-              src={avatar ? avatar : placeholder}
-              withBorder
-              variant="circular"
-              className=" pointer-events-none border-[3px]"
-              style={{ borderColor: baseTextColor }}
-            />
-          </Badge>
-        </div>
-        <div
-          className="text-white flex flex-col flex-1 items-center"
-          style={{ color: baseTextColor }}
-        >
-          <div className="text text-center">Welcome to Kombat</div>
-          <div className="text-2xl font-bold">
-            {isGuest ? `#${username}` : username} 
+      <div>
+        {!userDetails?.id ? (
+          <div className="text=2xl" style={{ color: baseTextColor }}>
+            Loading User...
           </div>
-        </div>
+        ) : (
+          <div className="flex items-center justify-center w-full">
+            <div
+              id="avatar"
+              className="relative cursor-pointer"
+              onClick={handleClickAvatar}
+            >
+              <Badge
+                color="gray"
+                placement="bottom-end"
+                content={
+                  <FontAwesomeIcon icon={faPencilAlt} className="text-xs" />
+                }
+                className="bottom-3 right-3 pointer-events-none"
+                withBorder
+              >
+                <Avatar
+                  size="xl"
+                  alt="avatar"
+                  src={avatar ? avatar : placeholder}
+                  withBorder
+                  variant="circular"
+                  className=" pointer-events-none border-[3px]"
+                  style={{ borderColor: baseTextColor }}
+                />
+              </Badge>
+            </div>
+            <div
+              className="text-white flex flex-col flex-1 items-center"
+              style={{ color: baseTextColor }}
+            >
+              <div className="text text-center">Welcome to Kombat</div>
+              <div className="text-2xl font-bold">
+                {isGuest ? `#${username}` : username}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

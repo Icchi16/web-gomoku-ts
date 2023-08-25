@@ -119,7 +119,7 @@ const ProfilesModal: React.FC<ProfilesModalProps> = ({ isOpen }) => {
             backgroundColor: `${theme.bgColor2}${opacity[70]}`,
           }}
         />
-        <div className="absolute top-0 right-1 rounded">
+        <div className="absolute top-1 right-1 rounded">
           <Button variant="text" onClick={handleProfileModal}>
             <div className="px-3 rounded flex justify-center items-center">
               <FontAwesomeIcon

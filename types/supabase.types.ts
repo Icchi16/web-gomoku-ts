@@ -55,20 +55,24 @@ export interface Database {
           id: string;
           username: string | null;
           is_guest: boolean;
+          is_online: boolean;
         };
         Insert: {
           avatar?: string | null;
           created_at?: string | null;
           id: string;
           username?: string | null;
-          is_guest: boolean;
+          is_guest?: boolean;
+          is_online?: boolean;
         };
         Update: {
           avatar?: string | null;
           created_at?: string | null;
           id?: string;
           username?: string | null;
-          is_guest: boolean;
+          is_guest?: boolean;
+          is_online?: boolean;
+
         };
         Relationships: [
           {

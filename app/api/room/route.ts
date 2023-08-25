@@ -17,10 +17,6 @@ export async function POST(request: Request) {
     throw new NextResponse(`${currentSessionError}`, { status: 500 });
   }
 
-  // const players = [
-  //   "66311767-832b-4259-835e-abe9f85afb29",
-  //   "20d53037-2ac5-459e-a3b3-1cb49ecf5398",
-  // ];
   const currentPlayer = players[Math.round(Math.random())];
 
   const { data: newRoom, error: newRoomError } = await supabase

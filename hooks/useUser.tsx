@@ -13,6 +13,9 @@ import ConfirmRoomToast, {
 } from "@/components/modals/ConfirmCreateRoomToast";
 import { useTheme } from "./useTheme";
 import { useRouter } from "next/navigation";
+import { NewAnimatePresenceProps } from "@material-tailwind/react/types/generic";
+import { error } from "console";
+import { Database } from "@/types/supabase.types";
 
 type UserContextType = {
   accessToken: string | null;
@@ -84,37 +87,45 @@ export const CurrentUserContextProvider = (props: Props) => {
     },
   });
 
-  // const onlineChannel = supabase.channel("online");
+  const onlineChannel = supabase.channel("online");
 
-  // useEffect(() => {
-  //   if (user && session) {
-  //     onlineChannel
-  //       .on("presence", { event: "sync" }, () => {
-  //         const sharedState = onlineChannel.presenceState();
-  //         console.log(sharedState);
-  //       })
-  //       // .on("presence", { event: "join" }, (payload) => {
-  //       //   console.log(payload);
-  //       // })
-  //       // .on("presence", { event: "leave" }, (payload) => {
-  //       //   console.log(payload);
-  //       // })
+  const updateStatus = async (event: "join" | "leave", userId: string) => {
+    const { error } = await supabase
+      .from("profiles")
+      .update({ is_online: event === "join" })
+      .eq("id", userId);
 
-  //       .subscribe(async (status) => {
-  //         if (status === "SUBSCRIBED") {
-  //           const presenceTrackStatus = await onlineChannel.track({
-  //             user: user.id,
-  //             online_at: new Date().toISOString(),
-  //           });
-  //           console.log(presenceTrackStatus);
-  //         }
-  //       });
-  //   }
+    if (error) {
+      toast.error("Status update failed");
+    }
+  };
 
-  //   return () => {
-  //     supabase.removeChannel(onlineChannel);
-  //   };
-  // }, [onlineChannel]);
+  useEffect(() => {
+    if (user && session) {
+      onlineChannel
+        .on("presence", { event: "join" }, ({ event, newPresences }) => {
+          const { user: userId } = newPresences[0];
+          updateStatus(event, userId);
+        })
+        .on("presence", { event: "leave" }, ({ event, leftPresences }) => {
+          const { user: userId } = leftPresences[0];
+          updateStatus(event, userId);
+        })
+
+        .subscribe(async (status) => {
+          if (status === "SUBSCRIBED") {
+            await onlineChannel.track({
+              user: user.id,
+              online_at: new Date().toISOString(),
+            });
+          }
+        });
+    }
+
+    return () => {
+      supabase.removeChannel(onlineChannel);
+    };
+  }, [onlineChannel]);
 
   useEffect(() => {
     //for sending createRoom
@@ -162,7 +173,6 @@ export const CurrentUserContextProvider = (props: Props) => {
       .on("broadcast", { event: "getResponse" }, (payload) => {
         const response = payload?.payload.result;
         const roomId = payload?.payload?.roomId;
-
         if (response === "accepted" && roomId) {
           toast.success("Your opponent have accepted your challenge!", {
             autoClose: 4000,
@@ -182,17 +192,6 @@ export const CurrentUserContextProvider = (props: Props) => {
       supabase.removeChannel(userResponseChannel);
     };
   }, [userResponseChannel]);
-
-  // const authEvent = supabase.auth.onAuthStateChange((event, session) => {
-  //   setSession(session);
-  // });
-
-  // // !asdasdasdas
-  // useEffect(() => {
-  //   return () => {
-  //     authEvent.data.subscription.unsubscribe();
-  //   };
-  // }, [session, authEvent]);
 
   const value = {
     accessToken,

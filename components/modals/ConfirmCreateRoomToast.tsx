@@ -62,25 +62,23 @@ const ConfirmRoomToast: React.FC<ConfirmRoomToastProps> = ({ senderId }) => {
 
   const handleYes = async () => {
     const handlerData = [userDetails?.id, senderId];
-    startTransition(() => {
-      axios.post("/api/room", handlerData).then((response) => {
-        const { data: newRoom } = response;
 
-        responseChannel.subscribe(async (status) => {
-          if (status === "SUBSCRIBED") {
-            await responseChannel.send({
-              type: "broadcast",
-              event: "getResponse",
-              payload: {
-                result: "accepted",
-                roomId: newRoom.id,
-              },
-            });
-          }
-        });
+    axios.post("/api/room", handlerData).then((response) => {
+      const { data: newRoom } = response;
 
-        router.push(`/${newRoom.id}`);
+      responseChannel.subscribe(async (status) => {
+        if (status === "SUBSCRIBED") {
+          await responseChannel.send({
+            type: "broadcast",
+            event: "getResponse",
+            payload: {
+              result: "accepted",
+              roomId: newRoom.id,
+            },
+          });
+        }
       });
+      router.push(`/${newRoom.id}`);
     });
   };
 

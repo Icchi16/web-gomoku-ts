@@ -11,11 +11,11 @@ import { toast } from "react-toastify";
 import { useUser } from "@/hooks/useUser";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { Database } from "@/types/supabase.types";
 
 const CreateRoomModal = () => {
   const { baseTextColor, bgColor2 } = useTheme().colors;
-  const [isLoading, setIsLoading] = useState(false);
-  const supabase = useSupabaseClient();
+  const supabase = useSupabaseClient<Database>();
   const { userDetails } = useUser();
 
   const {
@@ -32,37 +32,43 @@ const CreateRoomModal = () => {
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     const guestName = data.guestName;
-    const { data: guestId, error } = await supabase
+    const { data: guestData, error: getUserError } = await supabase
       .from("profiles")
-      .select("id")
+      .select("id, is_online")
       .ilike("username", `%${guestName}%`)
       .single();
 
-    if (error) {
-      toast.error("Can't find user");
+    const { id: guestId, is_online: guestOnlineStatus } = guestData ?? {};
+
+    if (getUserError) {
+      toast.error("Can't find user!");
       throw new NextResponse("can't find user", { status: 400 });
     } else {
-      toast.info("Sending your challenge letter!");
+      if (!guestOnlineStatus) {
+        toast.error("User is not online!");
+      } else {
+        toast.info("Sending your challenge letter!");
 
-      const channel = supabase.channel(`invite:${guestId.id}`, {
-        config: {
-          broadcast: {
-            ack: true,
-          },
-        },
-      });
-
-      channel.subscribe(async (status) => {
-        if (status === "SUBSCRIBED") {
-          await channel.send({
-            type: "broadcast",
-            event: "sendInvite",
-            payload: {
-              senderId: userDetails?.id,
+        const channel = supabase.channel(`invite:${guestId}`, {
+          config: {
+            broadcast: {
+              ack: true,
             },
-          });
-        }
-      });
+          },
+        });
+
+        channel.subscribe(async (status) => {
+          if (status === "SUBSCRIBED") {
+            await channel.send({
+              type: "broadcast",
+              event: "sendInvite",
+              payload: {
+                senderId: userDetails?.id,
+              },
+            });
+          }
+        });
+      }
     }
   };
 
@@ -85,7 +91,6 @@ const CreateRoomModal = () => {
             label="Player ID"
             register={register}
             errors={errors}
-            disabled={isLoading}
             tooltipContent="Error!"
             getFieldState={getFieldState}
             getValues={getValues}
