@@ -66,7 +66,7 @@ const AuthForm = () => {
         user_metadata: {
           username: username ? username : genUsername,
           is_guest: isGuest,
-          avatar: "",
+          avatar: null,
         },
         email: email,
         password: password,
