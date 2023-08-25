@@ -70,7 +70,6 @@ const ConfirmUpdateUserToast: React.FC<ConfirmUpdateUserToastProps> = ({
 
         const { error } = await supabase.auth.updateUser({
           data: {
-            // ...user?.user_metadata,
             avatar: avatar,
           },
         });
@@ -94,7 +93,6 @@ const ConfirmUpdateUserToast: React.FC<ConfirmUpdateUserToastProps> = ({
     if (username) {
       const { error } = await supabase.auth.updateUser({
         data: {
-          // ...user?.user_metadata,
           username: username,
         },
       });
