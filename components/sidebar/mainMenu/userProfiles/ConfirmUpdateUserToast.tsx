@@ -94,7 +94,7 @@ const ConfirmUpdateUserToast: React.FC<ConfirmUpdateUserToastProps> = ({
     if (username) {
       const { error } = await supabase.auth.updateUser({
         data: {
-          ...user?.user_metadata,
+          // ...user?.user_metadata,
           username: username,
         },
       });
@@ -103,9 +103,9 @@ const ConfirmUpdateUserToast: React.FC<ConfirmUpdateUserToastProps> = ({
         throw new Error("Cannot upload to server!");
       }
     }
-    
+
     toast.dismiss("update-profile");
-    router.refresh();
+    window.location.reload();
   };
 
   const handleRefuse = () => {
