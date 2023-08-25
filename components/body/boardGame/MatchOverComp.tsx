@@ -34,7 +34,7 @@ const MatchOverComp = () => {
             userDetails?.id === currentWinner ? (
               <div>
                 Congrats&nbsp;
-                <span className="italic text-3xl uppercase">{userName}</span>
+                <span className="text-3xl uppercase">{userName}</span>
                 &nbsp;! You&apos;re the winner !
               </div>
             ) : (
