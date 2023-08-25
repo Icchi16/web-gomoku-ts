@@ -121,10 +121,7 @@ const ProfilesModal: React.FC<ProfilesModalProps> = ({ isOpen }) => {
         />
         <div className="absolute top-0 right-1 rounded ">
           <Button variant="text" onClick={handleProfileModal}>
-            <div
-              className="p-0 h-7 w-7 rounded flex items-center"
-              style={{ backgroundColor: theme.bgColor2 }}
-            >
+            <div className="px-2 h-7 w-7 rounded flex justify-center items-center">
               <FontAwesomeIcon
                 icon={faClose}
                 className="text-xl"
